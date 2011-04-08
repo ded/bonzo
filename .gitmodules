@@ -4,3 +4,6 @@
 [submodule "build/sink"]
 	path = build/sink
 	url = git://github.com/ded/sink-test.git
+[submodule "build/qwery"]
+	path = build/qwery
+	url = git://github.com/ded/qwery.git
