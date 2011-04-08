@@ -10,7 +10,7 @@
       html = (doc.compatMode == 'CSS1Compat') ?
         doc.documentElement :
         doc.body,
-      specialAttributes = /^checked|value$/,
+      specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
       ie = /msie/.test(navigator.userAgent);
 
@@ -48,7 +48,7 @@
   }
 
   function _bonzo(elements) {
-    this.elements = elements;
+    this.elements = Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
   }
 
   _bonzo.prototype = {
