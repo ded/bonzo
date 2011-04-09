@@ -1,0 +1,14 @@
+{
+  "name": "bonzo",
+  "description": "simple, hassle-free, library agnostic, extensible DOM utility",
+  "version": "0.0.1",
+  "homepage": "https://github.com/ded/bonzo",
+  "authors": ["Dustin Diaz", "Jacob Thornton"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ded/bonzo.git"
+  },
+  "authors": ["Dustin Diaz, @ded", "Jacob Thornton, @fat"],
+  "main": "./bonzo.js",
+  "ender": "./src/ender.js"
+}
