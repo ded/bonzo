@@ -1,3 +1,3 @@
-$.augment(bonzo);
-$.augment(bonzo(), true);
+$.ender(bonzo);
+$.ender(bonzo(), true);
 bonzo.noConflict();
