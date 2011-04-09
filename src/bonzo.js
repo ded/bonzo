@@ -220,7 +220,7 @@
     return new _bonzo(els);
   }
 
-  bonzo.augment = function (o, target) {
+  bonzo.aug = function (o, target) {
     for (var k in o) {
       o.hasOwnProperty(k) && ((target || _bonzo.prototype)[k] = o[k]);
     }
