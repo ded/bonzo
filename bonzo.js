@@ -48,7 +48,7 @@
   }
 
   function _bonzo(elements) {
-    this.elements = Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
+    this.elements = elements && Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
   }
 
   _bonzo.prototype = {
