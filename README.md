@@ -55,6 +55,8 @@ All other API methods
   * hasClass
   * show
   * hide
+  * first
+  * last
   * append
   * prepend
   * before

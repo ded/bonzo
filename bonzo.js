@@ -68,6 +68,14 @@
       return m;
     },
 
+    first: function () {
+      return this.elements[0];
+    },
+
+    last: function (){
+      return this.elements[this.elements.length - 1];
+    },
+
     html: function (html) {
       return typeof html == 'string' ?
         this.each(function (el) {
