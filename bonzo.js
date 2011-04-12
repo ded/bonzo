@@ -72,7 +72,7 @@
       return this.elements[0];
     },
 
-    last: function (){
+    last: function () {
       return this.elements[this.elements.length - 1];
     },
 
@@ -209,7 +209,7 @@
     },
 
     remove: function () {
-      this.each(function (el) {
+      return this.each(function (el) {
         el.parentNode.removeChild(el);
       });
     },

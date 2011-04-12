@@ -23,7 +23,7 @@ A great way to use Bonzo is with a selector engine (like [Qwery](https://github.
       return bonzo(qwery(selector));
     }
 
-    bonzo.augment(bonzo, $);
+    bonzo.aug(bonzo, $);
 
 This now allows you to write the following code:
 
@@ -33,7 +33,7 @@ Bonzo Extension API
 -------------------
 One of the greatest parts about Bonzo is its simplicity to hook into the internal chain to create custom methods. For example you can create a method called **color** like this:
 
-    bonzo.augment({
+    bonzo.aug({
       color: function (c) {
         this.css('color', c);
       }

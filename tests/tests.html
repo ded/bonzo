@@ -24,7 +24,7 @@
       function $(s) {
         return dom(Q(s));
       }
-      dom.augment(dom, $);
+      dom.aug(dom, $);
     </script>
   </head>
   <body>
@@ -62,6 +62,11 @@
         <a id="twitter" href="http://twitter.com/">twitter.com</a>
         <input type="hidden" value="eyo">
         <input type="checkbox" checked>
+      </div>
+      <div id="first-last">
+        <div id="first"></div>
+        <div id="second"></div>
+        <div id="last"></div>
       </div>
     </div>
     <h1>Bonzo Tests</h1>
@@ -128,7 +133,7 @@
 
         test('should augment special methods', 3, function () {
           ok(!dom.hasOwnProperty('color'), 'bonzo has no "color" method');
-          dom.augment({
+          dom.aug({
             color: function (color) {
               ok(this.prototype == dom().prototype, 'calls augmented methods in scope of bonzo prototype');
               this.css('color', color);
@@ -168,6 +173,11 @@
           ok($('#attrs input[type="hidden"]').attr('value') == 'eyo', 'retrieves "value" attribute from {input} element');
           ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true');
           ok($('#attrs input[type="hidden"]').attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input');
+        });
+
+        test('first and last', 2, function () {
+          ok($('#first-last div').first().id == 'first', 'found first() element');
+          ok($('#first-last div').last().id == 'last', 'found last() element');
         });
 
       });
