@@ -220,9 +220,31 @@
       return this.map(function (el) {
         return el.parentNode.removeChild(el);
       });
+    },
+
+    scroll: function (x, y) {
+      var el = this.elements[0];
+      if (x == null || y == null) {
+        return isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop };
+      }
+      if (isBody(el)) {
+        window.scrollTo(x, y);
+      } else {
+        x != null && (el.scrollLeft = x);
+        y != null && (el.scrollTop = y);
+      }
+      return this;
     }
 
   };
+
+  function isBody(element) {
+    return element === window || (/^(?:body|html)$/i).test(element.tagName);
+  }
+
+  function getWindowScroll() {
+    return { x: window.pageXOffset || html.scrollLeft, y: window.pageYOffset || html.scrollTop };
+  }
 
   function bonzo(els) {
     return new _bonzo(els);

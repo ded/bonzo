@@ -9,6 +9,17 @@
         position: absolute;
         top: -999em;
       }
+      #overflowed {
+        overflow:auto;
+        width:50px;
+        height:100px;
+        top: 10000px;
+        position:absolute;
+      }
+      #overflower{
+        height:1000px;
+        width:1000px;
+      }
     </style>
     <script src="../build/sink/src/sink.js"></script>
     <script src="../build/qwery/qwery.min.js"></script>
@@ -68,6 +79,9 @@
         <div id="second"></div>
         <div id="last"></div>
       </div>
+    </div>
+    <div id="overflowed">
+      <div id="overflower"></div>
     </div>
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -178,6 +192,19 @@
         test('first and last', 2, function () {
           ok($('#first-last div').first().id == 'first', 'found first() element');
           ok($('#first-last div').last().id == 'last', 'found last() element');
+        });
+
+        test('scroll', 1, function () {
+          $(window).scroll(0, 100);
+          ok($(window).scroll().y == 100, 'set and retrieved correct scroll on window');
+        });
+
+        test('scroll', 3, function () {
+          $(window).scroll(0, 100);
+          ok($(window).scroll().y == 100, 'condition1');
+          $('#overflowed').scroll(150, 150);
+          ok($('#overflowed').scroll().x == 150, 'condition2');
+          ok($('#overflowed').scroll().y == 150, 'condition3');
         });
 
       });
