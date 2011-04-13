@@ -179,7 +179,7 @@
     },
 
     offset: function () {
-      var el = this.elements[0];
+      var el = this.first();
       var width = el.offsetWidth;
       var height = el.offsetHeight;
       var top = el.offsetTop;
@@ -198,7 +198,7 @@
     },
 
     attr: function (k, v) {
-      var el = this.elements[0];
+      var el = this.first();
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
@@ -229,7 +229,7 @@
     },
 
     scroll: function (x, y) {
-      var el = this.elements[0];
+      var el = this.first();
       if (x == null || y == null) {
         return isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop };
       }
