@@ -64,11 +64,13 @@
     },
 
     first: function () {
-      return this.elements[0];
+      this.elements = [this.elements[0]];
+      return this;
     },
 
     last: function () {
-      return this.elements[this.elements.length - 1];
+      this.elements = [this.elements[this.elements.length - 1]];
+      return this;
     },
 
     html: function (html) {
@@ -194,7 +196,7 @@
     },
 
     offset: function () {
-      var el = this.first();
+      var el = this.elements[0];
       var width = el.offsetWidth;
       var height = el.offsetHeight;
       var top = el.offsetTop;
@@ -213,7 +215,7 @@
     },
 
     attr: function (k, v) {
-      var el = this.first();
+      var el = this.elements[0];
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
@@ -254,7 +256,7 @@
   };
 
   function scroll(x, y, type) {
-    var el = this.first();
+    var el = this.elements[0];
     if (x == null && y == null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
     }

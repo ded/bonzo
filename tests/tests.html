@@ -10,10 +10,10 @@
         top: -9999em;
       }
       #overflowed {
-        overflow: hidden;
+        overflow: auto;
         width: 50px;
         height: 100px;
-        top: -10000px;
+        top: 10000px;
         position: absolute;
       }
       #overflower {
@@ -204,8 +204,8 @@
         });
 
         test('first and last', 2, function () {
-          ok($('#first-last div').first().id == 'first', 'found first() element');
-          ok($('#first-last div').last().id == 'last', 'found last() element');
+          ok($('#first-last div').first().elements[0].id == 'first', 'found first() element');
+          ok($('#first-last div').last().elements[0].id == 'last', 'found last() element');
         });
 
 
@@ -236,6 +236,7 @@
         });
 
         test('scrollTop && scrollLeft', 2, function () {
+          // there's gotta be a better way to test this than making the spec page height: 10000px
           $(window).scrollTop(100);
           ok($(window).scrollTop() == 100, 'condition1');
           $('#overflowed').scrollLeft(150);
