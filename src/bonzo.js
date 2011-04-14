@@ -222,21 +222,29 @@
       });
     },
 
-    scroll: function (x, y) {
-      var el = this.first();
-      if (x == null || y == null) {
-        return isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop };
-      }
-      if (isBody(el)) {
-        window.scrollTo(x, y);
-      } else {
-        x != null && (el.scrollLeft = x);
-        y != null && (el.scrollTop = y);
-      }
-      return this;
+    scrollTop: function (y) {
+      return scroll.call(this, null, y, 'y');
+    },
+
+    scrollLeft: function (x) {
+      return scroll.call(this, x, null, 'x');
     }
 
   };
+
+  function scroll(x, y, type) {
+    var el = this.first();
+    if (x == null && y == null) {
+      return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
+    }
+    if (isBody(el)) {
+      window.scrollTo(x, y);
+    } else {
+      x != null && (el.scrollLeft = x);
+      y != null && (el.scrollTop = y);
+    }
+    return this;
+  }
 
   function isBody(element) {
     return element === window || (/^(?:body|html)$/i).test(element.tagName);

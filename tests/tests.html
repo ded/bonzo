@@ -194,17 +194,11 @@
           ok($('#first-last div').last().id == 'last', 'found last() element');
         });
 
-        test('scroll', 1, function () {
-          $(window).scroll(0, 100);
-          ok($(window).scroll().y == 100, 'set and retrieved correct scroll on window');
-        });
-
-        test('scroll', 3, function () {
-          $(window).scroll(0, 100);
-          ok($(window).scroll().y == 100, 'condition1');
-          $('#overflowed').scroll(150, 150);
-          ok($('#overflowed').scroll().x == 150, 'condition2');
-          ok($('#overflowed').scroll().y == 150, 'condition3');
+        test('scrollTop && scrollLeft', 2, function () {
+          $(window).scrollTop(100);
+          ok($(window).scrollTop() == 100, 'condition1');
+          $('#overflowed').scrollLeft(150);
+          ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
       });
