@@ -7,7 +7,18 @@
     <style type="text/css">
       #fixtures {
         position: absolute;
-        top: -999em;
+        top: -9999em;
+      }
+      #overflowed {
+        overflow: hidden;
+        width: 50px;
+        height: 100px;
+        top: -10000px;
+        position: absolute;
+      }
+      #overflower {
+        height: 1000px;
+        width: 1000px;
       }
     </style>
     <script src="../build/sink/src/sink.js"></script>
@@ -82,6 +93,9 @@
           <li class="nextr">five</li>
         </ul>
       </div>
+    </div>
+    <div id="overflowed">
+      <div id="overflower"></div>
     </div>
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -194,6 +208,7 @@
           ok($('#first-last div').last().id == 'last', 'found last() element');
         });
 
+
         test('appendTo', 1, function () {
           var node = $.create('<p>hello</p>')[0];
           var append = Q('#append-to')[0];
@@ -218,6 +233,13 @@
 
         test('previous', 1, function () {
           ok($('#sibling-tests li.nextr').previous().elements.length == 3, 'els.previous().elements.length == 3');
+        });
+
+        test('scrollTop && scrollLeft', 2, function () {
+          $(window).scrollTop(100);
+          ok($(window).scrollTop() == 100, 'condition1');
+          $('#overflowed').scrollLeft(150);
+          ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
       });

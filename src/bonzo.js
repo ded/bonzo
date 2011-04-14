@@ -194,7 +194,7 @@
     },
 
     offset: function () {
-      var el = this.elements[0];
+      var el = this.first();
       var width = el.offsetWidth;
       var height = el.offsetHeight;
       var top = el.offsetTop;
@@ -213,7 +213,7 @@
     },
 
     attr: function (k, v) {
-      var el = this.elements[0];
+      var el = this.first();
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
@@ -241,9 +241,39 @@
       return this.map(function (el) {
         return el.parentNode.removeChild(el);
       });
+    },
+
+    scrollTop: function (y) {
+      return scroll.call(this, null, y, 'y');
+    },
+
+    scrollLeft: function (x) {
+      return scroll.call(this, x, null, 'x');
     }
 
   };
+
+  function scroll(x, y, type) {
+    var el = this.first();
+    if (x == null && y == null) {
+      return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
+    }
+    if (isBody(el)) {
+      window.scrollTo(x, y);
+    } else {
+      x != null && (el.scrollLeft = x);
+      y != null && (el.scrollTop = y);
+    }
+    return this;
+  }
+
+  function isBody(element) {
+    return element === window || (/^(?:body|html)$/i).test(element.tagName);
+  }
+
+  function getWindowScroll() {
+    return { x: window.pageXOffset || html.scrollLeft, y: window.pageYOffset || html.scrollTop };
+  }
 
   function bonzo(els) {
     return new _bonzo(els);

@@ -60,10 +60,11 @@
       return this;
     },
 
-    map: function (fn) {
-      var m = [];
-      for (var i = 0; i  < this.elements.length; i++) {
-        m.push(fn.call(this, this.elements[i]));
+    map: function (fn, include) {
+      var m = [], n;
+      for (var i = 0; i < this.elements.length; i++) {
+        n = fn.call(this, this.elements[i]);
+        include ? (include(n) && m.push(n)) : m.push(n);
       }
       return m;
     },
@@ -116,25 +117,9 @@
       });
     },
 
-    create: function (node) {
-      return typeof node == 'string' ?
-        function () {
-          var el = doc.createElement('div'), els = [];
-          el.innerHTML = node;
-          var nodes = el.childNodes;
-          el = el.firstChild;
-          els.push(el);
-          while (el = el.nextSibling) {
-            (el.nodeType == 1) && els.push(el);
-          }
-          return els;
-
-        }() : is(node) ? [node.cloneNode(true)] : [];
-    },
-
     append: function (node) {
       return this.each(function (el) {
-        each(this.create(node), function (i) {
+        each(bonzo.create(node), function (i) {
           el.appendChild(i);
         });
       });
@@ -143,15 +128,51 @@
     prepend: function (node) {
       return this.each(function (el) {
         var first = el.firstChild;
-        each(this.create(node), function (i) {
+        each(bonzo.create(node), function (i) {
           el.insertBefore(i, first);
         });
       });
     },
 
+    appendTo: function (target) {
+      return this.each(function (el) {
+        target.appendChild(el);
+      });
+    },
+
+    next: function () {
+      return this.related('nextSibling');
+    },
+
+    previous: function () {
+      return this.related('previousSibling');
+    },
+
+    related: function (method) {
+      this.elements = this.map(
+        function (el) {
+          el = el[method];
+          while (el && el.nodeType !== 1) {
+            el = el[method];
+          }
+          return el || 0;
+        },
+        function (el) {
+          return el;
+        }
+      );
+      return this;
+    },
+
+    prependTo: function (target) {
+      return this.each(function (el) {
+        target.insertBefore(el, bonzo.firstChild(target));
+      });
+    },
+
     before: function (node) {
       return this.each(function (el) {
-        each(this.create(node), function (i) {
+        each(bonzo.create(node), function (i) {
           el.parentNode.insertBefore(i, el);
         });
       });
@@ -159,7 +180,7 @@
 
     after: function (node) {
       return this.each(function (el) {
-        each(this.create(node), function (i) {
+        each(bonzo.create(node), function (i) {
           el.parentNode.insertBefore(i, el.nextSibling);
         });
       });
@@ -179,7 +200,7 @@
     },
 
     offset: function () {
-      var el = this.elements[0];
+      var el = this.first();
       var width = el.offsetWidth;
       var height = el.offsetHeight;
       var top = el.offsetTop;
@@ -198,7 +219,7 @@
     },
 
     attr: function (k, v) {
-      var el = this.elements[0];
+      var el = this.first();
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
@@ -226,9 +247,39 @@
       return this.map(function (el) {
         return el.parentNode.removeChild(el);
       });
+    },
+
+    scrollTop: function (y) {
+      return scroll.call(this, null, y, 'y');
+    },
+
+    scrollLeft: function (x) {
+      return scroll.call(this, x, null, 'x');
     }
 
   };
+
+  function scroll(x, y, type) {
+    var el = this.first();
+    if (x == null && y == null) {
+      return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
+    }
+    if (isBody(el)) {
+      window.scrollTo(x, y);
+    } else {
+      x != null && (el.scrollLeft = x);
+      y != null && (el.scrollTop = y);
+    }
+    return this;
+  }
+
+  function isBody(element) {
+    return element === window || (/^(?:body|html)$/i).test(element.tagName);
+  }
+
+  function getWindowScroll() {
+    return { x: window.pageXOffset || html.scrollLeft, y: window.pageYOffset || html.scrollTop };
+  }
 
   function bonzo(els) {
     return new _bonzo(els);
@@ -240,6 +291,22 @@
     }
   };
 
+  bonzo.create = function (node) {
+    return typeof node == 'string' ?
+      function () {
+        var el = doc.createElement('div'), els = [];
+        el.innerHTML = node;
+        var nodes = el.childNodes;
+        el = el.firstChild;
+        els.push(el);
+        while (el = el.nextSibling) {
+          (el.nodeType == 1) && els.push(el);
+        }
+        return els;
+
+      }() : is(node) ? [node.cloneNode(true)] : [];
+  };
+
   bonzo.doc = function () {
     var w = html.scrollWidth,
         h = html.scrollHeight,
@@ -248,6 +315,15 @@
       width: Math.max(w, vp.width),
       height: Math.max(h, vp.height)
     };
+  };
+
+  bonzo.firstChild = function (el) {
+    for (var c = el.childNodes, i = 0, j = (c && c.length) || 0, e; i < j; i++) {
+      if (c[i].nodeType === 1) {
+        e = c[j = i];
+      }
+    }
+    return e;
   };
 
   bonzo.viewport = function () {
