@@ -57,10 +57,14 @@ All other API methods
   * hide
   * first
   * last
+  * next
+  * previous
   * append
   * prepend
   * before
   * after
+  * prependTo
+  * appendTo
   * css
     - css(prop, val)
     - css({properties})

@@ -11,7 +11,7 @@
       }
     </style>
     <script src="../build/sink/src/sink.js"></script>
-    <script src="../build/qwery/qwery.min.js"></script>
+    <script src="../build/qwery/qwery.js"></script>
     <script type="text/javascript">
       function bonzo() {
         return 'success';
@@ -67,6 +67,20 @@
         <div id="first"></div>
         <div id="second"></div>
         <div id="last"></div>
+      </div>
+      <div id="append-to"></div>
+      <div id="prepend-to">
+        <div id="prepend-first-child"></div>
+      </div>
+      <div id="sibling-tests">
+        <ul>
+          <li>zero</li>
+          <li class="nextr">one</li>
+          <li>two</li>
+          <li class="nextr">three</li>
+          <li>four</li>
+          <li class="nextr">five</li>
+        </ul>
       </div>
     </div>
     <h1>Bonzo Tests</h1>
@@ -178,6 +192,32 @@
         test('first and last', 2, function () {
           ok($('#first-last div').first().id == 'first', 'found first() element');
           ok($('#first-last div').last().id == 'last', 'found last() element');
+        });
+
+        test('appendTo', 1, function () {
+          var node = $.create('<p>hello</p>')[0];
+          var append = Q('#append-to')[0];
+          $(node).appendTo(append);
+          ok($.contains(append, node), '$.contains(append, node) - appended to target node');
+        });
+
+        test('prependTo', 2, function () {
+          var node = $.create('<p>hello</p>')[0];
+          var node2 = $.create('<p>world</p>')[0];
+          var append = Q('#prepend-to')[0];
+          var prependWithNoFirstChild = Q('#prepend-first-child')[0];
+          $(node).prependTo(append);
+          $(node2).prependTo(prependWithNoFirstChild);
+          ok($.contains(append, node), '$.contains(append, node) - prepended to target node');
+          ok($.contains(prependWithNoFirstChild, node2), 'prepends with no inner firstChild');
+        });
+
+        test('next', 1, function () {
+          ok($('#sibling-tests li.nextr').next().elements.length == 2, 'els.next().elements.length == 2');
+        });
+
+        test('previous', 1, function () {
+          ok($('#sibling-tests li.nextr').previous().elements.length == 3, 'els.previous().elements.length == 3');
         });
 
       });
