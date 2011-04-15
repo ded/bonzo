@@ -78,7 +78,7 @@ All other API methods
   * bonzo.augment
   * bonzo.doc[width|height]
   * bonzo.viewport[width|height]
-  * bonzo.contains
+  * bonzo.isAncestor
   * bonzo.noConflict
 
 The name Bonzo

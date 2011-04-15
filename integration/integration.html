@@ -3,7 +3,7 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>ender integration test</title>
-    <!-- ender -b qwery,scriptjs -->
+    <!-- ender -b qwery,scriptjs,domready -->
     <script src="ender.js"></script>
     <script src="../src/bonzo.js"></script>
     <script src="../src/ender.js"></script>
@@ -11,6 +11,7 @@
       $.domReady(function () {
         var el1 = $('li').first().css('color', 'red').next().css('color', 'blue');
         var el2 = $('li').last().css('color', 'green');
+        $('input[type=text]').attr('value', 'hello');
       });
     </script>
   </head>
@@ -21,5 +22,6 @@
       <li id="second">two</li>
       <li id="last">three</li>
     </ul>
+    <input type="text" value=""/>
   </body>
 </html>

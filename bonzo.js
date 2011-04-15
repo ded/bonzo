@@ -355,7 +355,7 @@
     };
   };
 
-  bonzo.contains = 'compareDocumentPosition' in html ?
+  bonzo.isAncestor = 'compareDocumentPosition' in html ?
     function (container, element) {
       return (container.compareDocumentPosition(element) & 16) == 16;
     } : 'contains' in html ?
