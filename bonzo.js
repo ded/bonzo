@@ -49,6 +49,7 @@
 
   function _bonzo(elements) {
     this.elements = [];
+    this.length = 0;
     if (elements) {
       this.elements = Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
       this.length = this.elements.length;
@@ -61,28 +62,37 @@
   _bonzo.prototype = {
 
     each: function (fn) {
-      for (var i = 0; i  < this.elements.length; i++) {
-        fn.call(this, this.elements[i]);
+      for (var i = 0, l = this.length; i < l; i++) {
+        fn.call(this, this[i], i);
       }
       return this;
     },
 
-    map: function (fn, include) {
+    map: function (fn, reject) {
       var m = [], n;
-      for (var i = 0; i < this.elements.length; i++) {
-        n = fn.call(this, this.elements[i]);
-        include ? (include(n) && m.push(n)) : m.push(n);
+      for (var i = 0; i < this.length; i++) {
+        n = fn.call(this, this[i]);
+        reject ? (reject(n) && m.push(n)) : m.push(n);
       }
       return m;
     },
 
     first: function () {
-      this.elements = [this.elements[0]];
+      this.elements = [this[0]];
+      this.each(function (el, i) {
+        i && (delete this[i]);
+      });
+      this.length = 1;
       return this;
     },
 
     last: function () {
-      this.elements = [this.elements[this.elements.length - 1]];
+      this.elements = [this[this.length - 1]];
+      this[0] = this.elements[0];
+      this.each(function (el, i) {
+        i && (delete this[i]);
+      });
+      this.length = 1;
       return this;
     },
 
@@ -91,7 +101,7 @@
         this.each(function (el) {
           el.innerHTML = html;
         }) :
-        this.elements[0].innerHTML;
+        this.elements[0] ? this.elements[0].innerHTML : '';
     },
 
     addClass: function (c) {
