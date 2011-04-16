@@ -46,7 +46,10 @@ All other API methods
 ---------------------
 
   * each
+    - function (element, index)
   * map
+    - function (element, index)
+    - reject
   * html
     - html() get
     - html(str) set
@@ -68,17 +71,27 @@ All other API methods
   * css
     - css(prop, val)
     - css({properties})
-  * offset
+  * offset()
+    - top
+    - left
+    - width
+    - height
   * attr
     - attr(k) get
     - attr(k, v) set
   * remove
   * empty
   * detach
-  * bonzo.augment
-  * bonzo.doc[width|height]
-  * bonzo.viewport[width|height]
-  * bonzo.isAncestor
+  * scrollLeft
+  * scrollTop
+  * bonzo.aug({ properties })
+  * bonzo.doc()
+    - width
+    - height
+  * bonzo.viewport()
+    - width
+    - height
+  * bonzo.isAncestor(container, child)
   * bonzo.noConflict
 
 The name Bonzo
@@ -100,6 +113,12 @@ Tests
 -----
 
     open bonzo/tests/tests.html
+
+Ender integration
+----------
+Bonzo fits in nicely with the Ender framework. To combine Bonzo to your Ender build, you can add it as such:
+
+    $ ender -b bonzo[,modb, modc,...]
 
 Contributors
 -----

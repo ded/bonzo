@@ -244,7 +244,7 @@
 
     remove: function () {
       return this.each(function (el) {
-        el.parentNode.removeChild(el);
+        el.parentNode && el.parentNode.removeChild(el);
       });
     },
 
