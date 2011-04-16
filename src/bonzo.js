@@ -200,6 +200,9 @@
     },
 
     css: function (o, v) {
+      if (v === undefined && typeof o == 'string') {
+        return this[0].style[camelize(o)];
+      }
       var fn = typeof o == 'string' ?
         function (el) {
           el.style[camelize(o)] = v;

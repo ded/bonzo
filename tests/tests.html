@@ -97,6 +97,7 @@
     <div id="overflowed">
       <div id="overflower"></div>
     </div>
+	<div id="styles" style="color:black;"></div>
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
 
@@ -242,6 +243,12 @@
           $('#overflowed').scrollLeft(150);
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
+
+		test('setting & getting styles', 2, function() {
+			ok($('#styles').css('color') == 'black', 'black by default');
+			$('#styles').css('color', 'red');
+			ok($('#styles').css('color') == 'red', 'red after update');
+		});
 
       });
       start();
