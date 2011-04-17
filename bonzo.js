@@ -7,9 +7,7 @@
 !function (context) {
 
   var doc = document,
-      html = (doc.compatMode == 'CSS1Compat') ?
-        doc.documentElement :
-        doc.body,
+      html = doc.documentElement,
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
       ie = /msie/.test(navigator.userAgent);
