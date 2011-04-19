@@ -12,6 +12,7 @@
         var el1 = $('li').first().css('color', 'red').next().css('color', 'blue');
         var el2 = $('li').last().css('color', 'green');
         $('input[type=text]').attr('value', 'hello');
+        $('#get-me').parents('div.robustr').addClass('aloha');
       });
     </script>
   </head>
@@ -23,5 +24,12 @@
       <li id="last">three</li>
     </ul>
     <input type="text" value=""/>
+    <div id="thing">
+      <div class="robustr">
+        <div class="robustr">
+          <div id="get-me"></div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
