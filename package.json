@@ -1,7 +1,7 @@
 {
   "name": "bonzo",
   "description": "simple, hassle-free, library agnostic, extensible DOM utility",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "homepage": "https://github.com/ded/bonzo",
   "authors": ["Dustin Diaz <@ded>", "Jacob Thornton <@fat>"],
   "repository": {
