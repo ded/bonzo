@@ -265,6 +265,12 @@
         });
     },
 
+    removeAttr: function (k) {
+      return this.each(function (el) {
+        el.removeAttribute(k);
+      });
+    },
+
     remove: function () {
       return this.each(function (el) {
         el.parentNode && el.parentNode.removeChild(el);
