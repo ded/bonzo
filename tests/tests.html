@@ -41,6 +41,7 @@
   <body>
     <div id="fixtures">
       <div id="class-test" class="existing-class"></div>
+      <div id="toggle-class" class="toggle-me"></div>
       <div id="append">
         <div></div>
         <div></div>
@@ -118,6 +119,14 @@
           dom(el).removeClass('boosh');
           ok(!dom(el).hasClass('boosh'), 'element no longer has class "boosh" after removeClass()');
           ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
+        });
+
+        test('toggleClass', 3, function () {
+          ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
+          $('#toggle-class').toggleClass('toggle-me');
+          ok(!$('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
+          $('#toggle-class').toggleClass('toggle-me');
+          ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
         });
 
         test('should append nodes', 1, function () {

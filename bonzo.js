@@ -122,6 +122,14 @@
         classReg(c).test(el.className);
     },
 
+    toggleClass: function (c) {
+      return this.each(function (el) {
+        this.hasClass(el, c) ?
+          (el.className = trim(el.className.replace(classReg(c), ' '))) :
+          (el.className = trim(el.className + ' ' + c));
+      });
+    },
+
     show: function (elements) {
       return this.each(function (el) {
         el.style.display = '';
