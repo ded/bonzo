@@ -10,7 +10,9 @@
       html = doc.documentElement,
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
-      ie = /msie/.test(navigator.userAgent);
+      ie = /msie/.test(navigator.userAgent),
+      uidList = [],
+      uuids = 0;
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
@@ -269,6 +271,24 @@
       return this.each(function (el) {
         el.removeAttribute(k);
       });
+    },
+
+    data: function (k, v) {
+      var el = this.elements[0];
+      if (typeof v === 'undefined') {
+        el.getAttribute('data-node-uid') || el.setAttribute('data-node-uid', ++uuids);
+        var uid = el.getAttribute('data-node-uid');
+        uidList[uid] || (uidList[uid] = {});
+        return uidList[uid][k];
+      } else {
+        return this.each(function (el) {
+          el.getAttribute('data-node-uid') || el.setAttribute('data-node-uid', ++uuids);
+          var uid = el.getAttribute('data-node-uid');
+          var o = {};
+          o[k] = v;
+          uidList[uid] = o;
+        });
+      }
     },
 
     remove: function () {
