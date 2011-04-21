@@ -94,6 +94,10 @@ All other API methods
   * bonzo.isAncestor(container, child)
   * bonzo.noConflict
 
+Added in the Ender bridge
+
+  * parents(selector)
+
 The name Bonzo
 --------------
 Bonzo Madrid was a malicious battle school commander of whom eventually is killed by [Ender Wiggin](http://en.wikipedia.org/wiki/Ender_Wiggin). Bonzo represents the DOM, of whom we'd all love to slay.
@@ -116,9 +120,13 @@ Tests
 
 Ender integration
 ----------
-Bonzo fits in nicely with the Ender framework. To combine Bonzo to your Ender build, you can add it as such:
+Bonzo is a registered npm package and fits in nicely with the Ender framework. To combine Bonzo to your Ender build, you can add it as such:
 
-    $ ender -b bonzo[,modb, modc,...]
+    $ ender build bonzo[,modb, modc,...]
+
+or, add it to your existing ender package
+
+    $ ender add bonzo
 
 Contributors
 -----

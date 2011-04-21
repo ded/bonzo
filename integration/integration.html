@@ -9,10 +9,14 @@
     <script src="../src/ender.js"></script>
     <script type="text/javascript">
       $.domReady(function () {
-        var el1 = $('li').first().css('color', 'red').next().css('color', 'blue');
-        var el2 = $('li').last().css('color', 'green');
+        var li = $('li');
+        var el1 = li.first().css('color', 'red').next().css('color', 'blue');
+        var el2 = li.last().css('color', 'green');
         $('input[type=text]').attr('value', 'hello');
-        $('#get-me').parents('div.robustr').addClass('aloha');
+        var getme = $('#get-me');
+        var parents = getme.parents('div.robustr').addClass('aloha');
+        console.log(getme.length);
+        console.log(parents.length);
       });
     </script>
   </head>

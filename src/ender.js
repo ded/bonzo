@@ -7,6 +7,19 @@
       return $(b.create(node));
     }
   });
+  function uniq(ar) {
+    var a = [], i, j;
+    label:
+    for (i = 0; i < ar.length; i++) {
+      for (j = 0; j < a.length; j++) {
+        if (a[j] == ar[i]) {
+          continue label;
+        }
+      }
+      a[a.length] = ar[i];
+    }
+    return a;
+  }
   $.ender({
     parents: function (selector) {
       var collection = $(selector), i, l, j, k, r = [];
@@ -19,17 +32,8 @@
           }
         }
       }
-      this.elements = [];
-      for (i = 0, l = this.length; i < l; i++) {
-        delete this[i];
-      }
-      for (i = 0, l = r.length; i < l; i++) {
-        this[i] = r[i];
-      }
-      this.length = r.length;
-      return this;
+      return b(uniq(collection));
     }
   }, true);
 
 }();
-

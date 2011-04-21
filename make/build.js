@@ -1,4 +1,4 @@
-require('../build/smoosh').config({
+require('smoosh').config({
   "JAVASCRIPT": {
     "DIST_DIR": "./",
     "bonzo": [
@@ -8,7 +8,7 @@ require('../build/smoosh').config({
   },
   "JSHINT_OPTS": {
     "boss": true,
-    "forin": true,
+    "forin": false,
     "curly": true,
     "debug": false,
     "devel": false,

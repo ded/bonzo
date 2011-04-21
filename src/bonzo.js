@@ -72,22 +72,11 @@
     },
 
     first: function () {
-      this.elements = [this[0]];
-      this.each(function (el, i) {
-        i && (delete this[i]);
-      });
-      this.length = 1;
-      return this;
+      return bonzo(this[0]);
     },
 
     last: function () {
-      this.elements = [this[this.length - 1]];
-      this[0] = this.elements[0];
-      this.each(function (el, i) {
-        i && (delete this[i]);
-      });
-      this.length = 1;
-      return this;
+      return bonzo(this[this.length - 1]);
     },
 
     html: function (html) {
@@ -170,8 +159,7 @@
     },
 
     related: function (method) {
-      var i, l;
-      this.elements = this.map(
+      return bonzo(this.map(
         function (el) {
           el = el[method];
           while (el && el.nodeType !== 1) {
@@ -182,15 +170,7 @@
         function (el) {
           return el;
         }
-      );
-      for (i = 0, l = this.length; i < l; i++) {
-        delete this[i];
-      }
-      for (i = 0, l = this.elements.length; i < l; i++) {
-        this[i] = this.elements[i];
-      }
-      this.length = l;
-      return this;
+      ));
     },
 
     prependTo: function (target) {
