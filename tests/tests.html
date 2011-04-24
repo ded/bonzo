@@ -40,6 +40,20 @@
   </head>
   <body>
     <div id="fixtures">
+      <form action="/foo" method="post">
+        <input type="submit" value="Continue">
+        <input type="text" name="foo" value="bar">
+        <input type="hidden" name="bar" value="baz">
+        <input type="checkbox" name="wha" checked value="1">
+        <input type="checkbox" name="wha" value="2">
+        <input type="checkbox" name="wha" checked value="3">
+        <select name="choices">
+          <option>one</option>
+          <option selected>two</option>
+          <option>tres</option>
+        </select>
+        <textarea name="opinions">world peace is not real</textarea>
+      </form>
       <div id="class-test" class="existing-class"></div>
       <div id="toggle-class" class="toggle-me"></div>
       <div id="append">
@@ -99,6 +113,7 @@
       <div id="overflower"></div>
     </div>
 	<div id="styles" style="color:black;"></div>
+
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
 
@@ -253,11 +268,16 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-		test('setting & getting styles', 2, function() {
-			ok($('#styles').css('color') == 'black', 'black by default');
-			$('#styles').css('color', 'red');
-			ok($('#styles').css('color') == 'red', 'red after update');
-		});
+        test('setting & getting styles', 2, function() {
+        	ok($('#styles').css('color') == 'black', 'black by default');
+        	$('#styles').css('color', 'red');
+        	ok($('#styles').css('color') == 'red', 'red after update');
+        });
+
+        test('serialize', 1, function () {
+          var expected = '&foo=bar&bar=baz&wha[]=1&wha[]=3&choices=two&opinions=world%20peace%20is%20not%20real';
+          ok($('form').serialize() == expected, 'serialized form');
+        });
 
       });
       start();

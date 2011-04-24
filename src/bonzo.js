@@ -291,9 +291,42 @@
 
     scrollLeft: function (x) {
       return scroll.call(this, x, null, 'x');
-    }
+    },
 
+    serialize: function () {
+      var form = this[0],
+          inputs = form.getElementsByTagName('input'),
+          selects = form.getElementsByTagName('select'),
+          texts = form.getElementsByTagName('textarea');
+      return bonzo(inputs).map(serial).join('') +
+      bonzo(selects).map(serial).join('') +
+      bonzo(texts).map(serial).join('');
+    }
   };
+
+  function serial(el) {
+    switch (el.tagName.toLowerCase()) {
+    case 'input':
+      switch (el.type) {
+      case 'reset':
+      case 'button':
+      case 'image':
+        return '';
+      case 'checkbox':
+        return el.checked ? '&' + el.name + '[]=' + (el.value ? escape(el.value) : true) : '';
+      case 'radio':
+        return el.checked ? '&' + el.name + '=' + escape(el.value) : '';
+      default: // text radio file hidden password submit
+        return el.name ? '&' + el.name + '=' + (el.value ? escape(el.value) : true) : '';
+      }
+      break;
+    case 'textarea':
+      return '&' + el.name + '=' + (el.value ? escape(el.value) : '');
+    case 'select':
+      return '&' + el.name + '=' + el.options[el.selectedIndex].value;
+    }
+    return '';
+  }
 
   function scroll(x, y, type) {
     var el = this.elements[0];
