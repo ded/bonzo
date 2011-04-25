@@ -129,7 +129,7 @@
 
     append: function (node) {
       return this.each(function (el) {
-        each(bonzo.create(node), function (i) {
+        each(normalize(node), function (i) {
           el.appendChild(i);
         });
       });
@@ -138,7 +138,7 @@
     prepend: function (node) {
       return this.each(function (el) {
         var first = el.firstChild;
-        each(bonzo.create(node), function (i) {
+        each(normalize(node), function (i) {
           el.insertBefore(i, first);
         });
       });
@@ -332,6 +332,10 @@
       return '&' + el.name + '=' + el.options[el.selectedIndex].value;
     }
     return '';
+  }
+
+  function normalize(node) {
+    return typeof node == 'string' ? bonzo.create(node) : node.length ? node : [node];
   }
 
   function scroll(x, y, type) {
