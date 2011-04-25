@@ -84,6 +84,8 @@ All other API methods
   * detach
   * scrollLeft
   * scrollTop
+  * serialize(form)
+  * serializeArray(form)
   * bonzo.aug({ properties })
   * bonzo.doc()
     - width
