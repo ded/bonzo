@@ -307,6 +307,13 @@
       return bonzo(inputs).map(serial).join('') +
       bonzo(selects).map(serial).join('') +
       bonzo(texts).map(serial).join('');
+    },
+
+    serializeArray: function () {
+      for (var pairs = this.serialize().split('&'), i = 0, l = pairs.length, r = [], o; i < l; i++) {
+        pairs[i] && (o = pairs[i].split('=')) && r.push({name: o[0], value: o[1]});
+      }
+      return r;
     }
   };
 

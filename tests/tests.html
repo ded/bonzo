@@ -279,6 +279,25 @@
           ok($('form').serialize() == expected, 'serialized form');
         });
 
+        test('serializeArray', 6, function () {
+          var expected = [
+            { name: 'foo', value: 'bar' },
+            { name: 'bar', value: 'baz' },
+            { name: 'wha', value: 1 },
+            { name: 'wha', value: 3 },
+            { name: 'choices', value: 'two' },
+            { name: 'opinions', value: 'world%20peace%20is%20not%20real' }
+          ];
+
+          var result = $('form').serializeArray();
+
+          for (var i = 0; i < expected.length; i++) {
+            ok(result.some(function (v) {
+              return v.name == expected[i].name && v.value == expected[i].value;
+            }), 'serialized ' + result[i].name);
+          }
+        });
+
       });
       start();
     </script>
