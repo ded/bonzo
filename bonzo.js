@@ -319,10 +319,9 @@
       case 'image':
         return '';
       case 'checkbox':
-        return el.checked ? '&' + el.name + '[]=' + (el.value ? escape(el.value) : true) : '';
       case 'radio':
-        return el.checked ? '&' + el.name + '=' + escape(el.value) : '';
-      default: // text radio file hidden password submit
+        return el.checked ? '&' + el.name + '=' + (el.value ? escape(el.value) : true) : '';
+      default: // text file hidden password submit
         return el.name ? '&' + el.name + '=' + (el.value ? escape(el.value) : true) : '';
       }
       break;

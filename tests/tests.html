@@ -275,7 +275,7 @@
         });
 
         test('serialize', 1, function () {
-          var expected = '&foo=bar&bar=baz&wha[]=1&wha[]=3&choices=two&opinions=world%20peace%20is%20not%20real';
+          var expected = '&foo=bar&bar=baz&wha=1&wha=3&choices=two&opinions=world%20peace%20is%20not%20real';
           ok($('form').serialize() == expected, 'serialized form');
         });
 
