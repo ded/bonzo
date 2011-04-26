@@ -17,6 +17,9 @@
         var parents = getme.parents('div.robustr').addClass('aloha');
         console.log(getme.length);
         console.log(parents.length);
+        parents.each(function (el, i) {
+          $(el).addClass(i);
+        });
 
       });
     </script>

@@ -1,8 +1,9 @@
 /*!
-  * Ender.js: next-level JavaScript
+  * Ender: open module JavaScript framework
   * copyright Dustin Diaz & Jacob Thornton 2011 (@ded @fat)
-  * https://github.com/ender-js/Ender
+  * https://github.com/ender-js/ender
   * License MIT
+  * Build: ender build qwery scriptjs domready
   */
 !function (context) {
 
@@ -43,7 +44,62 @@
     (module.exports = $) :
     (context.$ = $);
 
-}(this);/*!
+}(this);
+!function () { var module = { exports: {} }; !function (doc) {
+  var loaded = 0, fns = [], ol, f = false,
+      testEl = doc.createElement('a'),
+      domContentLoaded = 'DOMContentLoaded',
+      addEventListener = 'addEventListener',
+      onreadystatechange = 'onreadystatechange';
+
+  /^loade|c/.test(doc.readyState) && (loaded = 1);
+
+  function flush() {
+    loaded = 1;
+    for (var i = 0, l = fns.length; i < l; i++) {
+      fns[i]();
+    }
+  }
+  doc[addEventListener] && doc[addEventListener](domContentLoaded, function fn() {
+    doc.removeEventListener(domContentLoaded, fn, f);
+    flush();
+  }, f);
+
+
+  testEl.doScroll && doc.attachEvent(onreadystatechange, (ol = function ol() {
+    if (/^c/.test(doc.readyState)) {
+      doc.detachEvent(onreadystatechange, ol);
+      flush();
+    }
+  }));
+
+  var domReady = testEl.doScroll ?
+    function (fn) {
+      self != top ?
+        !loaded ?
+          fns.push(fn) :
+          fn() :
+        !function () {
+          try {
+            testEl.doScroll('left');
+          } catch (e) {
+            return setTimeout(function() {
+              domReady(fn);
+            }, 50);
+          }
+          fn();
+        }();
+    } :
+    function (fn) {
+      loaded ? fn() : fns.push(fn);
+    };
+
+    (typeof module !== 'undefined') && module.exports ?
+      (module.exports = {domReady: domReady}) :
+      (window.domReady = domReady);
+
+}(document); $.ender(module.exports); }();
+/*!
   * qwery.js - copyright @dedfat
   * https://github.com/ded/qwery
   * Follow our software http://twitter.com/dedfat
@@ -213,6 +269,9 @@
     if (isNode(selector)) {
       return !_root || (isNode(root) && isAncestor(selector, root)) ? [selector] : [];
     }
+    if (selector && typeof selector === 'object' && selector.length && isFinite(selector.length)) {
+      return array(selector);
+    }
     if (m = selector.match(idOnly)) {
       return (el = doc.getElementById(m[1])) ? [el] : [];
     }
@@ -294,7 +353,7 @@
     };
   }();
 
-  // being nice
+  qwery.uniq = uniq;
   var oldQwery = context.qwery;
   qwery.noConflict = function () {
     context.qwery = oldQwery;
@@ -303,60 +362,23 @@
   context.qwery = qwery;
 
 }(this, document);
-!function () { var module = { exports: {} }; !function (doc) {
-  var loaded = 0, fns = [], ol,
-      testEl = doc.createElement('a'),
-      domContentLoaded = 'DOMContentLoaded', readyState = 'readyState',
-      onreadystatechange = 'onreadystatechange';
-
-
-  doc.addEventListener && doc.addEventListener(domContentLoaded, function fn() {
-    doc.removeEventListener(domContentLoaded, fn, false);
-    doc[readyState] = "complete";
-  }, false);
-  doc[readyState] = "loading";
-
-  function again(fn) {
-    setTimeout(function() {
-      domReady(fn);
-    }, 50);
-  }
-
-  testEl.doScroll && doc.attachEvent(onreadystatechange, (ol = function ol() {
-    /^c/.test(doc[readyState]) &&
-    (loaded = 1) &&
-    !doc.detachEvent(onreadystatechange, ol) && !function () {
-      for (var i = 0, l = fns.length; i < l; i++) {
-        fns[i]();
+!function () {
+  var q = qwery.noConflict();
+  $._select = q;
+  $.ender({
+    find: function (s) {
+      var r = [], i, l, j, k, els;
+      for (i = 0, l = this.length; i < l; i++) {
+        els = q(s, this[i]);
+        for (j = 0, k = els.length; j < k; j++) {
+          r.push(els[j]);
+        }
       }
-      testEl = null;
-    }();
-  }));
-
-  var domReady = testEl.doScroll ?
-    function (fn) {
-      self != top ?
-        !loaded ?
-          fns.push(fn) :
-          fn() :
-        !function () {
-          try {
-            testEl.doScroll('left');
-          } catch (e) {
-            return again(fn);
-          }
-          fn();
-        }();
-    } :
-    function (fn) {
-      /^i|c/.test(doc[readyState]) ? fn() : again(fn);
-    };
-
-    (typeof module !== 'undefined') && module.exports ?
-      (module.exports = {domReady: domReady}) :
-      (window.domReady = domReady);
-
-}(document); $.ender(module.exports); }();/*!
+      return $(q.uniq(r));
+    }
+  }, true);
+}();
+/*!
   * $script.js v1.3
   * https://github.com/ded/script.js
   * Copyright: @ded & @fat - Dustin Diaz, Jacob Thornton 2011
@@ -409,33 +431,40 @@
             }
           }
         }
-    if (id && ids[id]) {
-      return;
-    }
     timeout(function() {
       each(paths, function(path) {
         if (scripts[path]) {
+          id && (ids[id] = 1);
+          callback();
           return;
         }
         scripts[path] = 1;
         id && (ids[id] = 1);
-        var el = doc.createElement("script"),
-            loaded = 0;
-        el.onload = el[onreadystatechange] = function () {
-          if ((el[readyState] && !(!re.test(el[readyState]))) || loaded) {
-            return;
-          }
-          el.onload = el[onreadystatechange] = null;
-          loaded = 1;
-          callback();
-        };
-        el.async = 1;
-        el.src = path;
-        script.parentNode.insertBefore(el, script);
+        create($script.path ?
+          $script.path + path + '.js' :
+          path, callback);
       });
     }, 0);
     return $script;
   };
+
+  function create(path, fn) {
+    var el = doc.createElement("script"),
+        loaded = 0;
+    el.onload = el[onreadystatechange] = function () {
+      if ((el[readyState] && !(!re.test(el[readyState]))) || loaded) {
+        return;
+      }
+      el.onload = el[onreadystatechange] = null;
+      loaded = 1;
+      fn();
+    };
+    el.async = 1;
+    el.src = path;
+    script.parentNode.insertBefore(el, script);
+  }
+
+  $script.get = create;
 
   $script.ready = function(deps, ready, req) {
     deps = deps[push] ? deps : [deps];
@@ -462,8 +491,12 @@
     (module.exports = $script) :
     (win.$script = $script);
 
-}(this, document, setTimeout);$._select = qwery.noConflict();!function () {
+}(this, document, setTimeout);!function () {
+  var s = $script.noConflict();
   $.ender({
-    script: $script.noConflict()
+    script: s,
+    ready: s.ready,
+    require: s,
+    getScript: s.get
   });
 }();

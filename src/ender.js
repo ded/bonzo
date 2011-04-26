@@ -7,6 +7,16 @@
       return $(b.create(node));
     }
   });
+
+  function indexOf(ar, val) {
+    for (var i = 0; i < ar.length; i++) {
+      if ( ar[i] === val ) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
   function uniq(ar) {
     var a = [], i, j;
     label:
@@ -22,17 +32,16 @@
   }
   $.ender({
     parents: function (selector) {
-      var collection = $(selector), i, j, k, r = [];
-      collect:
-      for (i = collection.length - 1; i >= 0; i--) {
-        for (j = 0, k = this.length; j < k; j++) {
-          if (b.isAncestor(collection[i], this[j])) {
-            r.push(collection[i]);
-            continue collect;
+      var collection = $(selector), j, k, p, r = [];
+      for (j = 0, k = this.length; j < k; j++) {
+        p = this[j];
+        while (p = p.parentNode) {
+          if (indexOf(collection, p) !== -1) {
+            r.push(p);
           }
         }
       }
-      return $(uniq(collection));
+      return $(uniq(r));
     },
 
     first: function () {
@@ -44,11 +53,11 @@
     },
 
     next: function () {
-      return this.related('nextSibling', $);
+      return $(b(this).next());
     },
 
     previous: function () {
-      return this.related('previousSibling', $);
+      return $(b(this).previous());
     }
   }, true);
 
