@@ -107,7 +107,10 @@
         classReg(c).test(el.className);
     },
 
-    toggleClass: function (c) {
+    toggleClass: function (c, condition) {
+      if (typeof condition !== 'undefined' && !condition) {
+        return this;
+      }
       return this.each(function (el) {
         this.hasClass(el, c) ?
           (el.className = trim(el.className.replace(classReg(c), ' '))) :
