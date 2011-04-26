@@ -51,7 +51,7 @@
     this.elements = [];
     this.length = 0;
     if (elements) {
-      this.elements = Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
+      this.elements = typeof elements !== 'string' && Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
       this.length = this.elements.length;
       for (var i = 0; i < this.length; i++) {
         this[i] = this.elements[i];
@@ -167,9 +167,8 @@
       return this.related('previousSibling');
     },
 
-    related: function (method, type) {
-      var m = type || bonzo;
-      return m(this.map(
+    related: function (method) {
+      return this.map(
         function (el) {
           el = el[method];
           while (el && el.nodeType !== 1) {
@@ -180,7 +179,7 @@
         function (el) {
           return el;
         }
-      ));
+      );
     },
 
     prependTo: function (target) {
