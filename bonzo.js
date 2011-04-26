@@ -167,8 +167,9 @@
       return this.related('previousSibling');
     },
 
-    related: function (method) {
-      return bonzo(this.map(
+    related: function (method, type) {
+      var m = type || bonzo;
+      return m(this.map(
         function (el) {
           el = el[method];
           while (el && el.nodeType !== 1) {

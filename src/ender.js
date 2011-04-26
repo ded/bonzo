@@ -33,6 +33,22 @@
         }
       }
       return $(uniq(collection));
+    },
+
+    first: function () {
+      return $(this[0]);
+    },
+
+    last: function () {
+      return $(this[this.length - 1]);
+    },
+
+    next: function () {
+      return this.related('nextSibling', $);
+    },
+
+    previous: function () {
+      return this.related('previousSibling', $);
     }
   }, true);
 
