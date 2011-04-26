@@ -32,7 +32,7 @@
           }
         }
       }
-      return b(uniq(collection));
+      return $(uniq(collection));
     }
   }, true);
 
