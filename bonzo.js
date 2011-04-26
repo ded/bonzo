@@ -86,7 +86,7 @@
     },
 
     html: function (html) {
-      return typeof html == 'string' ?
+      return typeof html !== 'undefined' ?
         this.each(function (el) {
           el.innerHTML = html;
         }) :
