@@ -45,7 +45,7 @@
     this.elements = [];
     this.length = 0;
     if (elements) {
-      this.elements = typeof elements !== 'string' && Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
+      this.elements = typeof elements !== 'string' && !elements.nodeType && Object.prototype.hasOwnProperty.call(elements, 'length') ? elements : [elements];
       this.length = this.elements.length;
       for (var i = 0; i < this.length; i++) {
         this[i] = this.elements[i];
