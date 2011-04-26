@@ -22,9 +22,9 @@
   }
   $.ender({
     parents: function (selector) {
-      var collection = $(selector), i, l, j, k, r = [];
+      var collection = $(selector), i, j, k, r = [];
       collect:
-      for (i = 0, l = collection.length; i < l; i++) {
+      for (i = collection.length - 1; i >= 0; i--) {
         for (j = 0, k = this.length; j < k; j++) {
           if (b.isAncestor(collection[i], this[j])) {
             r.push(collection[i]);
