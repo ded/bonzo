@@ -253,11 +253,11 @@
         });
 
         test('next', 1, function () {
-          ok($('#sibling-tests li.nextr').next().elements.length == 2, 'els.next().elements.length == 2');
+          ok($('#sibling-tests li.nextr').next().length == 2, 'els.next().elements.length == 2');
         });
 
         test('previous', 1, function () {
-          ok($('#sibling-tests li.nextr').previous().elements.length == 3, 'els.previous().elements.length == 3');
+          ok($('#sibling-tests li.nextr').previous().length == 3, 'els.previous().elements.length == 3');
         });
 
         test('scrollTop && scrollLeft', 2, function () {

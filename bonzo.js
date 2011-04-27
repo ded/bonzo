@@ -320,6 +320,10 @@
     }
   };
 
+  function enc(v) {
+    return encodeURIComponent(v);
+  }
+
   function serial(el) {
     switch (el.tagName.toLowerCase()) {
     case 'input':
@@ -327,18 +331,19 @@
       case 'reset':
       case 'button':
       case 'image':
+      case 'file':
         return '';
       case 'checkbox':
       case 'radio':
-        return el.checked ? '&' + el.name + '=' + (el.value ? escape(el.value) : true) : '';
+        return el.checked ? '&' + enc(el.name) + '=' + (el.value ? enc(el.value) : true) : '';
       default: // text file hidden password submit
-        return el.name ? '&' + el.name + '=' + (el.value ? escape(el.value) : true) : '';
+        return el.name ? '&' + enc(el.name) + '=' + (el.value ? enc(el.value) : true) : '';
       }
       break;
     case 'textarea':
-      return '&' + el.name + '=' + (el.value ? escape(el.value) : '');
+      return '&' + enc(el.name) + '=' + enc(el.value);
     case 'select':
-      return '&' + el.name + '=' + el.options[el.selectedIndex].value;
+      return '&' + enc(el.name) + '=' + enc(el.options[el.selectedIndex].value);
     }
     return '';
   }
