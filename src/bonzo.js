@@ -301,9 +301,9 @@
           inputs = form.getElementsByTagName('input'),
           selects = form.getElementsByTagName('select'),
           texts = form.getElementsByTagName('textarea');
-      return bonzo(inputs).map(serial).join('') +
+      return (bonzo(inputs).map(serial).join('') +
       bonzo(selects).map(serial).join('') +
-      bonzo(texts).map(serial).join('');
+      bonzo(texts).map(serial).join('')).replace(/&$/, '');
     },
 
     serializeArray: function () {
@@ -319,6 +319,12 @@
   }
 
   function serial(el) {
+    var n = el.name;
+    // don't serialize elements that are disabled or without a name
+    if (el.disabled || !n) {
+      return '';
+    }
+    n = enc(n);
     switch (el.tagName.toLowerCase()) {
     case 'input':
       switch (el.type) {
@@ -329,21 +335,22 @@
         return '';
       case 'checkbox':
       case 'radio':
-        return el.checked ? '&' + enc(el.name) + '=' + (el.value ? enc(el.value) : true) : '';
-      default: // text file hidden password submit
-        return el.name ? '&' + enc(el.name) + '=' + (el.value ? enc(el.value) : true) : '';
+        return el.checked ? n + '=' + (el.value ? enc(el.value) : true) + '&' : '';
+      default: // text hidden password submit
+        return n + '=' + (el.value ? enc(el.value) : true) + '&';
       }
       break;
     case 'textarea':
-      return '&' + enc(el.name) + '=' + enc(el.value);
+      return n + '=' + enc(el.value) + '&';
     case 'select':
-      return '&' + enc(el.name) + '=' + enc(el.options[el.selectedIndex].value);
+      // @todo refactor beyond basic single selected value case
+      return n + '=' + enc(el.options[el.selectedIndex].value) + '&';
     }
     return '';
   }
 
   function normalize(node) {
-    return typeof node == 'string' ? bonzo.create(node) : node.length ? node : [node];
+    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node;
   }
 
   function scroll(x, y, type) {

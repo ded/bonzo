@@ -269,13 +269,13 @@
         });
 
         test('setting & getting styles', 2, function() {
-        	ok($('#styles').css('color') == 'black', 'black by default');
-        	$('#styles').css('color', 'red');
-        	ok($('#styles').css('color') == 'red', 'red after update');
+          ok($('#styles').css('color') == 'black', 'black by default');
+          $('#styles').css('color', 'red');
+          ok($('#styles').css('color') == 'red', 'red after update');
         });
 
         test('serialize', 1, function () {
-          var expected = '&foo=bar&bar=baz&wha=1&wha=3&choices=two&opinions=world%20peace%20is%20not%20real';
+          var expected = 'foo=bar&bar=baz&wha=1&wha=3&choices=two&opinions=world%20peace%20is%20not%20real';
           ok($('form').serialize() == expected, 'serialized form');
         });
 
