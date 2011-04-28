@@ -1,12 +1,14 @@
 !function (context) {
 
-  var doc = document,
+  var doc = context.document,
       html = doc.documentElement,
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
       ie = /msie/.test(navigator.userAgent),
       uidList = [],
-      uuids = 0;
+      uuids = 0,
+      digit = /^\d+$/,
+      px = 'px';
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
@@ -41,18 +43,40 @@
     return false;
   }
 
-  function sucks(o) {
-    for (var k in o) {
-      switch (k) {
-      case 'opacity':
-        o.filter = 'alpha(opacity=' + (o[k] * 100) + ')';
-        delete o[k];
-        break;
-      case '':
-        break;
+  var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
+    function (el, property) {
+      var value = null;
+      if (property == 'float') {
+        property = 'cssFloat';
       }
-    }
-  }
+      var computed = doc.defaultView.getComputedStyle(el, '');
+      computed && (value = computed[camelize(property)]);
+      return el.style[property] || value;
+
+    } : (ie && html.currentStyle) ?
+
+    function (el, property) {
+      property = camelize(property);
+      property = property == 'float' ? 'styleFloat' : property;
+
+      if (property == 'opacity') {
+        var val = 100;
+        try {
+          val = el.filters['DXImageTransform.Microsoft.Alpha'].opacity;
+        } catch (e1) {
+          try {
+            val = el.filters('alpha').opacity;
+          } catch (e2) {}
+        }
+        return val / 100;
+      }
+      var value = el.currentStyle ? el.currentStyle[property] : null;
+      return el.style[property] || value;
+    } :
+
+    function (el, property) {
+      return el.style[camelize(property)];
+    };
 
   function _bonzo(elements) {
     this.elements = [];
@@ -228,18 +252,38 @@
     },
 
     css: function (o, v) {
+      // is this a request for just getting a style?
       if (v === undefined && typeof o == 'string') {
-        return this[0].style[camelize(o)];
+        return getStyle(this[0], o);
       }
       var iter = o;
       if (typeof o == 'string') {
         iter = {};
         iter[o] = v;
       }
-      ie && sucks(iter);
-      var fn = function (el) {
+
+      if (ie && iter.opacity) {
+        // oh this 'ol gamut
+        iter.filter = 'alpha(opacity=' + (iter.opacity * 100) + ')';
+        // give it layout
+        iter.zoom = o.zoom || 1;
+        delete iter.opacity;
+      }
+
+      if (v = iter['float']) {
+        // float is a reserved style word. w3 uses cssFloat, ie uses styleFloat
+        ie ? (iter.styleFloat = v) : (iter.cssFloat = v);
+        delete iter['float'];
+      }
+
+      var fn = function (el, p, v) {
         for (var k in iter) {
-          iter.hasOwnProperty(k) && (el.style[camelize(k)] = iter[k]);
+          if (iter.hasOwnProperty(k)) {
+            v = iter[k];
+            // change "5" to "5px" - unless you're line-height, which is allowed
+            (p = camelize(k)) && digit.test(v) && p != 'lineHeight' && (v += px);
+            el.style[p] = v;
+          }
         }
       };
       return this.each(fn);

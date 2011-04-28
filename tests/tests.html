@@ -118,7 +118,7 @@
     <div id="overflowed">
       <div id="overflower"></div>
     </div>
-	<div id="styles" style="color:black;"></div>
+	<div id="styles" style="margin-left:5px;"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -201,16 +201,15 @@
         });
 
         test('should augment special methods', 3, function () {
-          ok(!dom.hasOwnProperty('color'), 'bonzo has no "color" method');
+          ok(!dom(Q('#augment')).color, 'bonzo has no "color" method');
           dom.aug({
             color: function (color) {
               ok(this.prototype == dom().prototype, 'calls augmented methods in scope of bonzo prototype');
               this.css('color', color);
             }
           });
-          var originalColor = Q('#augment')[0].style.color;
-          $('#augment').color('red');
-          ok(Q('#augment')[0].style.color != originalColor, 'augment appropriately changed elements');
+          $('#augmnent').color('red');
+          ok(!!dom(Q('#augment')).color, 'bonzo now has a "color" method');
         });
 
         test('viewport width & height', 2, function () {
@@ -285,11 +284,11 @@
         });
 
         test('setting & getting styles', 3, function() {
-          ok($('#styles').css('color') == 'black', 'black by default');
-          $('#styles').css('color', 'red');
-          ok($('#styles').css('color') == 'red', 'red after update');
-          $('#styles').css({color: 'blue'});
-          ok($('#styles').css('color') == 'blue', 'blue after setting color with object');
+          ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
+          $('#styles').css('margin-left', 10);
+          ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
+          $('#styles').css({marginLeft: '15px'});
+          ok($('#styles').css('margin-left') == '15px', 'blue after setting color with object');
         });
 
         test('serialize', 1, function () {
