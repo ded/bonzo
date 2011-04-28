@@ -31,17 +31,22 @@
     return a;
   }
   $.ender({
-    parents: function (selector) {
+    parents: function (selector, closest) {
       var collection = $(selector), j, k, p, r = [];
       for (j = 0, k = this.length; j < k; j++) {
         p = this[j];
         while (p = p.parentNode) {
           if (indexOf(collection, p) !== -1) {
             r.push(p);
+            if (closest) break;
           }
         }
       }
       return $(uniq(r));
+    },
+
+    closest: function (selector) {
+      return this.parents(selector, true);
     },
 
     first: function () {
