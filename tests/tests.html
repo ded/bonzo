@@ -284,10 +284,12 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        test('setting & getting styles', 2, function() {
+        test('setting & getting styles', 3, function() {
           ok($('#styles').css('color') == 'black', 'black by default');
           $('#styles').css('color', 'red');
           ok($('#styles').css('color') == 'red', 'red after update');
+          $('#styles').css({color: 'blue'});
+          ok($('#styles').css('color') == 'blue', 'blue after setting color with object');
         });
 
         test('serialize', 1, function () {

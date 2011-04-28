@@ -47,6 +47,19 @@
     return false;
   }
 
+  function sucks(o) {
+    for (var k in o) {
+      switch (k) {
+      case 'opacity':
+        o.filter = 'alpha(opacity=' + (o[k] * 100) + ')';
+        delete o[k];
+        break;
+      case '':
+        break;
+      }
+    }
+  }
+
   function _bonzo(elements) {
     this.elements = [];
     this.length = 0;
@@ -224,15 +237,17 @@
       if (v === undefined && typeof o == 'string') {
         return this[0].style[camelize(o)];
       }
-      var fn = typeof o == 'string' ?
-        function (el) {
-          el.style[camelize(o)] = v;
-        } :
-        function (el) {
-          for (var k in o) {
-            o.hasOwnProperty(k) && (el.style[camelize(k)] = o[k]);
-          }
-        };
+      var iter = o;
+      if (typeof o == 'string') {
+        iter = {};
+        iter[o] = v;
+      }
+      ie && sucks(iter);
+      var fn = function (el) {
+        for (var k in iter) {
+          iter.hasOwnProperty(k) && (el.style[camelize(k)] = iter[k]);
+        }
+      };
       return this.each(fn);
     },
 
