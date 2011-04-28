@@ -63,11 +63,13 @@ All other API methods
   * next
   * previous
   * append
+  * appendTo(target)
   * prepend
+  * prependTo(target)
   * before
+  * insertBefore(target)
   * after
-  * prependTo
-  * appendTo
+  * insertAfter(target)
   * css
     - css(prop, val)
     - css({properties})
@@ -122,7 +124,15 @@ Tests
 
 Ender integration
 ----------
-Bonzo is a registered npm package and fits in nicely with the Ender framework. To combine Bonzo to your Ender build, you can add it as such:
+Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, ever.
+
+    $ npm install ender
+
+On the NPM release candidate?
+
+    $ npm install ender -g
+
+To combine Bonzo to your Ender build, you can add it as such:
 
     $ ender build bonzo[,modb, modc,...]
 

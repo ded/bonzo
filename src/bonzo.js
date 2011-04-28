@@ -190,6 +190,22 @@
       });
     },
 
+    insertBefore: function (node) {
+      return this.each(function (el) {
+        each(normalize(node), function (n) {
+          n.parentNode.insertBefore(el, n);
+        });
+      });
+    },
+
+    insertAfter: function (node) {
+      return this.each(function (el) {
+        each(normalize(node), function (n) {
+          n.parentNode.insertBefore(el, (n.nextSibling || n));
+        });
+      });
+    },
+
     after: function (node) {
       return this.each(function (el) {
         each(bonzo.create(node), function (i) {
