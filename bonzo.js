@@ -13,7 +13,7 @@
       ie = /msie/.test(navigator.userAgent),
       uidList = [],
       uuids = 0,
-      digit = /^\d+$/,
+      digit = /^-?\d+$/,
       px = 'px';
 
   function classReg(c) {
@@ -83,6 +83,27 @@
     function (el, property) {
       return el.style[camelize(property)];
     };
+
+  function xy(el, x, y) {
+    var $el = bonzo(el),
+        style = $el.css('position'),
+        offset = $el.offset(),
+        rel = 'relative',
+        isRel = style == rel,
+        delta = [parseInt($el.css('left'), 10), parseInt($el.css('top'), 10)];
+
+    if (style == 'static') {
+      $el.css('position', rel);
+      style = rel;
+    }
+
+    isNaN(delta[0]) && (delta[0] = isRel ? 0 : el.offsetLeft);
+    isNaN(delta[1]) && (delta[1] = isRel ? 0 : el.offsetTop);
+
+    x !== null && (el.style.left = x - offset.left + delta[0] + 'px');
+    y !== null && (el.style.top = y - offset.top + delta[1] + 'px');
+
+  }
 
   function _bonzo(elements) {
     this.elements = [];
@@ -295,7 +316,12 @@
       return this.each(fn);
     },
 
-    offset: function () {
+    offset: function (x, y) {
+      if (x || y) {
+        return this.each(function (el) {
+          xy(el, x, y);
+        });
+      }
       var el = this.elements[0];
       var width = el.offsetWidth;
       var height = el.offsetHeight;

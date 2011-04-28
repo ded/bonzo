@@ -118,7 +118,7 @@
     <div id="overflowed">
       <div id="overflower"></div>
     </div>
-	<div id="styles" style="margin-left:5px;"></div>
+  <div id="styles" style="margin-left:5px;"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -198,6 +198,20 @@
           ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
           $('#show-hide').show();
           ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
+        });
+
+        test('offsets', 4, function () {
+          var $el = $(dom.create('<div/>')).css({
+            position: 'absolute',
+            left: '50px',
+            top: -999
+          }).appendTo(document.body);
+          ok($el.offset().left == 50, 'initial offset.left is 50');
+          ok($el.offset().left == 50, 'initial offset.top is -999');
+          $el.offset(100, null);
+          $el.offset(null, -100);
+          ok($el.offset().left == 100, 'after offset(100, null), left == 100');
+          ok($el.offset().top == -100, 'after offset(null, -100), top == -100');
         });
 
         test('should augment special methods', 3, function () {
