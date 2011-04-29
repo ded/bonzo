@@ -1,6 +1,6 @@
 Bonzo
 -----
-a simple, to the point, hassle-free, small (1.4k), library agnostic, extensible DOM utility. Nothing else.
+a simple, to the point, hassle-free, small (2.8k), library agnostic, extensible DOM utility. Nothing else.
 Bonzo is designed to live in any host library, or simply as a stand-alone tool for the majority of your DOM-related tasks.
 
 <h3>It looks like this</h3>
