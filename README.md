@@ -106,7 +106,7 @@ Added in the Ender bridge
   * parents(selector)
   * closest(selector)
   * siblings()
-  * 
+
 The name Bonzo
 --------------
 Bonzo Madrid was a malicious battle school commander of whom eventually is killed by [Ender Wiggin](http://en.wikipedia.org/wiki/Ender_Wiggin). Bonzo represents the DOM, of whom we'd all love to slay.
