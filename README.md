@@ -71,13 +71,16 @@ All other API methods
   * after
   * insertAfter(target)
   * css
-    - css(prop, val)
-    - css({properties})
+    - css(prop) get
+    - css(prop, val) set
+    - css({properties}) set
   * offset()
-    - top
-    - left
-    - width
-    - height
+    - offset(x, y) set
+    - offset() get
+      - top
+      - left
+      - width
+      - height
   * attr
     - attr(k) get
     - attr(k, v) set
@@ -101,7 +104,9 @@ All other API methods
 Added in the Ender bridge
 
   * parents(selector)
-
+  * closest(selector)
+  * siblings()
+  * 
 The name Bonzo
 --------------
 Bonzo Madrid was a malicious battle school commander of whom eventually is killed by [Ender Wiggin](http://en.wikipedia.org/wiki/Ender_Wiggin). Bonzo represents the DOM, of whom we'd all love to slay.
