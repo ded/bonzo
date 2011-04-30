@@ -1,4 +1,5 @@
-!function () {
+!function ($) {
+
   var b = bonzo.noConflict();
   $.ender(b);
   $.ender(b(), true);
@@ -81,4 +82,4 @@
     }
   }, true);
 
-}();
+}(ender || $);
