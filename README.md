@@ -1,6 +1,6 @@
 Bonzo
 -----
-a simple, to the point, hassle-free, small (1.4k), library agnostic, extensible DOM utility. Nothing else.
+a simple, to the point, hassle-free, small (2.8k), library agnostic, extensible DOM utility. Nothing else.
 Bonzo is designed to live in any host library, or simply as a stand-alone tool for the majority of your DOM-related tasks.
 
 <h3>It looks like this</h3>
@@ -71,13 +71,16 @@ All other API methods
   * after
   * insertAfter(target)
   * css
-    - css(prop, val)
-    - css({properties})
+    - css(prop) get
+    - css(prop, val) set
+    - css({properties}) set
   * offset()
-    - top
-    - left
-    - width
-    - height
+    - offset(x, y) set
+    - offset() get
+      - top
+      - left
+      - width
+      - height
   * attr
     - attr(k) get
     - attr(k, v) set
@@ -101,6 +104,8 @@ All other API methods
 Added in the Ender bridge
 
   * parents(selector)
+  * closest(selector)
+  * siblings()
 
 The name Bonzo
 --------------
