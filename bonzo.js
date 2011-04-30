@@ -8,6 +8,7 @@
 
   var doc = context.document,
       html = doc.documentElement,
+      byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
       ie = /msie/.test(navigator.userAgent),
@@ -148,7 +149,7 @@
         this.each(function (el) {
           el.innerHTML = html;
         }) :
-        this.elements[0] ? this.elements[0].innerHTML : '';
+        this[0] ? this[0].innerHTML : '';
     },
 
     addClass: function (c) {
@@ -165,7 +166,7 @@
 
     hasClass: function (el, c) {
       return typeof c == 'undefined' ?
-        some(this.elements, function (i) {
+        some(this, function (i) {
           return classReg(el).test(i.className);
         }) :
         classReg(c).test(el.className);
@@ -322,7 +323,7 @@
           xy(el, x, y);
         });
       }
-      var el = this.elements[0];
+      var el = this[0];
       var width = el.offsetWidth;
       var height = el.offsetHeight;
       var top = el.offsetTop;
@@ -341,7 +342,7 @@
     },
 
     attr: function (k, v) {
-      var el = this.elements[0];
+      var el = this[0];
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
@@ -358,7 +359,7 @@
     },
 
     data: function (k, v) {
-      var el = this.elements[0];
+      var el = this[0];
       if (typeof v === 'undefined') {
         el.getAttribute('data-node-uid') || el.setAttribute('data-node-uid', ++uuids);
         var uid = el.getAttribute('data-node-uid');
@@ -405,9 +406,9 @@
 
     serialize: function () {
       var form = this[0],
-          inputs = form.getElementsByTagName('input'),
-          selects = form.getElementsByTagName('select'),
-          texts = form.getElementsByTagName('textarea');
+          inputs = form[byTag]('input'),
+          selects = form[byTag]('select'),
+          texts = form[byTag]('textarea');
       return (bonzo(inputs).map(serial).join('') +
       bonzo(selects).map(serial).join('') +
       bonzo(texts).map(serial).join('')).replace(/&$/, '');
@@ -461,7 +462,7 @@
   }
 
   function scroll(x, y, type) {
-    var el = this.elements[0];
+    var el = this[0];
     if (x == null && y == null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
     }
