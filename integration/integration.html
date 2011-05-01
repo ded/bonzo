@@ -3,16 +3,17 @@
   <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
     <title>ender integration test</title>
-    <!-- ender -b qwery,scriptjs,domready -->
+    <!-- ender -b qwery scriptjs domready -->
     <script src="ender.js"></script>
     <script src="../src/bonzo.js"></script>
     <script src="../src/ender.js"></script>
     <script type="text/javascript">
       $.domReady(function () {
+        $('<h1>**Ender integration test**</h1>').prependTo('body');
         var li = $('li');
         var el1 = li.first().css('color', 'red').next().css('color', 'blue');
         var el2 = li.last().css('color', 'green');
-        $('input[type=text]').attr('value', 'hello');
+        $('input[type=text]').val('hello');
         var getme = $('#get-me');
         var parents = getme.parents('div.robustr').addClass('aloha');
         console.log(getme.length);
@@ -21,13 +22,20 @@
           $(el).addClass(i);
         });
         $('#get-me').closest('.robustr').addClass('closest robusto');
+        $('<em/>').prependTo('li').css('color', 'purple').html(' asdf ');
+        $('<b/>').appendTo('li').css('color', 'orange').html(' asdf ');
+        $('<li>extre</li>').insertAfter('li').css('background', 'lightpink');
+        $('body').css({
+          width: 500,
+          margin: '0 auto',
+          font: '300 14px/1.5 helvetica neue'
+        });
       });
     </script>
   </head>
   <body>
-    <h1>Ender integration test</h1>
     <ul>
-      <li id="first">one</li>
+      <li id="first"><span>one</span></li>
       <li id="second">two</li>
       <li id="last">three</li>
     </ul>

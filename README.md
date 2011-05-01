@@ -84,6 +84,9 @@ All other API methods
   * attr
     - attr(k) get
     - attr(k, v) set
+  * val
+    - val() get
+    - val(s) set
   * remove
   * empty
   * detach
@@ -107,6 +110,13 @@ Added in the Ender bridge
   * closest(selector)
   * siblings()
 
+Setting a query engine host
+------------------
+For the insertion methods you can set a query selector host (like [qwery](https://github.com/ded/qwery)).
+
+    bonzo.setSelectorEngine(qwery);
+    bonzo(bonzo.create('div')).insertAfter('.boosh a');
+
 The name Bonzo
 --------------
 Bonzo Madrid was a malicious battle school commander of whom eventually is killed by [Ender Wiggin](http://en.wikipedia.org/wiki/Ender_Wiggin). Bonzo represents the DOM, of whom we'd all love to slay.
@@ -129,7 +139,7 @@ Tests
 
 Ender integration
 ----------
-Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, ever.
+Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, ever. As a side note the *query engine host* is set for you when you include it with Ender.
 
     $ npm install ender
 

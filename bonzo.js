@@ -8,6 +8,7 @@
 
   var doc = context.document,
       html = doc.documentElement,
+      query = null,
       byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
@@ -15,21 +16,30 @@
       uidList = [],
       uuids = 0,
       digit = /^-?\d+$/,
-      px = 'px';
+      px = 'px',
+      // commonly used methods
+      setAttribute = 'setAttribute',
+      getAttribute = 'getAttribute',
+      trimReplace = /(^\s*|\s*$)/g;
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
   }
 
-  function each(ar, fn) {
-    for (i = 0, len = ar.length; i < len; i++) {
-      fn(ar[i]);
+  function each(ar, fn, scope) {
+    for (var i = 0, l = ar.length; i < l; i++) {
+      fn.call(scope || ar[i], ar[i], i, ar);
     }
+    return ar;
   }
 
-  function trim(s) {
-    return s.replace(/(^\s*|\s*$)/g, '');
-  }
+  var trim = String.prototype.trim ?
+    function (s) {
+      return s.trim();
+    } :
+    function (s) {
+      return s.replace(trimReplace, '');
+    };
 
   function camelize(s) {
     return s.replace(/-(.)/g, function (m, m1) {
@@ -85,6 +95,18 @@
       return el.style[camelize(property)];
     };
 
+  function insert(target, host, fn) {
+    var i = 0, self = host || this;
+    each(normalize(query ? query(target) : target), function (t) {
+      each(normalize(this.original), function (el) {
+        fn(t, el);
+        self[i++] = el;
+      });
+    }, this);
+    self.length = i;
+    return self;
+  }
+
   function xy(el, x, y) {
     var $el = bonzo(el),
         style = $el.css('position'),
@@ -107,24 +129,25 @@
   }
 
   function _bonzo(elements) {
-    this.elements = [];
     this.length = 0;
+    this.original = elements;
     if (elements) {
-      this.elements = typeof elements !== 'string' && !elements.nodeType && typeof elements.length !== 'undefined' ? elements : [elements];
-      this.length = this.elements.length;
-      for (var i = 0; i < this.length; i++) {
-        this[i] = this.elements[i];
+      elements = typeof elements !== 'string' &&
+        !elements.nodeType &&
+        typeof elements.length !== 'undefined' ?
+          elements :
+          [elements];
+      this.length = elements.length;
+      for (var i = 0; i < elements.length; i++) {
+        this[i] = elements[i];
       }
     }
   }
 
   _bonzo.prototype = {
 
-    each: function (fn) {
-      for (var i = 0, l = this.length; i < l; i++) {
-        fn.call(this, this[i], i);
-      }
-      return this;
+    each: function (fn, scope) {
+      return each(this, fn, scope);
     },
 
     map: function (fn, reject) {
@@ -155,13 +178,13 @@
     addClass: function (c) {
       return this.each(function (el) {
         this.hasClass(el, c) || (el.className = trim(el.className + ' ' + c));
-      });
+      }, this);
     },
 
     removeClass: function (c) {
       return this.each(function (el) {
         this.hasClass(el, c) && (el.className = trim(el.className.replace(classReg(c), ' ')));
-      });
+      }, this);
     },
 
     hasClass: function (el, c) {
@@ -180,7 +203,7 @@
         this.hasClass(el, c) ?
           (el.className = trim(el.className.replace(classReg(c), ' '))) :
           (el.className = trim(el.className + ' ' + c));
-      });
+      }, this);
     },
 
     show: function (elements) {
@@ -212,9 +235,15 @@
       });
     },
 
-    appendTo: function (target) {
-      return this.each(function (el) {
-        target.appendChild(el);
+    appendTo: function (target, host) {
+      return insert.call(this, target, host, function (t, el) {
+        t.appendChild(el);
+      });
+    },
+
+    prependTo: function (target, host) {
+      return insert.call(this, target, host, function (t, el) {
+        t.insertBefore(el, t.firstChild);
       });
     },
 
@@ -241,32 +270,10 @@
       );
     },
 
-    prependTo: function (target) {
-      return this.each(function (el) {
-        target.insertBefore(el, bonzo.firstChild(target));
-      });
-    },
-
     before: function (node) {
       return this.each(function (el) {
         each(bonzo.create(node), function (i) {
           el.parentNode.insertBefore(i, el);
-        });
-      });
-    },
-
-    insertBefore: function (node) {
-      return this.each(function (el) {
-        each(normalize(node), function (n) {
-          n.parentNode.insertBefore(el, n);
-        });
-      });
-    },
-
-    insertAfter: function (node) {
-      return this.each(function (el) {
-        each(normalize(node), function (n) {
-          n.parentNode.insertBefore(el, (n.nextSibling || n));
         });
       });
     },
@@ -276,6 +283,18 @@
         each(bonzo.create(node), function (i) {
           el.parentNode.insertBefore(i, el.nextSibling);
         });
+      });
+    },
+
+    insertBefore: function (target, host) {
+      return insert.call(this, target, host, function (t, el) {
+        t.parentNode.insertBefore(el, t);
+      });
+    },
+
+    insertAfter: function (target, host) {
+      return insert.call(this, target, host, function (t, el) {
+        t.parentNode.insertBefore(el, (t.nextSibling || t));
       });
     },
 
@@ -346,10 +365,14 @@
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
-            true : el[k] : el.getAttribute(k) :
+            true : el[k] : el[getAttribute](k) :
         this.each(function (el) {
-          el.setAttribute(k, v);
+          el[setAttribute](k, v);
         });
+    },
+
+    val: function (s) {
+      return this.attr('value', s);
     },
 
     removeAttr: function (k) {
@@ -361,14 +384,14 @@
     data: function (k, v) {
       var el = this[0];
       if (typeof v === 'undefined') {
-        el.getAttribute('data-node-uid') || el.setAttribute('data-node-uid', ++uuids);
-        var uid = el.getAttribute('data-node-uid');
+        el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids);
+        var uid = el[getAttribute]('data-node-uid');
         uidList[uid] || (uidList[uid] = {});
         return uidList[uid][k];
       } else {
         return this.each(function (el) {
-          el.getAttribute('data-node-uid') || el.setAttribute('data-node-uid', ++uuids);
-          var uid = el.getAttribute('data-node-uid');
+          el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids);
+          var uid = el[getAttribute]('data-node-uid');
           var o = {};
           o[k] = v;
           uidList[uid] = o;
@@ -483,9 +506,14 @@
     return { x: window.pageXOffset || html.scrollLeft, y: window.pageYOffset || html.scrollTop };
   }
 
-  function bonzo(els) {
-    return new _bonzo(els);
+  function bonzo(els, host) {
+    return new _bonzo(els, host);
   }
+
+  bonzo.setQueryEngine = function (q) {
+    query = q;
+    delete bonzo.setQueryEngine;
+  };
 
   bonzo.aug = function (o, target) {
     for (var k in o) {

@@ -1,6 +1,7 @@
 !function ($) {
 
   var b = bonzo.noConflict();
+  b.setQueryEngine($);
   $.ender(b);
   $.ender(b(), true);
   $.ender({
@@ -11,7 +12,7 @@
 
   function indexOf(ar, val) {
     for (var i = 0; i < ar.length; i++) {
-      if ( ar[i] === val ) {
+      if (ar[i] === val) {
         return i;
       }
     }
@@ -64,6 +65,22 @@
 
     previous: function () {
       return $(b(this).previous());
+    },
+
+    appendTo: function (t) {
+      return b(this.selector).appendTo(t, this);
+    },
+
+    prependTo: function (t) {
+      return b(this.selector).prependTo(t, this);
+    },
+
+    insertAfter: function (t) {
+      return b(this.selector).insertAfter(t, this);
+    },
+
+    insertBefore: function (t) {
+      return b(this.selector).insertBefore(t, this);
     },
 
     siblings: function () {

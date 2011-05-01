@@ -32,6 +32,7 @@
     <script type="text/javascript">
       var dom = bonzo.noConflict();
       var Q = qwery.noConflict();
+      dom.setQueryEngine(Q);
       function $(s) {
         return dom(Q(s));
       }
@@ -215,15 +216,15 @@
         });
 
         test('should augment special methods', 3, function () {
-          ok(!dom(Q('#augment')).color, 'bonzo has no "color" method');
+          ok(!dom('#augment').color, 'bonzo has no "color" method');
           dom.aug({
             color: function (color) {
               ok(this.prototype == dom().prototype, 'calls augmented methods in scope of bonzo prototype');
               this.css('color', color);
             }
           });
-          $('#augmnent').color('red');
-          ok(!!dom(Q('#augment')).color, 'bonzo now has a "color" method');
+          $('#augment').color('red');
+          ok(!!dom('#augment').color, 'bonzo now has a "color" method');
         });
 
         test('viewport width & height', 2, function () {
@@ -258,8 +259,8 @@
         });
 
         test('first and last', 2, function () {
-          ok($('#first-last div').first().elements[0].id == 'first', 'found first() element');
-          ok($('#first-last div').last().elements[0].id == 'last', 'found last() element');
+          ok($('#first-last div').first()[0].id == 'first', 'found first() element');
+          ok($('#first-last div').last()[0].id == 'last', 'found last() element');
         });
 
 
@@ -282,17 +283,17 @@
         });
 
         test('next', 1, function () {
-          ok($('#sibling-tests li.nextr').next().length == 2, 'els.next().elements.length == 2');
+          ok($('#sibling-tests li.nextr').next().length == 2, 'els.next().length == 2');
         });
 
         test('previous', 1, function () {
-          ok($('#sibling-tests li.nextr').previous().length == 3, 'els.previous().elements.length == 3');
+          ok($('#sibling-tests li.nextr').previous().length == 3, 'els.previous().length == 3');
         });
 
         test('scrollTop && scrollLeft', 2, function () {
           // there's gotta be a better way to test this than making the spec page height: 10000px
-          $(window).scrollTop(100);
-          ok($(window).scrollTop() == 100, 'condition1');
+          $(window).scrollTop(1);
+          ok($(window).scrollTop() == 1, 'condition1');
           $('#overflowed').scrollLeft(150);
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });

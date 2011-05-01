@@ -1,33 +1,33 @@
 /*!
   * Ender: open module JavaScript framework
   * copyright Dustin Diaz & Jacob Thornton 2011 (@ded @fat)
-  * https://github.com/ender-js/ender
+  * https://ender.no.de
   * License MIT
-  * Build: ender build qwery scriptjs domready
+  * Build: ender build scriptjs qwery domready
   */
 !function (context) {
 
   function aug(o, o2) {
     for (var k in o2) {
-      o[k] = o2[k];
+      k != 'noConflict' && k != '_VERSION' && (o[k] = o2[k]);
     }
+    return o;
   }
 
-  function _$(s, r) {
-    this.elements = $._select(s, r);
-    this.length = this.elements.length;
-    for (var i = 0; i < this.length; i++) {
-      this[i] = this.elements[i];
-    }
+  function boosh(s, r) {
+    var els = typeof s !== 'string' && !s.nodeType && typeof s.length !== 'undefined' ? s : ender._select(s, r);
+    els.selector = s;
+    return aug(els, boosh);
   }
 
-  function $(s, r) {
-    return new _$(s, r);
+  function ender(s, r) {
+    return boosh(s, r);
   }
 
-  aug($, {
-    ender: function (o, proto) {
-      aug(proto ? _$.prototype : $, o);
+  aug(ender, {
+    _VERSION: '0.1.5',
+    ender: function (o, chain) {
+      aug(chain ? boosh : ender, o);
     },
     _select: function () {
       return [];
@@ -35,17 +35,16 @@
   });
 
   var old = context.$;
-  $.noConflict = function () {
+  ender.noConflict = function () {
     context.$ = old;
     return this;
   };
 
-  (typeof module !== 'undefined') && module.exports ?
-    (module.exports = $) :
-    (context.$ = $);
+  (typeof module !== 'undefined') && module.exports && (module.exports = ender);
+  context.ender = context.$ = ender;
 
 }(this);
-!function () { var module = { exports: {} }; !function (doc) {
+!function () { var exports = {}, module = { exports: exports }; !function (doc) {
   var loaded = 0, fns = [], ol, f = false,
       testEl = doc.createElement('a'),
       domContentLoaded = 'DOMContentLoaded',
@@ -99,6 +98,128 @@
       (window.domReady = domReady);
 
 }(document); $.ender(module.exports); }();
+/*!
+  * $script.js v1.3
+  * https://github.com/ded/script.js
+  * Copyright: @ded & @fat - Dustin Diaz, Jacob Thornton 2011
+  * Follow our software http://twitter.com/dedfat
+  * License: MIT
+  */
+!function(win, doc, timeout) {
+  var script = doc.getElementsByTagName("script")[0],
+      list = {}, ids = {}, delay = {}, re = /^i|c/,
+      scripts = {}, s = 'string', f = false, i,
+      push = 'push', domContentLoaded = 'DOMContentLoaded', readyState = 'readyState',
+      addEventListener = 'addEventListener', onreadystatechange = 'onreadystatechange',
+      every = function(ar, fn) {
+        for (i = 0, j = ar.length; i < j; ++i) {
+          if (!fn(ar[i])) {
+            return 0;
+          }
+        }
+        return 1;
+      };
+      function each(ar, fn) {
+        every(ar, function(el) {
+          return !fn(el);
+        });
+      }
+
+  if (!doc[readyState] && doc[addEventListener]) {
+    doc[addEventListener](domContentLoaded, function fn() {
+      doc.removeEventListener(domContentLoaded, fn, f);
+      doc[readyState] = "complete";
+    }, f);
+    doc[readyState] = "loading";
+  }
+
+  var $script = function(paths, idOrDone, optDone) {
+    paths = paths[push] ? paths : [paths];
+    var idOrDoneIsDone = idOrDone && idOrDone.call,
+        done = idOrDoneIsDone ? idOrDone : optDone,
+        id = idOrDoneIsDone ? paths.join('') : idOrDone,
+        queue = paths.length;
+        function loopFn(item) {
+          return item.call ? item() : list[item];
+        }
+        function callback() {
+          if (!--queue) {
+            list[id] = 1;
+            done && done();
+            for (var dset in delay) {
+              every(dset.split('|'), loopFn) && !each(delay[dset], loopFn) && (delay[dset] = []);
+            }
+          }
+        }
+    timeout(function() {
+      each(paths, function(path) {
+        if (scripts[path]) {
+          id && (ids[id] = 1);
+          callback();
+          return;
+        }
+        scripts[path] = 1;
+        id && (ids[id] = 1);
+        create($script.path ?
+          $script.path + path + '.js' :
+          path, callback);
+      });
+    }, 0);
+    return $script;
+  };
+
+  function create(path, fn) {
+    var el = doc.createElement("script"),
+        loaded = 0;
+    el.onload = el[onreadystatechange] = function () {
+      if ((el[readyState] && !(!re.test(el[readyState]))) || loaded) {
+        return;
+      }
+      el.onload = el[onreadystatechange] = null;
+      loaded = 1;
+      fn();
+    };
+    el.async = 1;
+    el.src = path;
+    script.parentNode.insertBefore(el, script);
+  }
+
+  $script.get = create;
+
+  $script.ready = function(deps, ready, req) {
+    deps = deps[push] ? deps : [deps];
+    var missing = [];
+    !each(deps, function(dep) {
+      list[dep] || missing[push](dep);
+    }) && every(deps, function(dep) {
+      return list[dep];
+    }) ? ready() : !function(key) {
+      delay[key] = delay[key] || [];
+      delay[key][push](ready);
+      req && req(missing);
+    }(deps.join('|'));
+    return $script;
+  };
+
+  var old = win.$script;
+  $script.noConflict = function () {
+    win.$script = old;
+    return this;
+  };
+
+  (typeof module !== 'undefined' && module.exports) ?
+    (module.exports = $script) :
+    (win.$script = $script);
+
+}(this, document, setTimeout);!function () {
+  var s = $script.noConflict();
+  $.ender({
+    script: s,
+    ready: s.ready,
+    require: s,
+    getScript: s.get
+  });
+}();
 /*!
   * qwery.js - copyright @dedfat
   * https://github.com/ded/qwery
@@ -269,7 +390,7 @@
     if (isNode(selector)) {
       return !_root || (isNode(root) && isAncestor(selector, root)) ? [selector] : [];
     }
-    if (selector && typeof selector === 'object' && selector.length && isFinite(selector.length)) {
+    if (selector && typeof selector === 'object' && isFinite(selector.length)) {
       return array(selector);
     }
     if (m = selector.match(idOnly)) {
@@ -287,7 +408,7 @@
 
   function qsa(selector, _root) {
     var root = (typeof _root == 'string') ? qsa(_root)[0] : (_root || doc);
-    if (!root) {
+    if (!root || !selector) {
       return [];
     }
     if (m = boilerPlate(selector, _root, qsa)) {
@@ -320,7 +441,7 @@
     }
     return function (selector, _root) {
       var root = (typeof _root == 'string') ? qwery(_root)[0] : (_root || doc);
-      if (!root) {
+      if (!root || !selector) {
         return [];
       }
       var i, l, result = [], collections = [], element;
@@ -362,9 +483,22 @@
   context.qwery = qwery;
 
 }(this, document);
-!function () {
+!function (doc) {
   var q = qwery.noConflict();
-  $._select = q;
+  function create(node, root) {
+    var el = (root || doc).createElement('div'), els = [];
+    el.innerHTML = node;
+    var nodes = el.childNodes;
+    el = el.firstChild;
+    els.push(el);
+    while (el = el.nextSibling) {
+      (el.nodeType == 1) && els.push(el);
+    }
+    return els;
+  };
+  $._select = function (s, r) {
+    return /^\s*</.test(s) ? create(s, r) : q(s, r);
+  };
   $.ender({
     find: function (s) {
       var r = [], i, l, j, k, els;
@@ -377,126 +511,4 @@
       return $(q.uniq(r));
     }
   }, true);
-}();
-/*!
-  * $script.js v1.3
-  * https://github.com/ded/script.js
-  * Copyright: @ded & @fat - Dustin Diaz, Jacob Thornton 2011
-  * Follow our software http://twitter.com/dedfat
-  * License: MIT
-  */
-!function(win, doc, timeout) {
-  var script = doc.getElementsByTagName("script")[0],
-      list = {}, ids = {}, delay = {}, re = /^i|c/,
-      scripts = {}, s = 'string', f = false, i,
-      push = 'push', domContentLoaded = 'DOMContentLoaded', readyState = 'readyState',
-      addEventListener = 'addEventListener', onreadystatechange = 'onreadystatechange',
-      every = function(ar, fn) {
-        for (i = 0, j = ar.length; i < j; ++i) {
-          if (!fn(ar[i])) {
-            return 0;
-          }
-        }
-        return 1;
-      };
-      function each(ar, fn) {
-        every(ar, function(el) {
-          return !fn(el);
-        });
-      }
-
-  if (!doc[readyState] && doc[addEventListener]) {
-    doc[addEventListener](domContentLoaded, function fn() {
-      doc.removeEventListener(domContentLoaded, fn, f);
-      doc[readyState] = "complete";
-    }, f);
-    doc[readyState] = "loading";
-  }
-
-  var $script = function(paths, idOrDone, optDone) {
-    paths = paths[push] ? paths : [paths];
-    var idOrDoneIsDone = idOrDone && idOrDone.call,
-        done = idOrDoneIsDone ? idOrDone : optDone,
-        id = idOrDoneIsDone ? paths.join('') : idOrDone,
-        queue = paths.length;
-        function loopFn(item) {
-          return item.call ? item() : list[item];
-        }
-        function callback() {
-          if (!--queue) {
-            list[id] = 1;
-            done && done();
-            for (var dset in delay) {
-              every(dset.split('|'), loopFn) && !each(delay[dset], loopFn) && (delay[dset] = []);
-            }
-          }
-        }
-    timeout(function() {
-      each(paths, function(path) {
-        if (scripts[path]) {
-          id && (ids[id] = 1);
-          callback();
-          return;
-        }
-        scripts[path] = 1;
-        id && (ids[id] = 1);
-        create($script.path ?
-          $script.path + path + '.js' :
-          path, callback);
-      });
-    }, 0);
-    return $script;
-  };
-
-  function create(path, fn) {
-    var el = doc.createElement("script"),
-        loaded = 0;
-    el.onload = el[onreadystatechange] = function () {
-      if ((el[readyState] && !(!re.test(el[readyState]))) || loaded) {
-        return;
-      }
-      el.onload = el[onreadystatechange] = null;
-      loaded = 1;
-      fn();
-    };
-    el.async = 1;
-    el.src = path;
-    script.parentNode.insertBefore(el, script);
-  }
-
-  $script.get = create;
-
-  $script.ready = function(deps, ready, req) {
-    deps = deps[push] ? deps : [deps];
-    var missing = [];
-    !each(deps, function(dep) {
-      list[dep] || missing[push](dep);
-    }) && every(deps, function(dep) {
-      return list[dep];
-    }) ? ready() : !function(key) {
-      delay[key] = delay[key] || [];
-      delay[key][push](ready);
-      req && req(missing);
-    }(deps.join('|'));
-    return $script;
-  };
-
-  var old = win.$script;
-  $script.noConflict = function () {
-    win.$script = old;
-    return this;
-  };
-
-  (typeof module !== 'undefined' && module.exports) ?
-    (module.exports = $script) :
-    (win.$script = $script);
-
-}(this, document, setTimeout);!function () {
-  var s = $script.noConflict();
-  $.ender({
-    script: s,
-    ready: s.ready,
-    require: s,
-    getScript: s.get
-  });
-}();
+}(document);
