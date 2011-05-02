@@ -96,6 +96,14 @@
         }
       }
       return $(uniq(r));
+    },
+
+    height: function () {
+      return parseInt(this.css('height'), 10);
+    },
+
+    width: function () {
+      return parseInt(this.css('width'), 10);
     }
   }, true);
 
