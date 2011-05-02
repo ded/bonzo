@@ -98,12 +98,12 @@
       return $(uniq(r));
     },
 
-    height: function () {
-      return parseInt(this.css('height'), 10);
+    height: function (v) {
+      return v ? this.css('height', v) : parseInt(this.css('height'), 10);
     },
 
-    width: function () {
-      return parseInt(this.css('width'), 10);
+    width: function (v) {
+      return v ? this.css('width', v) : parseInt(this.css('width'), 10);
     }
   }, true);
 
