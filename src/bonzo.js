@@ -90,13 +90,17 @@
     };
 
   function insert(target, host, fn) {
-    var i = 0, self = host || this;
+    var i = 0, self = host || this, r = [];
     each(normalize(query ? query(target) : target), function (t) {
-      each(normalize(this.original), function (el) {
-        fn(t, el);
-        self[i++] = el;
+      each(self, function (el) {
+        var n = el.cloneNode(true);
+        fn(t, n);
+        r[i] = n; i++;
       });
     }, this);
+    each(r, function (e, i) {
+      self[i] = e;
+    });
     self.length = i;
     return self;
   }
