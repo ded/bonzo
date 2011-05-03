@@ -6,7 +6,7 @@
       byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       stateAttributes = /^checked|selected$/,
-      ie = /msie/.test(navigator.userAgent),
+      ie = /msie/i.test(navigator.userAgent),
       uidList = [],
       uuids = 0,
       digit = /^-?\d+$/,
