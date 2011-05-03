@@ -263,23 +263,22 @@
           ok($('#first-last div').last()[0].id == 'last', 'found last() element');
         });
 
-
         test('appendTo', 1, function () {
-          var node = $.create('<p>hello</p>')[0];
+          var node = $.create('<p>i am append-to</p>')[0];
           var append = Q('#append-to')[0];
           $(node).appendTo(append);
-          ok($.isAncestor(append, node), '$.isAncestor(append, node) - appended to target node');
+          ok($('#append-to p').length == 1, '$("#append-to p").length == 1 - appended to target node');
         });
 
-        test('prependTo', 2, function () {
-          var node = $.create('<p>hello</p>')[0];
-          var node2 = $.create('<p>world</p>')[0];
+        test('prependTo', 3, function () {
+          var node = $.create('<p>world</p>')[0];
+          var node2 = $.create('<p>hello</p>')[0];
           var append = Q('#prepend-to')[0];
           var prependWithNoFirstChild = Q('#prepend-first-child')[0];
-          $(node).prependTo(append);
-          $(node2).prependTo(prependWithNoFirstChild);
-          ok($.isAncestor(append, node), '$.isAncestor(append, node) - prepended to target node');
-          ok($.isAncestor(prependWithNoFirstChild, node2), 'prepends with no inner firstChild');
+          $([node, node2]).prependTo(append);
+          ok($('#prepend-to p').length == 2, '$("#prepend-to p").length == 2 - prepended to target node');
+          ok($('#prepend-to p').first().html() == 'hello', 'first node is "hello"');
+          ok($('#prepend-to p').last().html() == 'world', 'last node is "world"');
         });
 
         test('next', 1, function () {

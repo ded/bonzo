@@ -20,7 +20,8 @@
       // commonly used methods
       setAttribute = 'setAttribute',
       getAttribute = 'getAttribute',
-      trimReplace = /(^\s*|\s*$)/g;
+      trimReplace = /(^\s*|\s*$)/g,
+      unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 };
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
@@ -101,7 +102,8 @@
       each(self, function (el) {
         var n = el.cloneNode(true);
         fn(t, n);
-        r[i] = n; i++;
+        r[i] = n;
+        i++;
       });
     }, this);
     each(r, function (e, i) {
@@ -332,7 +334,7 @@
           if (iter.hasOwnProperty(k)) {
             v = iter[k];
             // change "5" to "5px" - unless you're line-height, which is allowed
-            (p = camelize(k)) && digit.test(v) && p != 'lineHeight' && (v += px);
+            (p = camelize(k)) && digit.test(v) && !(p in unitless) && (v += px);
             el.style[p] = v;
           }
         }
