@@ -53,6 +53,9 @@ All other API methods
   * html
     - html() get
     - html(str) set
+  * text
+    - text() get
+    - text(str) set
   * addClass
   * removeClass
   * hasClass
@@ -84,6 +87,7 @@ All other API methods
   * attr
     - attr(k) get
     - attr(k, v) set
+    - attr(obj) set
   * val
     - val() get
     - val(s) set
@@ -109,6 +113,7 @@ Added in the Ender bridge
   * parents(selector)
   * closest(selector)
   * siblings()
+  * children()
 
 Setting a query engine host
 ------------------
