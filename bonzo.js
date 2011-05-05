@@ -221,9 +221,10 @@
       }, this);
     },
 
-    show: function (elements) {
+    show: function (elements, type) {
+      type = type || 'block';
       return this.each(function (el) {
-        el.style.display = '';
+        el.style.display = type;
       });
     },
 
