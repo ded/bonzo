@@ -381,7 +381,7 @@
     },
 
     val: function (s) {
-      return this.attr('value', s);
+      return (typeof s == 'string') ? this[0].value = s : this[0].value;
     },
 
     removeAttr: function (k) {
