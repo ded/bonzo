@@ -173,12 +173,21 @@
       return bonzo(this[this.length - 1]);
     },
 
-    html: function (html) {
-      return typeof html !== 'undefined' ?
+    html: function (h, text) {
+      var method = text ?
+        html.textContent == null ?
+          'innerText' :
+          'textContent' :
+        'innerHTML';
+      return typeof h !== 'undefined' ?
         this.each(function (el) {
-          el.innerHTML = html;
+          el[method] = h;
         }) :
-        this[0] ? this[0].innerHTML : '';
+        this[0] ? this[0][method] : '';
+    },
+
+    text: function (text) {
+      return this.html(text, 1);
     },
 
     addClass: function (c) {

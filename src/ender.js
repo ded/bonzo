@@ -95,6 +95,20 @@
           p.nodeType == 1 && r.push(p);
         }
       }
+      return $(r);
+    },
+
+    children: function () {
+      var el, r = [];
+      for (i = 0, l = this.length; i < l; i++) {
+        if (!(el = b.firstChild(this[i]))) {
+          continue;
+        }
+        r.push(el);
+        while (el = el.nextSibling) {
+          el.nodeType == 1 && r.push(el);
+        }
+      }
       return $(uniq(r));
     },
 

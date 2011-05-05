@@ -80,6 +80,7 @@
         <div class="after-target"></div>
       </div>
       <div id="html"></div>
+      <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
       <div id="augment" style="color:orange;"></div>
       <div id="empty">
@@ -191,6 +192,14 @@
           $('#html').html(fixture);
           ok(Q('#html')[0].innerHTML.toLowerCase() == fixture, 'sets appropriate fixture html');
           ok($('#html').html().toLowerCase() == fixture, 'gets appropriate fixture html');
+        });
+
+        test('get and set text', 2, function () {
+          var fixture = '<p>boosh</p>';
+          var expected = '&lt;p&gt;boosh&lt;/p&gt;';
+          $('#text').text(fixture);
+          ok(Q('#text')[0].innerHTML.toLowerCase() == expected, 'sets appropriate fixture text');
+          ok($('#text').text().toLowerCase() == fixture, 'gets appropriate fixture text');
         });
 
         test('show and hide', 3, function () {
