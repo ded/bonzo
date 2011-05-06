@@ -215,10 +215,9 @@
       }, this);
     },
 
-    show: function (elements, type) {
-      type = type || 'block';
+    show: function (type) {
       return this.each(function (el) {
-        el.style.display = type;
+        el.style.display = type || '';
       });
     },
 
