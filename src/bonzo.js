@@ -215,9 +215,9 @@
       }, this);
     },
 
-    show: function (elements) {
+    show: function (type) {
       return this.each(function (el) {
-        el.style.display = '';
+        el.style.display = type || '';
       });
     },
 
