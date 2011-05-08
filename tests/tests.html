@@ -3,7 +3,7 @@
   <head>
     <title>Bonzo Tests</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="../build/sink/src/sink.css" type="text/css">
+    <link rel="stylesheet" href="https://github.com/ded/sink-test/raw/master/src/sink.css" type="text/css">
     <style type="text/css">
       #fixtures {
         position: absolute;
@@ -20,9 +20,13 @@
         height: 1000px;
         width: 1000px;
       }
+
+      .show-hide-css {
+        display: none;
+      }
     </style>
-    <script src="../build/sink/src/sink.js"></script>
-    <script src="../build/qwery/qwery.js"></script>
+    <script src="https://github.com/ded/sink-test/raw/master/src/sink.js"></script>
+    <script src="https://github.com/ded/qwery/raw/master/qwery.js"></script>
     <script type="text/javascript">
       function bonzo() {
         return 'success';
@@ -202,12 +206,20 @@
           ok($('#text').text().toLowerCase() == fixture, 'gets appropriate fixture text');
         });
 
-        test('show and hide', 3, function () {
+        test('show and hide', 6, function () {
           ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
           $('#show-hide').hide();
           ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
           $('#show-hide').show();
           ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
+		  $('#show-hide').hide();
+		  ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
+		  $('#show-hide').attr('class','show-hide-css');
+		  $('#show-hide').show('block');
+		  ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
+		  $('#show-hide').hide();
+		  $('#show-hide').show('inline');
+		  ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
         test('offsets', 4, function () {
