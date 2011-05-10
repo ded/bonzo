@@ -25,8 +25,6 @@ A great way to use Bonzo is with a selector engine (like [Qwery](https://github.
 function $(selector) {
   return bonzo(qwery(selector));
 }
-
-bonzo.aug(bonzo, $);
 ```
 
 This now allows you to write the following code:
