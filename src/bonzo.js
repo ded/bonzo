@@ -215,9 +215,9 @@
       }, this);
     },
 
-    show: function (elements) {
+    show: function (type) {
       return this.each(function (el) {
-        el.style.display = '';
+        el.style.display = type || '';
       });
     },
 
@@ -376,12 +376,12 @@
           stateAttributes.test(k) && typeof el[k] == 'string' ?
             true : el[k] : el[getAttribute](k) :
         this.each(function (el) {
-          el[setAttribute](k, v);
+          k == 'value' ? (el.value = v) : el[setAttribute](k, v);
         });
     },
 
     val: function (s) {
-      return this.attr('value', s);
+      return (typeof s == 'string') ? this.attr('value', s) : this[0].value;
     },
 
     removeAttr: function (k) {
