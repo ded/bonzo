@@ -303,7 +303,13 @@
 
     insertAfter: function (target, host) {
       return insert.call(this, target, host, function (t, el) {
-        t.parentNode.insertBefore(el, (t.nextSibling || t));
+        var sibling = t.nextSibling;
+        if (sibling) {
+          t.parentNode.insertBefore(el, sibling);
+        }
+        else {
+          t.parentNode.appendChild(el);
+        }
       });
     },
 
