@@ -440,60 +440,8 @@
 
     scrollLeft: function (x) {
       return scroll.call(this, x, null, 'x');
-    },
-
-    serialize: function () {
-      var form = this[0],
-          inputs = form[byTag]('input'),
-          selects = form[byTag]('select'),
-          texts = form[byTag]('textarea');
-      return (bonzo(inputs).map(serial).join('') +
-      bonzo(selects).map(serial).join('') +
-      bonzo(texts).map(serial).join('')).replace(/&$/, '');
-    },
-
-    serializeArray: function () {
-      for (var pairs = this.serialize().split('&'), i = 0, l = pairs.length, r = [], o; i < l; i++) {
-        pairs[i] && (o = pairs[i].split('=')) && r.push({name: o[0], value: o[1]});
-      }
-      return r;
     }
   };
-
-  function enc(v) {
-    return encodeURIComponent(v);
-  }
-
-  function serial(el) {
-    var n = el.name;
-    // don't serialize elements that are disabled or without a name
-    if (el.disabled || !n) {
-      return '';
-    }
-    n = enc(n);
-    switch (el.tagName.toLowerCase()) {
-    case 'input':
-      switch (el.type) {
-      case 'reset':
-      case 'button':
-      case 'image':
-      case 'file':
-        return '';
-      case 'checkbox':
-      case 'radio':
-        return el.checked ? n + '=' + (el.value ? enc(el.value) : true) + '&' : '';
-      default: // text hidden password submit
-        return n + '=' + (el.value ? enc(el.value) : true) + '&';
-      }
-      break;
-    case 'textarea':
-      return n + '=' + enc(el.value) + '&';
-    case 'select':
-      // @todo refactor beyond basic single selected value case
-      return n + '=' + enc(el.options[el.selectedIndex].value) + '&';
-    }
-    return '';
-  }
 
   function normalize(node) {
     return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node;
