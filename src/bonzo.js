@@ -544,6 +544,6 @@
     context.bonzo = old;
     return this;
   };
-  context.bonzo = bonzo;
+  context['bonzo'] = bonzo;
 
 }(this);

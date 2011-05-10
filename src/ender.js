@@ -1,6 +1,6 @@
 !function ($) {
 
-  var b = bonzo.noConflict();
+  var b = bonzo;
   b.setQueryEngine($);
   $.ender(b);
   $.ender(b(), true);
