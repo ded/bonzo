@@ -70,6 +70,7 @@
       <div id="insert-after">
         <div class="after-target"></div>
       </div>
+      <div id="insert-after-last"><div class="after-last-target"></div></div>
       <div id="html"></div>
       <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
@@ -175,7 +176,12 @@
 
         test('should insert target after nodes', 1, function () {
           $($.create('<p>eyo</p>')).insertAfter($('.after-target'));
-          ok(Q('.after-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target');
+          ok(Q('.after-target')[0].nextSibling && Q('.after-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target');
+        });
+        
+        test('should insert target after last node', 1, function () {
+          $($.create('<p>eyo</p>')).insertAfter($('.after-last-target'));
+          ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
         test('get and set html', 2, function () {
