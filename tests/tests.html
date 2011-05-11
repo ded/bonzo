@@ -72,6 +72,7 @@
       </div>
       <div id="insert-after-last"><div class="after-last-target"></div></div>
       <div id="html"></div>
+      <div id="html-select"></div>
       <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
       <div id="augment" style="color:orange;"></div>
@@ -191,6 +192,21 @@
           ok($('#html').html().toLowerCase() == fixture, 'gets appropriate fixture html');
         });
 
+        test('set html on special tags', 2, function () {
+          var fixture = '<option>i am an option</option>';
+          var fixture2 = '<option>i am an option</option><option>and yet another</option>';
+
+          $('#html-select').append('<select id="select-test-2"/>');
+          $('#select-test-2').html(fixture2);
+          ok($('#select-test-2 option').length == 2, "$('#select-test-2 option').length == 2");
+
+
+          $('#html-select').append('<select id="select-test"/>');
+          $('#select-test').html(fixture);
+          ok($('#select-test option').length == 1, "$('#select-test option').length == 1");
+
+        });
+
         test('get and set text', 2, function () {
           var fixture = '<p>boosh</p>';
           var expected = '&lt;p&gt;boosh&lt;/p&gt;';
@@ -265,11 +281,14 @@
           ok(!$.isAncestor(document.body, orphans[0]), 'orphans do not exist in document');
         });
 
-        test('setting & getting attributes', 4, function () {
+        test('setting & getting attributes', 5, function () {
+          var input = $('#attrs input[type="hidden"]');
           ok($('#attrs a').attr('href').match(/twitter\.com/), 'retrieves "href" attribute from anchor');
-          ok($('#attrs input[type="hidden"]').attr('value') == 'eyo', 'retrieves "value" attribute from {input} element');
+          ok(input.val() == 'eyo', 'retrieves "value" attribute from {input} element');
           ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true');
-          ok($('#attrs input[type="hidden"]').attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input');
+          ok(input.attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input');
+          input.val('eyo');
+          ok(input.val() == 'eyo', 'val(val) can set value on input')
         });
 
         test('first and last', 2, function () {

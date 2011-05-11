@@ -11,6 +11,8 @@
       query = null,
       byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
+      specialTags = /select|map|fieldset|table|tbody|tr|colgroup/i,
+      tagMap = { select: 'option', table: 'tbody', tr: 'td' },
       stateAttributes = /^checked|selected$/,
       ie = /msie/i.test(navigator.userAgent),
       uidList = [],
@@ -178,11 +180,21 @@
         html.textContent == null ?
           'innerText' :
           'textContent' :
-        'innerHTML';
+        'innerHTML', m;
+      function append(el, tag) {
+        while (el.firstChild) {
+          el.removeChild(el.firstChild);
+        }
+        each(normalize(h, tag), function (node) {
+          el.appendChild(node);
+        });
+      }
       return typeof h !== 'undefined' ?
-        this.each(function (el) {
-          el[method] = h;
-        }) :
+          this.each(function (el) {
+            (m = el.tagName.match(specialTags)) ?
+              append(el, m[0]) :
+              (el[method] = h);
+          }) :
         this[0] ? this[0][method] : '';
     },
 
@@ -449,8 +461,8 @@
     }
   };
 
-  function normalize(node) {
-    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node;
+  function normalize(node, tag) {
+    return typeof node == 'string' ? bonzo.create(node, tag) : is(node) ? [node] : node;
   }
 
   function scroll(x, y, type) {
@@ -490,11 +502,22 @@
     }
   };
 
-  bonzo.create = function (node) {
+  bonzo.create = function (node, tag) {
     return typeof node == 'string' ?
       function () {
-        var el = doc.createElement('div'), els = [];
-        el.innerHTML = node;
+        var t = tag ? tagMap[tag.toLowerCase()] : null;
+        var el = doc.createElement(t || 'div'), els = [];
+        if (tag) {
+          var bitches = node.match(new RegExp("<" + t + ">.+?<\\/" + t + ">", "g"));
+          each(bitches, function (m) {
+            m = m.replace(/<(.+)>(.+?)<\/\1>/, '$2');
+            var bah = doc.createElement(t);
+            bah.appendChild(doc.createDocumentFragment(m));
+            el.appendChild(bah);
+          });
+        } else {
+          el.innerHTML = node;
+        }
         var nodes = el.childNodes;
         el = el.firstChild;
         els.push(el);
