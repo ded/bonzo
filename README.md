@@ -5,42 +5,48 @@ Bonzo is designed to live in any host library, or simply as a stand-alone tool f
 
 <h3>It looks like this</h3>
 
-    bonzo(elements)
-      .hide()
-      .addClass('foo')
-      .append('<p>the happs</p>')
-      .css({
-        color: 'red',
-        'background-color': 'white'
-      })
-      .show()
+``` js
+bonzo(elements)
+  .hide()
+  .addClass('foo')
+  .append('<p>the happs</p>')
+  .css({
+    color: 'red',
+    'background-color': 'white'
+  })
+  .show()
+```
 
 Paired with a Selector Engine
 -----------------------------
 A great way to use Bonzo is with a selector engine (like [Qwery](https://github.com/ded/qwery) for example). You could wrap bonzo up and augment your wrapper to inherit the same methods. That looks like this:
 
-    function $(selector) {
-      return bonzo(qwery(selector));
-    }
-
-    bonzo.aug(bonzo, $);
+``` js
+function $(selector) {
+  return bonzo(qwery(selector));
+}
+```
 
 This now allows you to write the following code:
 
-    $('#content a[rel~="bookmark"]').after('√').css('text-decoration', 'none');
+``` js
+$('#content a[rel~="bookmark"]').after('√').css('text-decoration', 'none');
+```
 
 Bonzo Extension API
 -------------------
 One of the greatest parts about Bonzo is its simplicity to hook into the internal chain to create custom methods. For example you can create a method called **color** like this:
 
-    bonzo.aug({
-      color: function (c) {
-        this.css('color', c);
-      }
-    });
+``` js
+bonzo.aug({
+  color: function (c) {
+    this.css('color', c);
+  }
+});
 
-    // you can now do the following
-    $('p').color('aqua');
+// you can now do the following
+$('p').color('aqua');
+```
 
 All other API methods
 ---------------------
@@ -96,8 +102,6 @@ All other API methods
   * detach
   * scrollLeft
   * scrollTop
-  * serialize(form)
-  * serializeArray(form)
   * bonzo.aug({ properties })
   * bonzo.doc()
     - width
@@ -119,8 +123,10 @@ Setting a query engine host
 ------------------
 For the insertion methods you can set a query selector host (like [qwery](https://github.com/ded/qwery)).
 
-    bonzo.setSelectorEngine(qwery);
-    bonzo(bonzo.create('div')).insertAfter('.boosh a');
+``` js
+bonzo.setSelectorEngine(qwery);
+bonzo(bonzo.create('div')).insertAfter('.boosh a');
+```
 
 The name Bonzo
 --------------
@@ -130,17 +136,17 @@ Building
 --------
 Aside from simply downloading the source, if you would like to contribute, building Bonzo requires GNU 'make' and Node >= 0.4, and of course, git. The rest is easy:
 
-    git clone git://github.com/ded/bonzo.git
-    cd bonzo
-    git submodule update --init
-    make
+    $ git clone git://github.com/ded/bonzo.git
+    $ cd bonzo
+    $ git submodule update --init
+    $ make
 
 *make* will run the [JSHint](http://jshint.com) linter as well as the [Uglify](https://github.com/mishoo/UglifyJS) compliler.
 
 Tests
 -----
 
-    open bonzo/tests/tests.html
+    $ open bonzo/tests/tests.html
 
 Ender integration
 ----------
