@@ -178,7 +178,7 @@
           $($.create('<p>eyo</p>')).insertAfter($('.after-target'));
           ok(Q('.after-target')[0].nextSibling && Q('.after-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target');
         });
-        
+
         test('should insert target after last node', 1, function () {
           $($.create('<p>eyo</p>')).insertAfter($('.after-last-target'));
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
@@ -205,14 +205,14 @@
           ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
           $('#show-hide').show();
           ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
-		  $('#show-hide').hide();
-		  ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
-		  $('#show-hide').attr('class','show-hide-css');
-		  $('#show-hide').show('block');
-		  ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
-		  $('#show-hide').hide();
-		  $('#show-hide').show('inline');
-		  ok($('#show-hide').css('display') == 'inline', 'element has flow');
+      $('#show-hide').hide();
+      ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
+      $('#show-hide').attr('class','show-hide-css');
+      $('#show-hide').show('block');
+      ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
+      $('#show-hide').hide();
+      $('#show-hide').show('inline');
+      ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
         test('offsets', 4, function () {
