@@ -124,7 +124,7 @@ Setting a query engine host
 For the insertion methods you can set a query selector host (like [qwery](https://github.com/ded/qwery)).
 
 ``` js
-bonzo.setSelectorEngine(qwery);
+bonzo.setQueryEngine(qwery);
 bonzo(bonzo.create('div')).insertAfter('.boosh a');
 ```
 
