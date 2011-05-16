@@ -11,7 +11,7 @@
       ie = /msie/i.test(navigator.userAgent),
       uidList = [],
       uuids = 0,
-      digit = /^-?\d+$/,
+      digit = /^-?[\d\.]+$/,
       px = 'px',
       // commonly used methods
       setAttribute = 'setAttribute',
