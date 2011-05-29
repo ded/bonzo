@@ -40,7 +40,7 @@ One of the greatest parts about Bonzo is its simplicity to hook into the interna
 ``` js
 bonzo.aug({
   color: function (c) {
-    this.css('color', c);
+    return this.css('color', c);
   }
 });
 
@@ -136,8 +136,8 @@ Building
 --------
 Aside from simply downloading the source, if you would like to contribute, building Bonzo requires GNU 'make' and Node >= 0.4, and of course, git. The rest is easy:
 
-    $ git clone git://github.com/ded/bonzo.git
-    $ cd bonzo
+    $ git clone git://github.com/ded/bonzo.git bonzo
+    $ cd !$
     $ git submodule update --init
     $ make
 
@@ -151,10 +151,6 @@ Tests
 Ender integration
 ----------
 Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, ever. As a side note the *query engine host* is set for you when you include it with Ender.
-
-    $ npm install ender
-
-On the NPM release candidate?
 
     $ npm install ender -g
 

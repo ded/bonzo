@@ -136,7 +136,7 @@
 
   }
 
-  function _bonzo(elements) {
+  function Bonzo(elements) {
     this.length = 0;
     this.original = elements;
     if (elements) {
@@ -152,15 +152,15 @@
     }
   }
 
-  _bonzo.prototype = {
+  Bonzo.prototype = {
 
     each: function (fn, scope) {
       return each(this, fn, scope);
     },
 
     map: function (fn, reject) {
-      var m = [], n;
-      for (var i = 0; i < this.length; i++) {
+      var m = [], n, i;
+      for (i = 0; i < this.length; i++) {
         n = fn.call(this, this[i]);
         reject ? (reject(n) && m.push(n)) : m.push(n);
       }
@@ -488,7 +488,7 @@
   }
 
   function bonzo(els, host) {
-    return new _bonzo(els, host);
+    return new Bonzo(els, host);
   }
 
   bonzo.setQueryEngine = function (q) {
@@ -498,7 +498,7 @@
 
   bonzo.aug = function (o, target) {
     for (var k in o) {
-      o.hasOwnProperty(k) && ((target || _bonzo.prototype)[k] = o[k]);
+      o.hasOwnProperty(k) && ((target || Bonzo.prototype)[k] = o[k]);
     }
   };
 

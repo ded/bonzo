@@ -10,6 +10,10 @@
     }
   });
 
+  $.id = function (id) {
+    return $([document.getElementById(id)]);
+  };
+
   function indexOf(ar, val) {
     for (var i = 0; i < ar.length; i++) {
       if (ar[i] === val) {
@@ -32,6 +36,7 @@
     }
     return a;
   }
+
   $.ender({
     parents: function (selector, closest) {
       var collection = $(selector), j, k, p, r = [];
