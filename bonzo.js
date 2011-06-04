@@ -4,7 +4,7 @@
   * Follow our software http://twitter.com/dedfat
   * MIT License
   */
-!function (context) {
+!function (context, win) {
 
   var doc = context.document,
       html = doc.documentElement,
@@ -331,10 +331,20 @@
       });
     },
 
-    css: function (o, v) {
+    css: function (o, v, p) {
       // is this a request for just getting a style?
       if (v === undefined && typeof o == 'string') {
-        return getStyle(this[0], o);
+        // repurpose 'v'
+        v = this[0];
+        if (!v) {
+          return null;
+        }
+        if (v == doc || v == win) {
+          p = (v == doc) ? bonzo.doc() : bonzo.viewport();
+          return o == 'width' ? p.width :
+            o == 'height' ? p.height : '';
+        }
+        return getStyle(v, o);
       }
       var iter = o;
       if (typeof o == 'string') {
@@ -471,7 +481,7 @@
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type];
     }
     if (isBody(el)) {
-      window.scrollTo(x, y);
+      win.scrollTo(x, y);
     } else {
       x != null && (el.scrollLeft = x);
       y != null && (el.scrollTop = y);
@@ -480,11 +490,11 @@
   }
 
   function isBody(element) {
-    return element === window || (/^(?:body|html)$/i).test(element.tagName);
+    return element === win || (/^(?:body|html)$/i).test(element.tagName);
   }
 
   function getWindowScroll() {
-    return { x: window.pageXOffset || html.scrollLeft, y: window.pageYOffset || html.scrollTop };
+    return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop };
   }
 
   function bonzo(els, host) {
@@ -551,7 +561,10 @@
   bonzo.viewport = function () {
     var h = self.innerHeight,
         w = self.innerWidth;
-    ie && (h = html.clientHeight) && (w = html.clientWidth);
+    if (ie) {
+      h = html.clientHeight;
+      w = html.clientWidth;
+    }
     return {
       width: w,
       height: h
@@ -581,4 +594,4 @@
   };
   context['bonzo'] = bonzo;
 
-}(this);
+}(this, window);

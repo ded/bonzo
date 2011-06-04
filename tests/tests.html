@@ -267,6 +267,11 @@
           ok(isFinite($.doc().height), 'has height property');
         });
 
+        test('width & height can be accessed on window and document', 2, function () {
+          ok($(window).css('width') == $(document).css('width'), 'win and doc have same width');
+          ok($(window).css('height') < $(document).css('height'), 'document height is much larger than win height');
+        })
+
         test('should empty a node without removing node', 2, function () {
           ok(Q('#empty p').length == 3, 'target has 3 {p} elements');
           $('#empty').empty();
