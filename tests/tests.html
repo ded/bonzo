@@ -193,7 +193,7 @@
         });
 
         test('set html on special tags', 2, function () {
-          var fixture = '<option>i am an option</option>';
+          var fixture = '<option class="bad">i am an option</option>';
           var fixture2 = '<option>i am an option</option><option>and yet another</option>';
 
           $('#html-select').append('<select id="select-test-2"/>');
@@ -221,14 +221,14 @@
           ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
           $('#show-hide').show();
           ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
-      $('#show-hide').hide();
-      ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
-      $('#show-hide').attr('class','show-hide-css');
-      $('#show-hide').show('block');
-      ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
-      $('#show-hide').hide();
-      $('#show-hide').show('inline');
-      ok($('#show-hide').css('display') == 'inline', 'element has flow');
+          $('#show-hide').hide();
+          ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
+          $('#show-hide').attr('class','show-hide-css');
+          $('#show-hide').show('block');
+          ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
+          $('#show-hide').hide();
+          $('#show-hide').show('inline');
+          ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
         test('offsets', 4, function () {

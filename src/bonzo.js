@@ -5,8 +5,9 @@
       query = null,
       byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
-      specialTags = /select|map|fieldset|table|tbody|tr|colgroup/i,
-      tagMap = { select: 'option', table: 'tbody', tr: 'td' },
+      specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i,
+      table = 'table',
+      tagMap = { thead: table, tbody: table, tfoot: table, tr: 'tbody', th: 'tr', td: 'tr', fieldset: 'form', option: 'select' },
       stateAttributes = /^checked|selected$/,
       ie = /msie/i.test(navigator.userAgent),
       uidList = [],
@@ -175,11 +176,11 @@
           'innerText' :
           'textContent' :
         'innerHTML', m;
-      function append(el, tag) {
+      function append(el) {
         while (el.firstChild) {
           el.removeChild(el.firstChild);
         }
-        each(normalize(h, tag), function (node) {
+        each(normalize(h), function (node) {
           el.appendChild(node);
         });
       }
@@ -465,8 +466,8 @@
     }
   };
 
-  function normalize(node, tag) {
-    return typeof node == 'string' ? bonzo.create(node, tag) : is(node) ? [node] : node;
+  function normalize(node) {
+    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node;
   }
 
   function scroll(x, y, type) {
@@ -506,22 +507,12 @@
     }
   };
 
-  bonzo.create = function (node, tag) {
+  bonzo.create = function (node) {
     return typeof node == 'string' ?
       function () {
-        var t = tag ? tagMap[tag.toLowerCase()] : null;
-        var el = doc.createElement(t || 'div'), els = [];
-        if (tag) {
-          var bitches = node.match(new RegExp("<" + t + ">.+?<\\/" + t + ">", "g"));
-          each(bitches, function (m) {
-            m = m.replace(/<(.+)>(.+?)<\/\1>/, '$2');
-            var bah = doc.createElement(t);
-            bah.appendChild(doc.createDocumentFragment(m));
-            el.appendChild(bah);
-          });
-        } else {
-          el.innerHTML = node;
-        }
+        var tag = /^<([^\s>]+)/.exec(node)[1];
+        var el = doc.createElement(tagMap[tag.toLowerCase()] || 'div'), els = [];
+        el.innerHTML = node;
         var nodes = el.childNodes;
         el = el.firstChild;
         els.push(el);
