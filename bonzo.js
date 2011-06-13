@@ -8,6 +8,7 @@
 
   var doc = context.document,
       html = doc.documentElement,
+      parentNode = 'parentNode',
       query = null,
       byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
@@ -100,10 +101,19 @@
     };
 
   function insert(target, host, fn) {
-    var i = 0, self = host || this, r = [];
-    each(normalize(query ? query(target) : target), function (t) {
+    var i = 0, self = host || this, r = [],
+        nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? function (n) {
+          return (n = query(target)) && (n.selected = 1) && n;
+        }() : target;
+    each(normalize(nodes), function (t) {
       each(self, function (el) {
-        var n = el.cloneNode(true);
+        var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
+                  function () {
+                    var c = el.cloneNode(true);
+                    self.$ && self.cloneEvents && self.$(c).cloneEvents(el);
+                    return c;
+                  }() :
+                  el;
         fn(t, n);
         r[i] = n;
         i++;
@@ -139,7 +149,6 @@
 
   function Bonzo(elements) {
     this.length = 0;
-    this.original = elements;
     if (elements) {
       elements = typeof elements !== 'string' &&
         !elements.nodeType &&
@@ -301,7 +310,7 @@
     before: function (node) {
       return this.each(function (el) {
         each(bonzo.create(node), function (i) {
-          el.parentNode.insertBefore(i, el);
+          el[parentNode].insertBefore(i, el);
         });
       });
     },
@@ -309,14 +318,14 @@
     after: function (node) {
       return this.each(function (el) {
         each(bonzo.create(node), function (i) {
-          el.parentNode.insertBefore(i, el.nextSibling);
+          el[parentNode].insertBefore(i, el.nextSibling);
         });
       });
     },
 
     insertBefore: function (target, host) {
       return insert.call(this, target, host, function (t, el) {
-        t.parentNode.insertBefore(el, t);
+        t[parentNode].insertBefore(el, t);
       });
     },
 
@@ -324,10 +333,10 @@
       return insert.call(this, target, host, function (t, el) {
         var sibling = t.nextSibling;
         if (sibling) {
-          t.parentNode.insertBefore(el, sibling);
+          t[parentNode].insertBefore(el, sibling);
         }
         else {
-          t.parentNode.appendChild(el);
+          t[parentNode].appendChild(el);
         }
       });
     },
@@ -445,7 +454,7 @@
 
     remove: function () {
       return this.each(function (el) {
-        el.parentNode && el.parentNode.removeChild(el);
+        el[parentNode] && el[parentNode].removeChild(el);
       });
     },
 
@@ -459,7 +468,7 @@
 
     detach: function () {
       return this.map(function (el) {
-        return el.parentNode.removeChild(el);
+        return el[parentNode].removeChild(el);
       });
     },
 
@@ -473,7 +482,7 @@
   };
 
   function normalize(node) {
-    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node;
+    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node; // assume [nodes]
   }
 
   function scroll(x, y, type) {
@@ -516,8 +525,8 @@
   bonzo.create = function (node) {
     return typeof node == 'string' ?
       function () {
-        var tag = /^<([^\s>]+)/.exec(node)[1];
-        var el = doc.createElement(tagMap[tag.toLowerCase()] || 'div'), els = [];
+        var tag = /^<([^\s>]+)/.exec(node);
+        var el = doc.createElement(tag && tagMap[tag[1].toLowerCase()] || 'div'), els = [];
         el.innerHTML = node;
         var nodes = el.childNodes;
         el = el.firstChild;
@@ -570,7 +579,7 @@
       return container !== element && container.contains(element);
     } :
     function (container, element) {
-      while (element = element.parentNode) {
+      while (element = element[parentNode]) {
         if (element === container) {
           return true;
         }

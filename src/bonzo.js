@@ -97,7 +97,7 @@
   function insert(target, host, fn) {
     var i = 0, self = host || this, r = [],
         nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? function (n) {
-          return (n = query(target)) && (n.selected = 1) && n
+          return (n = query(target)) && (n.selected = 1) && n;
         }() : target;
     each(normalize(nodes), function (t) {
       each(self, function (el) {
