@@ -22,15 +22,25 @@
           $(el).addClass(i);
         });
         $('#get-me').closest('.robustr').addClass('closest robusto');
-        $('<em/>').css('color', 'purple').prependTo('li').html(' asdf ');
-        $('<b/>').appendTo('li').css('color', 'orange').html(' asdf ');
-        $('<li>extre</li>').insertAfter('li').css('background', 'lightpink');
+
         $('body').css({
           width: 500,
           margin: '0 auto',
           font: '300 14px/1.5 helvetica neue'
         });
         $('ul').children().append(' √');
+
+
+        $('<em/>').css('color', 'purple').prependTo('li').html(' asdf ');
+        $('<b/>').appendTo('li').css('color', 'orange').html(' asdf ');
+        $('<li>extre</li>').insertAfter('li').css('background', 'lightpink');
+        $('.hello').appendTo('#hello-world');
+        $('<div>i have a click handler</div>')
+          .css('cursor', 'pointer')
+          .bind('click', function () {
+            alert('hello')
+          })
+          .appendTo('body')
       });
     </script>
   </head>
@@ -51,5 +61,10 @@
     <ul>
       <li>yar</li>
     </ul>
+    <div class="hello">hello</div>
+    <div class="hello">world</div>
+    <div id="hello-world">
+
+    </div>
   </body>
 </html>

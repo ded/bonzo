@@ -45,6 +45,10 @@
   </head>
   <body>
     <div id="fixtures">
+      <div class="prepend-with-engine"></div>
+      <div class="prepend-with-engine"></div>
+
+      <div class="prepend-with-engine-move"></div>
 
       <div id="class-test" class="existing-class"></div>
       <div id="toggle-class" class="toggle-me"></div>
@@ -113,7 +117,7 @@
     <div id="overflowed">
       <div id="overflower"></div>
     </div>
-  <div id="styles" style="margin-left:5px;"></div>
+    <div id="styles" style="margin-left:5px;"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -311,9 +315,9 @@
         test('prependTo', 3, function () {
           var node = $.create('<p>world</p>')[0];
           var node2 = $.create('<p>hello</p>')[0];
-          var append = Q('#prepend-to')[0];
+          var prepend = Q('#prepend-to')[0];
           var prependWithNoFirstChild = Q('#prepend-first-child')[0];
-          $([node, node2]).prependTo(append);
+          $([node, node2]).prependTo(prepend);
           ok($('#prepend-to p').length == 2, '$("#prepend-to p").length == 2 - prepended to target node');
           ok($('#prepend-to p').first().html() == 'hello', 'first node is "hello"');
           ok($('#prepend-to p').last().html() == 'world', 'last node is "world"');
@@ -344,6 +348,24 @@
         });
 
       });
+
+
+      sink('selector engine', function (test, ok) {
+
+        test('run insert with created nodes', 1, function () {
+          var node = $.create('<p>world</p>')[0];
+          var node2 = $.create('<p>hello</p>')[0];
+          $([node, node2]).prependTo('.prepend-with-engine');
+          ok($('.prepend-with-engine p').length == 4, 'prepends 4 elements total')
+        });
+
+        test('run insert with existing nodes', 2, function () {
+          $('.prepend-with-engine p').prependTo('.prepend-with-engine-move');
+          ok($('.prepend-with-engine p').length == 0, 'prepend now has no elements')
+          ok($('.prepend-with-engine-move p').length == 4, 'elements were moved to target selector')
+        });
+
+      })
       start();
     </script>
 
