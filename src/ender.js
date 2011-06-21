@@ -104,7 +104,7 @@
     },
 
     children: function () {
-      var el, r = [];
+      var i, el, r = [];
       for (i = 0, l = this.length; i < l; i++) {
         if (!(el = b.firstChild(this[i]))) {
           continue;
@@ -118,12 +118,21 @@
     },
 
     height: function (v) {
-      return v ? this.css('height', v) : parseInt(this.css('height'), 10);
+      return dimension(v, this, 'height')
     },
 
     width: function (v) {
-      return v ? this.css('width', v) : parseInt(this.css('width'), 10);
+      return dimension(v, this, 'width')
     }
   }, true);
+
+  function dimension(v, self, which) {
+    return v ?
+      self.css(which, v) :
+      function (r) {
+        r = parseInt(self.css(which), 10);
+        return isNaN(r) ? self[0]['offset' + which.replace(/^\w/, function (m) {return m.toUpperCase()})] : r
+      }()
+  }
 
 }(ender || $);
