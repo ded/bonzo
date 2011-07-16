@@ -235,7 +235,7 @@
           ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
-        test('offsets', 4, function () {
+        test('offsets', 6, function () {
           var $el = $(dom.create('<div/>')).css({
             position: 'absolute',
             left: '50px',
@@ -247,6 +247,10 @@
           $el.offset(null, -100);
           ok($el.offset().left == 100, 'after offset(100, null), left == 100');
           ok($el.offset().top == -100, 'after offset(null, -100), top == -100');
+
+          $el.offset(0, 0);
+          ok($el.offset().top == 0, 'setting "0" doesnt become falsy')
+          ok($el.offset().left == 0, 'setting "0" doesnt become falsy')
         });
 
         test('should augment special methods', 3, function () {

@@ -9,7 +9,7 @@ require('smoosh').config({
   "JSHINT_OPTS": {
     "boss": true,
     "forin": false,
-    "curly": true,
+    "curly": false,
     "debug": false,
     "devel": false,
     "evil": false,
@@ -19,6 +19,6 @@ require('smoosh').config({
     "white": true,
     "indent": 2,
     "whitespace": true,
-    "asi": false
+    "asi": true
   }
 }).run().build().analyze();

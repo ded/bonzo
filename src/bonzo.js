@@ -389,11 +389,11 @@
           xy(el, x, y);
         });
       }
-      var el = this[0]
-        , width = el.offsetWidth
-        , height = el.offsetHeight
-        , top = el.offsetTop
-        , left = el.offsetLeft;
+      var el = this[0],
+          width = el.offsetWidth,
+          height = el.offsetHeight,
+          top = el.offsetTop,
+          left = el.offsetLeft;
       while (el = el.offsetParent) {
         top = top + el.offsetTop;
         left = left + el.offsetLeft;
