@@ -390,16 +390,16 @@
     },
 
     offset: function (x, y) {
-      if (x || y) {
+      if (typeof x == 'number' || typeof y == 'number') {
         return this.each(function (el) {
           xy(el, x, y);
         });
       }
-      var el = this[0];
-      var width = el.offsetWidth;
-      var height = el.offsetHeight;
-      var top = el.offsetTop;
-      var left = el.offsetLeft;
+      var el = this[0]
+        , width = el.offsetWidth
+        , height = el.offsetHeight
+        , top = el.offsetTop
+        , left = el.offsetLeft;
       while (el = el.offsetParent) {
         top = top + el.offsetTop;
         left = left + el.offsetLeft;
