@@ -306,8 +306,8 @@
 
         test('setting attributes using object', 2, function () {
           var input = $('#attrs input[type="hidden"]');
-          input.attr({'value' : 'eyo', 'class' : 'css-class'});
-          ok(input.val() == 'eyo', 'sets value attribute of input');
+          input.attr({'value' : 'new-value', 'class' : 'css-class'});
+          ok(input.val() == 'new-value', 'sets value attribute of input');
           ok(input.attr('class') == 'css-class', 'sets regular attribute');
         });
 
