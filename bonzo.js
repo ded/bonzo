@@ -415,6 +415,12 @@
 
     attr: function (k, v) {
       var el = this[0];
+      if (typeof k != 'string' && !(k instanceof String)) {
+        for (var n in k) {
+          k.hasOwnProperty(n) && this.attr(n, k[n]);
+        }
+        return this;
+      }
       return typeof v == 'undefined' ?
         specialAttributes.test(k) ?
           stateAttributes.test(k) && typeof el[k] == 'string' ?
