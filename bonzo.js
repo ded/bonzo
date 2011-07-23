@@ -563,15 +563,9 @@
   };
 
   bonzo.viewport = function () {
-    var h = self.innerHeight,
-        w = self.innerWidth;
-    if (ie) {
-      h = html.clientHeight;
-      w = html.clientWidth;
-    }
     return {
-      width: w,
-      height: h
+      width: ie ? html.clientWidth : self.innerWidth,
+      height: ie ? html.clientHeight : self.innerHeight
     };
   };
 
