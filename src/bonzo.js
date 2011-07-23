@@ -540,12 +540,10 @@
   };
 
   bonzo.doc = function () {
-    var w = html.scrollWidth,
-        h = html.scrollHeight,
-        vp = this.viewport();
+    var vp = this.viewport();
     return {
-      width: Math.max(w, vp.width),
-      height: Math.max(h, vp.height)
+      width: Math.max(doc.body.scrollWidth, html.scrollHeight, vp.width),
+      height: Math.max(doc.body.scrollHeight, html.scrollHeight, vp.height)
     };
   };
 
