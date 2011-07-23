@@ -136,8 +136,8 @@
     isNaN(delta[0]) && (delta[0] = isRel ? 0 : el.offsetLeft);
     isNaN(delta[1]) && (delta[1] = isRel ? 0 : el.offsetTop);
 
-    x !== null && (el.style.left = x - offset.left + delta[0] + 'px');
-    y !== null && (el.style.top = y - offset.top + delta[1] + 'px');
+    x !== null && (el.style.left = x - offset.left + delta[0] + px);
+    y !== null && (el.style.top = y - offset.top + delta[1] + px);
 
   }
 
