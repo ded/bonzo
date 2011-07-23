@@ -542,7 +542,7 @@
   bonzo.doc = function () {
     var vp = this.viewport();
     return {
-      width: Math.max(doc.body.scrollWidth, html.scrollHeight, vp.width),
+      width: Math.max(doc.body.scrollWidth, html.scrollWidth, vp.width),
       height: Math.max(doc.body.scrollHeight, html.scrollHeight, vp.height)
     };
   };
