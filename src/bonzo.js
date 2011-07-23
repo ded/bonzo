@@ -4,7 +4,6 @@
       html = doc.documentElement,
       parentNode = 'parentNode',
       query = null,
-      byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i,
       table = 'table',

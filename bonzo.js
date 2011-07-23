@@ -10,7 +10,6 @@
       html = doc.documentElement,
       parentNode = 'parentNode',
       query = null,
-      byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i,
       table = 'table',
@@ -548,7 +547,7 @@
   bonzo.doc = function () {
     var vp = this.viewport();
     return {
-      width: Math.max(doc.body.scrollWidth, html.scrollHeight, vp.width),
+      width: Math.max(doc.body.scrollWidth, html.scrollWidth, vp.width),
       height: Math.max(doc.body.scrollHeight, html.scrollHeight, vp.height)
     };
   };
