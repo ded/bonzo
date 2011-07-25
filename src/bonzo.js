@@ -165,7 +165,7 @@
     map: function (fn, reject) {
       var m = [], n, i;
       for (i = 0; i < this.length; i++) {
-        n = fn.call(this, this[i]);
+        n = fn.call(this, this[i], i);
         reject ? (reject(n) && m.push(n)) : m.push(n);
       }
       return m;
