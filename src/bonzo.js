@@ -4,7 +4,6 @@
       html = doc.documentElement,
       parentNode = 'parentNode',
       query = null,
-      byTag = 'getElementsByTagName',
       specialAttributes = /^checked|value|selected$/,
       specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i,
       table = 'table',
@@ -136,8 +135,8 @@
     isNaN(delta[0]) && (delta[0] = isRel ? 0 : el.offsetLeft);
     isNaN(delta[1]) && (delta[1] = isRel ? 0 : el.offsetTop);
 
-    x !== null && (el.style.left = x - offset.left + delta[0] + 'px');
-    y !== null && (el.style.top = y - offset.top + delta[1] + 'px');
+    x !== null && (el.style.left = x - offset.left + delta[0] + px);
+    y !== null && (el.style.top = y - offset.top + delta[1] + px);
 
   }
 
@@ -540,12 +539,10 @@
   };
 
   bonzo.doc = function () {
-    var w = html.scrollWidth,
-        h = html.scrollHeight,
-        vp = this.viewport();
+    var vp = this.viewport();
     return {
-      width: Math.max(w, vp.width),
-      height: Math.max(h, vp.height)
+      width: Math.max(doc.body.scrollWidth, html.scrollWidth, vp.width),
+      height: Math.max(doc.body.scrollHeight, html.scrollHeight, vp.height)
     };
   };
 
@@ -559,15 +556,9 @@
   };
 
   bonzo.viewport = function () {
-    var h = self.innerHeight,
-        w = self.innerWidth;
-    if (ie) {
-      h = html.clientHeight;
-      w = html.clientWidth;
-    }
     return {
-      width: w,
-      height: h
+      width: ie ? html.clientWidth : self.innerWidth,
+      height: ie ? html.clientHeight : self.innerHeight
     };
   };
 
