@@ -159,7 +159,7 @@
 
     get: function (index) {
       return this[index];
-    }
+    },
 
     each: function (fn, scope) {
       return each(this, fn, scope);
