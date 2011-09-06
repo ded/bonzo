@@ -20,9 +20,11 @@
       trimReplace = /(^\s*|\s*$)/g,
       unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 },
       transform = function () {
-        var props = ['webkitTransform','MozTransform','OTransform','msTransform','Transform'], i
+        var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
         for (i = 0; i < props.length; i++) {
-          if (props[i] in doc.createElement('a').style) return props[i]
+          if (props[i] in doc.createElement('a').style) {
+            return props[i]
+          }
         }
       }();
 
