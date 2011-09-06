@@ -24,7 +24,15 @@
       setAttribute = 'setAttribute',
       getAttribute = 'getAttribute',
       trimReplace = /(^\s*|\s*$)/g,
-      unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 };
+      unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 },
+      transform = function () {
+        var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
+        for (i = 0; i < props.length; i++) {
+          if (props[i] in doc.createElement('a').style) {
+            return props[i]
+          }
+        }
+      }();
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
@@ -66,6 +74,8 @@
 
   var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
     function (el, property) {
+      property = property == 'transform' ? transform : property;
+      property = property == 'transform-origin' ? transform + "Origin" : property;
       var value = null;
       if (property == 'float') {
         property = 'cssFloat';
@@ -385,6 +395,8 @@
             v = iter[k];
             // change "5" to "5px" - unless you're line-height, which is allowed
             (p = camelize(k)) && digit.test(v) && !(p in unitless) && (v += px);
+            p = p == 'transform' ? transform : p;
+            p = p == 'transformOrigin' ? transform + 'Origin' : p;
             el.style[p] = v;
           }
         }
