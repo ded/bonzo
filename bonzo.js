@@ -197,7 +197,7 @@
 
     , html: function (h, text) {
         var method = text ?
-          html.textContent == null ?
+          html.textContent === null ?
             'innerText' :
             'textContent' :
           'innerHTML', m;
@@ -494,6 +494,14 @@
     , scrollLeft: function (x) {
         return scroll.call(this, x, null, 'x')
       }
+
+    , toggle: function(callback) {
+        this.each(function (el) {
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : ''
+        })
+        callback && callback()
+        return this
+      }
   }
 
   function normalize(node) {
@@ -502,14 +510,14 @@
 
   function scroll(x, y, type) {
     var el = this[0]
-    if (x == null && y == null) {
+    if (x === null && y === null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type]
     }
     if (isBody(el)) {
       win.scrollTo(x, y)
     } else {
-      x != null && (el.scrollLeft = x)
-      y != null && (el.scrollTop = y)
+      x !== null && (el.scrollLeft = x)
+      y !== null && (el.scrollTop = y)
     }
     return this
   }

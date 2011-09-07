@@ -79,6 +79,7 @@
       <div id="html-select"></div>
       <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
+      <div id="toggle" style="width:10px"></div>
       <div id="augment" style="color:orange;"></div>
       <div id="empty">
         <p>one</p>
@@ -234,6 +235,17 @@
           $('#show-hide').show('inline');
           ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
+
+        test('toggle', 4, function () {
+          ok($('#toggle').offset().width > 0, 'element has flow')
+          $('#toggle').toggle(function () {
+            ok(true, 'callback in toggle gets called')
+          })
+          ok($('#toggle').offset().width == 0, 'element has no flow')
+          $('#toggle').toggle()
+          ok($('#toggle').offset().width > 0, 'element has flow after toggling again')
+
+        })
 
         test('offsets', 6, function () {
           var $el = $(dom.create('<div/>')).css({
