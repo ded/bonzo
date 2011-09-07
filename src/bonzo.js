@@ -492,7 +492,7 @@
 
     , toggle: function(callback) {
         this.each(function (el) {
-          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : ''
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : 'block'
         })
         callback && callback()
         return this
