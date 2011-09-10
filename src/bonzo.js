@@ -504,7 +504,7 @@
 
   function scroll(x, y, type) {
     var el = this[0]
-    if (x === null && y === null) {
+    if (x == null && y == null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type]
     }
     if (isBody(el)) {
