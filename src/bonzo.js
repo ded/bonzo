@@ -455,9 +455,8 @@
           return this.each(function (el) {
             el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
             var uid = el[getAttribute]('data-node-uid')
-              , o = {}
+              , o = uidList[uid] || (uidList[uid] = {})
             o[k] = v
-            uidList[uid] = o
           })
         }
       }
@@ -505,7 +504,7 @@
 
   function scroll(x, y, type) {
     var el = this[0]
-    if (x === null && y === null) {
+    if (x == null && y == null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type]
     }
     if (isBody(el)) {
