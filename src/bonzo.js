@@ -455,9 +455,8 @@
           return this.each(function (el) {
             el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
             var uid = el[getAttribute]('data-node-uid')
-              , o = {}
+              , o = uidList[uid] || (uidList[uid] = {})
             o[k] = v
-            uidList[uid] = o
           })
         }
       }
