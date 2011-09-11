@@ -1,6 +1,20 @@
-!function (context, win) {
-
-  var doc = context.document
+(function (name, definition){
+  if (typeof define == 'function'){ // AMD
+    define(definition)
+  } else if (typeof module != 'undefined' && module.exports) { // Node.js
+    module.exports = definition()
+  } else { // Browser
+    var theModule = definition(), context = this, old = context[name];
+    theModule.noConflict = function() {
+      context[name] = old
+      return theModule
+    }
+    context[name] = theModule
+  }
+})('bonzo', function() {
+  var context = this
+    , win = window
+    , doc = context.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
     , query = null
@@ -594,12 +608,6 @@
       return false
     }
 
-  var old = context.bonzo
-  bonzo.noConflict = function () {
-    context.bonzo = old
-    return this
-  }
+  return bonzo;
+});
 
-  if (typeof module !== 'undefined') module.exports = bonzo; else context['bonzo'] = bonzo
-
-}(this, window)

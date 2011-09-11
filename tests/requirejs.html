@@ -1,0 +1,16 @@
+<!DOCTYPE HTML>
+<html lang="en-us">
+  <head>
+    <title>Bonzo + RequireJS Test</title>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+  </head>
+  <body>
+    <div id="bonzo">Waiting ...</div>
+    <script src="../build/requirejs/require.js"></script>
+    <script>
+      require(['../src/bonzo'], function(bonzo) {
+        bonzo(document.getElementById('bonzo')).html('Passed!');
+      });
+    </script>
+  </body>
+</html>
