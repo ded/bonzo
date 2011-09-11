@@ -148,6 +148,16 @@
 
   }
 
+  function hasClass(el, c) {
+    return classReg(c).test(el.className)
+  }
+  function addClass(el, c) {
+    el.className = trim(el.className + ' ' + c)
+  }
+  function removeClass(el, c) {
+    el.className = trim(el.className.replace(classReg(c), ' '))
+  }
+
   function Bonzo(elements) {
     this.length = 0
     if (elements) {
@@ -217,33 +227,28 @@
 
     , addClass: function (c) {
         return this.each(function (el) {
-          this.hasClass(el, c) || (el.className = trim(el.className + ' ' + c))
-        }, this)
+          hasClass(el, c) || addClass(el, c)
+        })
       }
 
     , removeClass: function (c) {
         return this.each(function (el) {
-          this.hasClass(el, c) && (el.className = trim(el.className.replace(classReg(c), ' ')))
-        }, this)
+          hasClass(el, c) && removeClass(el, c)
+        })
       }
 
-    , hasClass: function (el, c) {
-        return typeof c == 'undefined' ?
-          some(this, function (i) {
-            return classReg(el).test(i.className)
-          }) :
-          classReg(c).test(el.className)
+    , hasClass: function (c) {
+        return some(this, function (el) {
+          return hasClass(el, c)
+        })
       }
 
     , toggleClass: function (c, condition) {
-        if (typeof condition !== 'undefined' && !condition) {
-          return this
-        }
         return this.each(function (el) {
-          this.hasClass(el, c) ?
-            (el.className = trim(el.className.replace(classReg(c), ' '))) :
-            (el.className = trim(el.className + ' ' + c))
-        }, this)
+          typeof condition !== 'undefined' ?
+            condition ? addClass(el, c) : removeClass(el, c) :
+            hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
+        })
       }
 
     , show: function (type) {
