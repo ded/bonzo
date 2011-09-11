@@ -79,6 +79,7 @@
       <div id="html-select"></div>
       <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
+      <div id="toggle" style="width:10px"></div>
       <div id="augment" style="color:orange;"></div>
       <div id="empty">
         <p>one</p>
@@ -235,6 +236,17 @@
           ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
+        test('toggle', 4, function () {
+          ok($('#toggle').offset().width > 0, 'element has flow')
+          $('#toggle').toggle(function () {
+            ok(true, 'callback in toggle gets called')
+          })
+          ok($('#toggle').offset().width == 0, 'element has no flow')
+          $('#toggle').toggle()
+          ok($('#toggle').offset().width > 0, 'element has flow after toggling again')
+
+        })
+
         test('offsets', 6, function () {
           var $el = $(dom.create('<div/>')).css({
             position: 'absolute',
@@ -317,17 +329,17 @@
         });
 
         test('appendTo', 1, function () {
-          var node = $.create('<p>i am append-to</p>')[0];
-          var append = Q('#append-to')[0];
+          var node = $.create('<p>i am append-to</p>')[0]
+            , append = Q('#append-to')[0]
           $(node).appendTo(append);
           ok($('#append-to p').length == 1, '$("#append-to p").length == 1 - appended to target node');
         });
 
         test('prependTo', 3, function () {
-          var node = $.create('<p>world</p>')[0];
-          var node2 = $.create('<p>hello</p>')[0];
-          var prepend = Q('#prepend-to')[0];
-          var prependWithNoFirstChild = Q('#prepend-first-child')[0];
+          var node = $.create('<p>world</p>')[0]
+            , node2 = $.create('<p>hello</p>')[0]
+            , prepend = Q('#prepend-to')[0]
+            , prependWithNoFirstChild = Q('#prepend-first-child')[0]
           $([node, node2]).prependTo(prepend);
           ok($('#prepend-to p').length == 2, '$("#prepend-to p").length == 2 - prepended to target node');
           ok($('#prepend-to p').first().html() == 'hello', 'first node is "hello"');
@@ -369,8 +381,8 @@
       sink('selector engine', function (test, ok) {
 
         test('run insert with created nodes', 1, function () {
-          var node = $.create('<p>world</p>')[0];
-          var node2 = $.create('<p>hello</p>')[0];
+          var node = $.create('<p>world</p>')[0]
+            , node2 = $.create('<p>hello</p>')[0]
           $([node, node2]).prependTo('.prepend-with-engine');
           ok($('.prepend-with-engine p').length == 4, 'prepends 4 elements total')
         });

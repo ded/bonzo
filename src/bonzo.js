@@ -202,7 +202,7 @@
 
     , html: function (h, text) {
         var method = text ?
-          html.textContent == null ?
+          html.textContent === null ?
             'innerText' :
             'textContent' :
           'innerHTML', m;
@@ -460,9 +460,8 @@
           return this.each(function (el) {
             el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
             var uid = el[getAttribute]('data-node-uid')
-              , o = {}
+              , o = uidList[uid] || (uidList[uid] = {})
             o[k] = v
-            uidList[uid] = o
           })
         }
       }
@@ -493,6 +492,14 @@
 
     , scrollLeft: function (x) {
         return scroll.call(this, x, null, 'x')
+      }
+
+    , toggle: function(callback) {
+        this.each(function (el) {
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : 'block'
+        })
+        callback && callback()
+        return this
       }
   }
 
