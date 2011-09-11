@@ -7,3 +7,6 @@
 [submodule "build/qwery"]
 	path = build/qwery
 	url = git://github.com/ded/qwery.git
+[submodule "build/requirejs"]
+	path = build/requirejs
+	url = https://github.com/jrburke/requirejs.git
