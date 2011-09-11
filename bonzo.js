@@ -3,9 +3,14 @@
   * https://github.com/ded/bonzo
   * License MIT
   */
-!function (context, win) {
-
-  var doc = context.document
+(function (name, definition){
+  if (typeof define == 'function') define(definition)
+  else if (typeof module != 'undefined' && module.exports) module.exports = definition()
+  else this[name] = definition()
+})('bonzo', function() {
+  var context = this
+    , win = window
+    , doc = context.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
     , query = null
@@ -606,6 +611,6 @@
     return this
   }
 
-  if (typeof module !== 'undefined') module.exports = bonzo; else context['bonzo'] = bonzo
+  return bonzo;
+});
 
-}(this, window)
