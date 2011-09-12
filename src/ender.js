@@ -122,7 +122,7 @@
     width: function (v) {
       return dimension(v, this, 'width')
     }
-  }, true);
+  }, true)
 
   function dimension(v, self, which) {
     return v ?

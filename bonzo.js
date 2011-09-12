@@ -3,9 +3,14 @@
   * https://github.com/ded/bonzo
   * License MIT
   */
-!function (context, win) {
-
-  var doc = context.document
+!function (name, definition){
+  if (typeof define == 'function') define(definition)
+  else if (typeof module != 'undefined') module.exports = definition()
+  else this[name] = definition()
+}('bonzo', function() {
+  var context = this
+    , win = window
+    , doc = win.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
     , query = null
@@ -41,14 +46,12 @@
         }
 
   function classReg(c) {
-    return new RegExp("(^|\\s+)" + c + "(\\s+|$)");
+    return new RegExp("(^|\\s+)" + c + "(\\s+|$)")
   }
 
   function each(ar, fn, scope) {
-    for (var i = 0, l = ar.length; i < l; i++) {
-      fn.call(scope || ar[i], ar[i], i, ar);
-    }
-    return ar;
+    for (var i = 0, l = ar.length; i < l; i++) fn.call(scope || ar[i], ar[i], i, ar)
+    return ar
   }
 
   function camelize(s) {
@@ -61,8 +64,8 @@
     return node && node.nodeName && node.nodeType == 1
   }
 
-  function some(ar, fn, scope) {
-    for (var i = 0, j = ar.length; i < j; ++i) {
+  function some(ar, fn, scope, i) {
+    for (i = 0, j = ar.length; i < j; ++i) {
       if (fn.call(scope, ar[i], i, ar)) {
         return true
       }
@@ -104,7 +107,7 @@
 
     function (el, property) {
       return el.style[camelize(property)]
-    };
+    }
 
   function insert(target, host, fn) {
     var i = 0, self = host || this, r = []
@@ -115,8 +118,8 @@
       each(self, function (el) {
         var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
                   function () {
-                    var c = el.cloneNode(true);
-                    self.$ && self.cloneEvents && self.$(c).cloneEvents(el);
+                    var c = el.cloneNode(true)
+                    self.$ && self.cloneEvents && self.$(c).cloneEvents(el)
                     return c;
                   }() :
                   el
@@ -148,8 +151,8 @@
     isNaN(delta[0]) && (delta[0] = isRel ? 0 : el.offsetLeft)
     isNaN(delta[1]) && (delta[1] = isRel ? 0 : el.offsetTop)
 
-    x !== null && (el.style.left = x - offset.left + delta[0] + px)
-    y !== null && (el.style.top = y - offset.top + delta[1] + px)
+    x != null && (el.style.left = x - offset.left + delta[0] + px)
+    y != null && (el.style.top = y - offset.top + delta[1] + px)
 
   }
 
@@ -610,6 +613,5 @@
     return this
   }
 
-  if (typeof module !== 'undefined') module.exports = bonzo; else context['bonzo'] = bonzo
-
-}(this, window)
+  return bonzo
+})

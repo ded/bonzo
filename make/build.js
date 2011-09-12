@@ -22,5 +22,6 @@ require('smoosh').config({
     , "asi": true
     , "laxbreak": true
     , "eqeqeq": false
+    , "eqnull": true
   }
 }).run().build().analyze()
