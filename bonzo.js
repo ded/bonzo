@@ -443,7 +443,7 @@
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : el[getAttribute](k) :
           this.each(function (el) {
-            k == 'value' ? (el.value = v) : el[setAttribute](k, v)
+            specialAttributes.test(k) ? (el[k] = v) : el[setAttribute](k, v)
           })
       }
 
@@ -453,7 +453,7 @@
 
     , removeAttr: function (k) {
         return this.each(function (el) {
-          el.removeAttribute(k)
+          stateAttributes.test(k) ? (el[k] = false) : el.removeAttribute(k)
         })
       }
 

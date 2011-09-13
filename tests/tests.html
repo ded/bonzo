@@ -3,7 +3,7 @@
   <head>
     <title>Bonzo Tests</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-    <link rel="stylesheet" href="../build/sink/src/sink.css" type="text/css">
+    <link rel="stylesheet" href="../node_modules/sink-test/src/sink.css" type="text/css">
     <style type="text/css">
       #fixtures {
         position: absolute;
@@ -25,8 +25,8 @@
         display: none;
       }
     </style>
-    <script src="../build/sink/src/sink.js"></script>
-    <script src="../build/qwery/qwery.js"></script>
+    <script src="../node_modules/sink-test/src/sink.js"></script>
+    <script src="../node_modules/qwery/qwery.js"></script>
     <script type="text/javascript">
       function bonzo() {
         return 'success';
@@ -113,6 +113,11 @@
           <li>four</li>
           <li class="nextr">five</li>
         </ul>
+      </div>
+      <div id="checkboxes-bug">
+        <input type="checkbox" checked="checked">
+        <input type="checkbox" checked="checked">
+        <input type="checkbox" checked="checked">
       </div>
     </div>
     <div id="overflowed">
@@ -373,9 +378,24 @@
           ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
           $('#styles').css({'transform-origin':'50% 50%'});
           ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
-        });
+        })
+
+        test('checkboxes bug', 6, function () {
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, '3 checkboxes are checked')
+          $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 0, 'no checkboxes are checked')
+          $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, '3 checkboxes are checked again')
+          $("#checkboxes-bug input[type='checkbox']").first().get(0).click()
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 2, '2 checkboxes are checked')
+          $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 0, 'no checkboxes are checked again')
+          $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
+          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, 'all checkboxes are checked!')
+        })
 
       });
+
 
 
       sink('selector engine', function (test, ok) {
