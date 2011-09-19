@@ -42,44 +42,45 @@ bonzo.aug({
   color: function (c) {
     return this.css('color', c);
   }
-});
+})
 
 // you can now do the following
-$('p').color('aqua');
+$('p').color('aqua')
 ```
 
 All other API methods
 ---------------------
 
-  * each
-    - function (element, index)
-  * map
-    - function (element, index)
-    - reject
+  * each(callback)
+    - callback (element, index)
+  * map(callback, reject)
+    - callback (element, index)
+    - reject (element)
   * html
     - html() get
     - html(str) set
   * text
     - text() get
     - text(str) set
-  * addClass
-  * removeClass
-  * hasClass
-  * show
-  * hide
-  * first
-  * last
-  * next
-  * previous
-  * append
+  * addClass(c)
+  * removeClass(c)
+  * hasClass(c)
+  * show()
+  * hide()
+  * first()
+  * last()
+  * next()
+  * previous()
+  * append(html)
   * appendTo(target)
-  * prepend
+  * prepend(html)
   * prependTo(target)
-  * before
+  * before(html)
   * insertBefore(target)
-  * after
+  * after(html)
   * insertAfter(target)
-  * css
+  * replaceWith(html)
+  * css()
     - css(prop) get
     - css(prop, val) set
     - css({properties}) set
@@ -97,11 +98,15 @@ All other API methods
   * val
     - val() get
     - val(s) set
-  * remove
-  * empty
-  * detach
+  * remove()
+  * empty()
+  * detach()
   * scrollLeft
+    - scrollLeft() get
+    - scrollLeft(x) set
   * scrollTop
+    - scrollTop() get
+    - scrollTop(y) set
   * bonzo.aug({ properties })
   * bonzo.doc()
     - width
@@ -118,14 +123,16 @@ Added in the Ender bridge
   * closest(selector)
   * siblings()
   * children()
+  * width()
+  * height()
 
 Setting a query engine host
 ------------------
 For the insertion methods you can set a query selector host (like [qwery](https://github.com/ded/qwery)).
 
 ``` js
-bonzo.setQueryEngine(qwery);
-bonzo(bonzo.create('div')).insertAfter('.boosh a');
+bonzo.setQueryEngine(qwery)
+bonzo(bonzo.create('div')).insertAfter('.boosh a')
 ```
 
 The name Bonzo
@@ -134,19 +141,15 @@ Bonzo Madrid was a malicious battle school commander of whom eventually is kille
 
 Building
 --------
-Aside from simply downloading the source, if you would like to contribute, building Bonzo requires GNU 'make' and Node >= 0.4, and of course, git. The rest is easy:
 
-    $ git clone git://github.com/ded/bonzo.git bonzo
-    $ cd !$
-    $ git submodule update --init
+    $ cd bonzo
+    $ npm install --dev
     $ make
-
-*make* will run the [JSHint](http://jshint.com) linter as well as the [Uglify](https://github.com/mishoo/UglifyJS) compliler.
 
 Tests
 -----
 
-    $ open bonzo/tests/tests.html
+    $ open tests/tests.html
 
 Ender integration
 ----------
