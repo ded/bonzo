@@ -560,7 +560,7 @@
         el.innerHTML = node
         var nodes = el.childNodes
         el = el.firstChild
-        els.push(el)
+        el.nodeType == 1 && els.push(el)
         while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
         return els
 
