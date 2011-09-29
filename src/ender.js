@@ -16,9 +16,7 @@
 
   function indexOf(ar, val) {
     for (var i = 0; i < ar.length; i++) {
-      if (ar[i] === val) {
-        return i
-      }
+      if (ar[i] === val) return i
     }
     return -1
   }
@@ -43,7 +41,7 @@
       for (j = 0, k = this.length; j < k; j++) {
         p = this[j]
         while (p = p.parentNode) {
-          if (indexOf(collection, p) !== -1) {
+          if (~indexOf(collection, p)) {
             r.push(p)
             if (closest) break;
           }
@@ -92,13 +90,9 @@
       var i, l, p, r = []
       for (i = 0, l = this.length; i < l; i++) {
         p = this[i]
-        while (p = p.previousSibling) {
-          p.nodeType == 1 && r.push(p)
-        }
+        while (p = p.previousSibling) p.nodeType == 1 && r.push(p)
         p = this[i]
-        while (p = p.nextSibling) {
-          p.nodeType == 1 && r.push(p)
-        }
+        while (p = p.nextSibling) p.nodeType == 1 && r.push(p)
       }
       return $(r)
     },
@@ -106,10 +100,8 @@
     children: function () {
       var i, el, r = []
       for (i = 0, l = this.length; i < l; i++) {
-        if (!(el = b.firstChild(this[i]))) {
-          continue;
-        }
-        r.push(el);
+        if (!(el = b.firstChild(this[i]))) continue;
+        r.push(el)
         while (el = el.nextSibling) el.nodeType == 1 && r.push(el)
       }
       return $(uniq(r))

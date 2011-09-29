@@ -24,7 +24,6 @@
     , uuids = 0
     , digit = /^-?[\d\.]+$/
     , px = 'px'
-      // commonly used methods
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
     , trimReplace = /(^\s*|\s*$)/g
@@ -66,9 +65,7 @@
 
   function some(ar, fn, scope, i) {
     for (i = 0, j = ar.length; i < j; ++i) {
-      if (fn.call(scope, ar[i], i, ar)) {
-        return true
-      }
+      if (fn.call(scope, ar[i], i, ar)) return true
     }
     return false
   }
@@ -111,22 +108,19 @@
 
   function insert(target, host, fn) {
     var i = 0, self = host || this, r = []
-      , nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? function (n) {
-          return (n = query(target)) && (n.selected = 1) && n
-        }() : target
+      , nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? query(target) : target
     each(normalize(nodes), function (t) {
       each(self, function (el) {
         var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
-                  function () {
-                    var c = el.cloneNode(true)
-                    self.$ && self.cloneEvents && self.$(c).cloneEvents(el)
-                    return c;
-                  }() :
-                  el
+          function () {
+            var c = el.cloneNode(true)
+            self.$ && self.cloneEvents && self.$(c).cloneEvents(el)
+            return c
+          }() : el
         fn(t, n)
         r[i] = n
         i++
-      });
+      })
     }, this)
     each(r, function (e, i) {
       self[i] = e
@@ -354,6 +348,12 @@
           else {
             t[parentNode].appendChild(el)
           }
+        })
+      }
+
+    , replaceWith: function(html) {
+        return this.each(function (el) {
+          el.parentNode.replaceChild(bonzo.create(html)[0], el)
         })
       }
 
