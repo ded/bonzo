@@ -155,6 +155,18 @@
           ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
         });
 
+        test('bonzo.create() should not error with empty string', 1, function () {
+          var noError = true
+          try {
+            $('body').append('')
+          } catch (ex) {
+            noError = false
+          } finally {
+            ok(noError, '$("body").append("")')
+          }
+
+        })
+
         test('should append nodes', 1, function () {
           $('#append div').append('<p>hello</p><p>world <a href="#">hunger</a></p>');
           ok(Q('#append p').length == 4, 'appended two {p} nodes on all elements');

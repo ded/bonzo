@@ -553,7 +553,7 @@
   }
 
   bonzo.create = function (node) {
-    return typeof node == 'string' ?
+    return typeof node == 'string' && node !== '' ?
       function () {
         var tag = /^<([^\s>]+)/.exec(node)
           , el = doc.createElement(tag && tagMap[tag[1].toLowerCase()] || 'div'), els = []
