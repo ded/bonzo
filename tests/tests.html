@@ -124,6 +124,7 @@
       <div id="overflower"></div>
     </div>
     <div id="styles" style="margin-left:5px;"></div>
+    <div id="callback-styles" data-original="15"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -379,7 +380,7 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        test('setting & getting styles', 6, function() {
+        test('setting & getting styles', 6, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
@@ -390,6 +391,14 @@
           ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
           $('#styles').css({'transform-origin':'50% 50%'});
           ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
+        })
+
+        test('settings styles with a callback method', 2, function () {
+          $('#callback-styles').css('margin-left', function (el) {
+            ok(el == $('#callback-styles').get(0), 'element is passed back to callback')
+            return el.getAttribute('data-original')
+          })
+          ok($('#styles').css('margin-left') == '15px', 'margin-left is 15px after setting with callback');
         })
 
         test('checkboxes bug', 6, function () {

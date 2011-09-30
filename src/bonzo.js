@@ -1,6 +1,6 @@
-!function (name, definition){
-  if (typeof define == 'function') define(definition)
-  else if (typeof module != 'undefined') module.exports = definition()
+!function (name, definition) {
+  if (typeof module != 'undefined') module.exports = definition()
+  else if (typeof define == 'function') define(definition)
   else this[name] = definition()
 }('bonzo', function() {
   var context = this
@@ -155,6 +155,17 @@
     el.className = trim(el.className.replace(classReg(c), ' '))
   }
 
+  // this allows method calling for setting values
+  // example:
+
+  // bonzo(elements).css('color', function (el) {
+  //   return el.getAttribute('data-original-color')
+  // })
+
+  function set(el, v) {
+    return typeof v == 'function' ? v(el) : v
+  }
+
   function Bonzo(elements) {
     this.length = 0
     if (elements) {
@@ -224,13 +235,13 @@
 
     , addClass: function (c) {
         return this.each(function (el) {
-          hasClass(el, c) || addClass(el, c)
+          hasClass(el, set(el, c)) || addClass(el, set(el, c))
         })
       }
 
     , removeClass: function (c) {
         return this.each(function (el) {
-          hasClass(el, c) && removeClass(el, c)
+          hasClass(el, set(el, c)) && removeClass(el, set(el, c))
         })
       }
 
@@ -356,7 +367,7 @@
         // is this a request for just getting a style?
         if (v === undefined && typeof o == 'string') {
           // repurpose 'v'
-          v = this[0];
+          v = this[0]
           if (!v) {
             return null
           }
@@ -394,7 +405,7 @@
               (p = camelize(k)) && digit.test(v) && !(p in unitless) && (v += px)
               p = p == 'transform' ? transform : p
               p = p == 'transformOrigin' ? transform + 'Origin' : p
-              el.style[p] = v
+              el.style[p] = set(el, v)
             }
           }
         }
@@ -438,7 +449,7 @@
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : el[getAttribute](k) :
           this.each(function (el) {
-            specialAttributes.test(k) ? (el[k] = v) : el[setAttribute](k, v)
+            specialAttributes.test(k) ? (el[k] = set(el, v)) : el[setAttribute](k, set(el, v))
           })
       }
 
