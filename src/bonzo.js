@@ -21,6 +21,10 @@
     , px = 'px'
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
+    , hrefExtended = function() {
+        var e = doc.createElement('a')
+        return (e.href = '/x') && e.getAttribute('href') == '/x'
+      }()
     , trimReplace = /(^\s*|\s*$)/g
     , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
     , transform = function () {
@@ -447,7 +451,8 @@
         return typeof v == 'undefined' ?
           specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
-              true : el[k] : el[getAttribute](k) :
+              true : el[k] : (k == 'href' || k =='src') && hrefExtended ?
+                el[getAttribute](k, 2) : el[getAttribute](k) :
           this.each(function (el) {
             specialAttributes.test(k) ? (el[k] = set(el, v)) : el[setAttribute](k, set(el, v))
           })

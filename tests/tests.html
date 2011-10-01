@@ -92,6 +92,10 @@
       </div>
       <div id="attrs">
         <a id="twitter" href="http://twitter.com/">twitter.com</a>
+        <a id="hrefrel" href="/relative">relative</a>
+        <a id="hrefname" href="#name">name</a>
+        <img id="srcabs" src="http://a2.twimg.com/a/1317419607/phoenix/img/twitter_logo_right.png">
+        <img id="srcrel" src="/relative">
         <input type="hidden" value="eyo">
         <input type="checkbox" checked>
       </div>
@@ -324,14 +328,19 @@
           ok(!$.isAncestor(document.body, orphans[0]), 'orphans do not exist in document');
         });
 
-        test('setting & getting attributes', 5, function () {
+        test('setting & getting attributes', 9, function () {
+          ok($('a#twitter').attr('href') == 'http://twitter.com/', 'retrieves "href" attribute from anchor');
+          ok($('a#hrefrel').attr('href') == '/relative', 'retrieves relative "href" attribute from anchor');
+          ok($('a#hrefname').attr('href') == '#name', 'retrieves plain #name "href" attribute from anchor');
+          ok($('img#srcabs').attr('src') == 'http://a2.twimg.com/a/1317419607/phoenix/img/twitter_logo_right.png', 'retrieves "src" attribute from image');
+          ok($('img#srcrel').attr('src') == '/relative', 'retrieves relative "src" attribute from image');
+
           var input = $('#attrs input[type="hidden"]');
-          ok($('#attrs a').attr('href').match(/twitter\.com/), 'retrieves "href" attribute from anchor');
           ok(input.val() == 'eyo', 'retrieves "value" attribute from {input} element');
           ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true');
           ok(input.attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input');
-          input.val('eyo');
-          ok(input.val() == 'eyo', 'val(val) can set value on input')
+          input.val('eyoeyo');
+          ok(input.val() == 'eyoeyo', 'val(val) can set value on input')
         });
 
         test('setting attributes using object', 2, function () {
