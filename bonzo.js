@@ -225,7 +225,7 @@
 
     , html: function (h, text) {
         var method = text ?
-          html.textContent === null ?
+          html.textContent === undefined ?
             'innerText' :
             'textContent' :
           'innerHTML', m;
