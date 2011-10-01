@@ -420,6 +420,90 @@ alert($('#html-select')[0].innerHTML);
           ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, 'all checkboxes are checked!')
         })
 
+        function testCreate(node) {
+           var e, ex
+           try { e = $.create('<' + node + '>') } catch (e) { ex = e }
+           ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element ' + (e && e.length == 1 && e[0].tagName.toUpperCase() == node ? '' : '(X)'))
+           ok(!ex, 'no exception while creating &lt;' + node + '&gt; element ' + (!ex ? '' : '(X)'))
+           delete e;
+        }
+
+        // omitted from this list: AREA, BASE, FRAME, FRAMESET, HEAD, HTML, ISINDEX, LINK, MAP, OBJECT, PARAM, STYLE, TITLE
+        var html4Nodes = [
+          'A',
+          'ABBR',
+          'ACRONYM',
+          'ADDRESS',
+          'B',
+          'BDO',
+          'BIG',
+          'BLOCKQUOTE',
+          'BR',
+          'BUTTON',
+          'CAPTION',
+          'CENTER',
+          'CITE',
+          'CODE',
+          'COL',
+          'COLGROUP',
+          'DD',
+          'DEL',
+          'DFN',
+          'DIV',
+          'DL',
+          'DT',
+          'EM',
+          'FIELDSET',
+          'FONT',
+          'FORM',
+          'H1',
+          'H2',
+          'H3',
+          'H4',
+          'H5',
+          'H6',
+          'HR',
+          'I',
+          'IFRAME',
+          'IMG',
+          'INPUT',
+          'INS',
+          'KBD',
+          'LABEL',
+          'LEGEND',
+          'LI',
+          'OL',
+          'OPTGROUP',
+          'OPTION',
+          'P',
+          'PRE',
+          'Q',
+          'S',
+          'SAMP',
+          'SELECT',
+          'SMALL',
+          'SPAN',
+          'STRIKE',
+          'STRONG',
+          'SUB',
+          'SUP',
+          'TABLE',
+          'TBODY',
+          'TD',
+          'TEXTAREA',
+          'TFOOT',
+          'TH',
+          'THEAD',
+          'TR',
+          'TT',
+          'U',
+          'UL',
+          'VAR'
+        ];
+
+        test('`create` special cases', html4Nodes.length * 2, function() {
+          for (var i = 0; i < html4Nodes.length; i++) testCreate(html4Nodes[i])
+        })
       });
 
 

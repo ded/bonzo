@@ -16,8 +16,18 @@
     , query = null
     , specialAttributes = /^checked|value|selected$/
     , specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i
-    , table = 'table'
-    , tagMap = { thead: table, tbody: table, tfoot: table, tr: 'tbody', th: 'tr', td: 'tr', fieldset: 'form', option: 'select' }
+    , table = [ '<table>', '</table>', 1 ]
+    , td = [ '<table><tbody><tr>', '</tr></tbody></table>', 3 ]
+    , option = [ '<select>', '</select>', 1 ]
+    , tagMap = {
+        thead: table, tbody: table, tfoot: table, colgroup: table, caption: table
+        , tr: [ '<table><tbody>', '</tbody></table>', 2 ]
+        , th: td , td: td
+        , col: [ '<table><colgroup>', '</colgroup></table>', 2 ]
+        , fieldset: [ '<form>', '</form>', 1 ]
+        , legend: [ '<form><fieldset>', '</fieldset></form>', 2 ]
+        , option: option
+        , optgroup: option }
     , stateAttributes = /^checked|selected$/
     , ie = /msie/i.test(navigator.userAgent)
     , uidList = []
@@ -567,10 +577,12 @@
     return typeof node == 'string' && node !== '' ?
       function () {
         var tag = /^<([^\s>]+)/.exec(node)
-          , el = doc.createElement(tag && tagMap[tag[1].toLowerCase()] || 'div'), els = []
-        el.innerHTML = node
-        var nodes = el.childNodes
-        el = el.firstChild
+          , el = doc.createElement('div')
+          , els = []
+          , p = tag ? tagMap[tag[1].toLowerCase()] : null
+          , dep = p ? p[2] + 1 : 1
+        el.innerHTML = p ? (p[0] + node + p[1]) : node
+        for (var i = 0; i < dep; i++) el = el.firstChild
         el.nodeType == 1 && els.push(el)
         while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
         return els
