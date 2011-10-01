@@ -27,6 +27,7 @@
     </style>
     <script src="../node_modules/sink-test/src/sink.js"></script>
     <script src="../node_modules/qwery/qwery.js"></script>
+    <script src="../node_modules/bowser/bowser.js"></script>
     <script type="text/javascript">
       function bonzo() {
         return 'success';
@@ -222,6 +223,7 @@
           $('#html-select').append('<select id="select-test-2"/>');
           $('#select-test-2').html(fixture2);
           ok($('#select-test-2 option').length == 2, "$('#select-test-2 option').length == 2");
+alert($('#html-select')[0].innerHTML);
 
 
           $('#html-select').append('<select id="select-test"/>');
@@ -380,7 +382,8 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        test('setting & getting styles', 6, function () {
+        var transformTests = !bowser.msie || bowser.version > 9 ? 3 : 2
+        test('setting & getting styles', 3 + transformTests, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
@@ -389,8 +392,10 @@
           ok($('#styles').css('transform') == 'none', 'transform style blank by default');
           $('#styles').css({'transform':'rotate(30deg) scale(4)'});
           ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
-          $('#styles').css({'transform-origin':'50% 50%'});
-          ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
+          if (!bowser.msie || bowser.version > 9) {
+            $('#styles').css({'transform-origin':'50% 50%'});
+            ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
+          }
         })
 
         test('settings styles with a callback method', 2, function () {
