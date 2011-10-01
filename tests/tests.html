@@ -8,6 +8,7 @@
       #fixtures {
         position: absolute;
         top: -9999em;
+        width: 1000px; /*for ie<=7*/
       }
       #overflowed {
         overflow: auto;
@@ -306,7 +307,12 @@
         });
 
         test('width & height can be accessed on window and document', 2, function () {
+//alert ($(window).css('width') +'=='+ $(document).css('width'));
           ok($(window).css('width') == $(document).css('width'), 'win and doc have same width');
+//alert('start');
+//alert(/msie/i.test(navigator.userAgent) + ','+document.body.scrollHeight + ',' + document.documentElement.scrollHeight + ',' + document.documentElement.clientHeight);
+//alert ($(window).css('height') +'<'+ $(document).css('height'));
+//alert(bonzo.viewport().height);
           ok($(window).css('height') < $(document).css('height'), 'document height is much larger than win height');
         })
 
@@ -380,17 +386,26 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        var transformTests = !bowser.msie || bowser.version > 9 ? 3 : 2
-        test('setting & getting styles', 3 + transformTests, function () {
+        // conditional tests, don't run transform tests in browsers where we don't expect support
+        var runTransform = true, runTransformOrigin = true;
+        if (bowser.msie) {
+          bowser.version <= 9 && (runTransformOrigin = false)
+          bowser.version <= 8 && (runTransform = false)
+        }
+        if (bowser.firefox && bowser.version < 3.5) runTransform = runTransformOrigin = false;
+
+        test('setting & getting styles', 3 + (runTransform ? 2 : 0) + (runTransformOrigin ? 1 : 0), function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
           $('#styles').css({marginLeft: '15px'});
           ok($('#styles').css('margin-left') == '15px', 'blue after setting color with object');
-          ok($('#styles').css('transform') == 'none', 'transform style blank by default');
-          $('#styles').css({'transform':'rotate(30deg) scale(4)'});
-          ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
-          if (!bowser.msie || bowser.version > 9) {
+          if (runTransform) {
+            ok($('#styles').css('transform') == 'none', 'transform style blank by default');
+            $('#styles').css({'transform':'rotate(30deg) scale(4)'});
+            ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
+          }
+          if (runTransformOrigin) {
             $('#styles').css({'transform-origin':'50% 50%'});
             ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
           }
@@ -405,17 +420,23 @@
         })
 
         test('checkboxes bug', 6, function () {
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, '3 checkboxes are checked')
+          // don't trust qwery to get `:checked` pseudo right
+          function checkedCount() {
+            var cb = $('#checkboxes-bug input[type="checkbox"]'), c = 0;
+            for (var i = 0; i < cb.length; cb[i].checked && c++, i++);
+            return c;
+          }
+          ok(checkedCount() == 3, '3 checkboxes are checked')
           $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 0, 'no checkboxes are checked')
+          ok(checkedCount() == 0, 'no checkboxes are checked')
           $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, '3 checkboxes are checked again')
+          ok(checkedCount() == 3, '3 checkboxes are checked again')
           $("#checkboxes-bug input[type='checkbox']").first().get(0).click()
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 2, '2 checkboxes are checked')
+          ok(checkedCount() == 2, '2 checkboxes are checked')
           $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 0, 'no checkboxes are checked again')
+          ok(checkedCount() == 0, 'no checkboxes are checked again')
           $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
-          ok($('#checkboxes-bug input[type="checkbox"]:checked').length == 3, 'all checkboxes are checked!')
+          ok(checkedCount() == 3, 'all checkboxes are checked!')
         })
 
         function testCreate(node) {

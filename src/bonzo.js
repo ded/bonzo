@@ -77,13 +77,12 @@
 
   var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
     function (el, property) {
-      property = property == 'transform' ? transform : property
-      property = property == 'transform-origin' ? transform + "Origin" : property
+      property == 'transform' && (property = transform)
+      property == 'transform-origin' && (property = transform + "Origin")
+      property == 'float' && (property = 'cssFloat')
+      if (property == null) return null
       var value = null
-      if (property == 'float') {
-        property = 'cssFloat'
-      }
-      var computed = doc.defaultView.getComputedStyle(el, '')
+        , computed = doc.defaultView.getComputedStyle(el, '')
       computed && (value = computed[camelize(property)])
       return el.style[property] || value
     } : (ie && html.currentStyle) ?
@@ -381,8 +380,8 @@
           if (!v) {
             return null
           }
-          if (v == doc || v == win) {
-            p = (v == doc) ? bonzo.doc() : bonzo.viewport()
+          if (v === doc || v === win) {
+            p = (v === doc) ? bonzo.doc() : bonzo.viewport()
             return o == 'width' ? p.width : o == 'height' ? p.height : ''
           }
           return getStyle(v, o)
