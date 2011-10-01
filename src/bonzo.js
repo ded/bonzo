@@ -22,8 +22,8 @@
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
     , hrefExtended = function() {
-        var e = doc.createElement('a')
-        return (e.href = '/x') && e.getAttribute('href') == '/x'
+        var e = doc.createElement('div')
+        return (e.innerHTML = '<a href="#x">x</a>') && e.firstChild.getAttribute('href') != '#x'
       }()
     , trimReplace = /(^\s*|\s*$)/g
     , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
