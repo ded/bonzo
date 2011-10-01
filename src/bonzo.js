@@ -578,7 +578,7 @@
           , dep = p ? p[2] + 1 : 1
         el.innerHTML = p ? (p[0] + node + p[1]) : node
         for (var i = 0; i < dep; i++) el = el.firstChild
-        els.push(el)
+        el.nodeType == 1 && els.push(el)
         while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
         return els
 
