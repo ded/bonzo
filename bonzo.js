@@ -37,23 +37,24 @@
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
     , byTag = 'getElementsByTagName'
-    , featureTest = function() {
+    , features = function() {
         var e = doc.createElement('div')
-        e.innerHTML = '<a href="#x">x</a><table></table>'
-        return e
-      }()
-    , hrefExtended = featureTest[byTag]('a')[0][getAttribute]('href') != '#x' //IE<8
-    , autoTbody = featureTest[byTag]('tbody').length !== 0 //IE<8
-    , trimReplace = /(^\s*|\s*$)/g
-    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
-    , transform = function () {
-        var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
-        for (i = 0; i < props.length; i++) {
-          if (props[i] in doc.createElement('a').style) {
-            return props[i]
-          }
+        e.innerHTML = '<a href="#x">x</a><table style="float:left;"></table>'
+        return {
+          hrefExtended: e[byTag]('a')[0][getAttribute]('href') != '#x' //IE<8
+          , autoTbody: e[byTag]('tbody').length !== 0 //IE<8
+          , computedStyle: doc.defaultView && doc.defaultView.getComputedStyle
+          , cssFloat: e[byTag]('table')[0].style.styleFloat ? 'styleFloat' : 'cssFloat'
+          , transform: function () {
+              var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
+              for (i = 0; i < props.length; i++) {
+                if (props[i] in e.style) return props[i]
+              }
+            }()
         }
       }()
+    , trimReplace = /(^\s*|\s*$)/g
+    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
     , trim = String.prototype.trim ?
         function (s) {
           return s.trim()
@@ -88,22 +89,22 @@
     return false
   }
 
-  var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
+  function styleProperty(p) {
+      (p == 'transform' && (p = features.transform)) ||
+        (/^transform-?[Oo]rigin$/.test(p) && (p = features.transform + "Origin")) ||
+        (p == 'float' && (p = features.cssFloat))
+      return p ? camelize(p) : null
+  }
+
+  var getStyle = features.computedStyle ?
     function (el, property) {
-      property == 'transform' && (property = transform)
-      property == 'transform-origin' && (property = transform + "Origin")
-      property == 'float' && (property = 'cssFloat')
-      if (property == null) return null
       var value = null
         , computed = doc.defaultView.getComputedStyle(el, '')
-      computed && (value = computed[camelize(property)])
+      computed && (value = computed[property])
       return el.style[property] || value
     } : (ie && html.currentStyle) ?
 
     function (el, property) {
-      property = camelize(property)
-      property = property == 'float' ? 'styleFloat' : property
-
       if (property == 'opacity') {
         var val = 100
         try {
@@ -120,7 +121,7 @@
     } :
 
     function (el, property) {
-      return el.style[camelize(property)]
+      return el.style[property]
     }
 
   function insert(target, host, fn) {
@@ -397,7 +398,7 @@
             p = (v === doc) ? bonzo.doc() : bonzo.viewport()
             return o == 'width' ? p.width : o == 'height' ? p.height : ''
           }
-          return getStyle(v, o)
+          return (o = styleProperty(o)) ? getStyle(v, o) : null
         }
         var iter = o
         if (typeof o == 'string') {
@@ -413,20 +414,12 @@
           delete iter.opacity;
         }
 
-        if (v = iter['float']) {
-          // float is a reserved style word. w3 uses cssFloat, ie uses styleFloat
-          ie ? (iter.styleFloat = v) : (iter.cssFloat = v);
-          delete iter['float'];
-        }
-
         function fn(el, p, v) {
           for (var k in iter) {
             if (iter.hasOwnProperty(k)) {
               v = iter[k];
               // change "5" to "5px" - unless you're line-height, which is allowed
-              (p = camelize(k)) && digit.test(v) && !(p in unitless) && (v += px)
-              p = p == 'transform' ? transform : p
-              p = p == 'transformOrigin' ? transform + 'Origin' : p
+              (p = styleProperty(k)) && digit.test(v) && !(p in unitless) && (v += px)
               el.style[p] = set(el, v)
             }
           }
@@ -469,7 +462,7 @@
         return typeof v == 'undefined' ?
           specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
-              true : el[k] : (k == 'href' || k =='src') && hrefExtended ?
+              true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
                 el[getAttribute](k, 2) : el[getAttribute](k) :
           this.each(function (el) {
             specialAttributes.test(k) ? (el[k] = set(el, v)) : el[setAttribute](k, set(el, v))
@@ -590,7 +583,7 @@
           , p = tag ? tagMap[tag[1].toLowerCase()] : null
           , dep = p ? p[2] + 1 : 1
           , pn = parentNode
-          , tb = autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
+          , tb = features.autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
         el.innerHTML = p ? (p[0] + node + p[1]) : node
         while (dep--) el = el.firstChild
         do {

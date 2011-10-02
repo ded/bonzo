@@ -134,7 +134,7 @@
     <div id="overflowed">
       <div id="overflower"></div>
     </div>
-    <div id="styles" style="margin-left:5px;"></div>
+    <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
 
     <h1>Bonzo Tests</h1>
@@ -394,12 +394,15 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        test('setting & getting styles', 3, function () {
+        test('setting & getting styles', 5, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
           $('#styles').css({marginLeft: '15px'});
           ok($('#styles').css('margin-left') == '15px', 'blue after setting color with object');
+          ok($('#styles div').css('float') == 'left', 'float is "left" by default');
+          $('#styles div').css('float', "right");
+          ok($('#styles div').css('float') == 'right', '"right" after update.');
         })
 
         if (!(bowser.msie && bowser.version <= 8) && !(bowser.firefox && bowser.version < 3.5)) {
