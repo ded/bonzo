@@ -416,7 +416,7 @@
 
           test('setting & getting transform styles (old browser)', 3, function () {
             ok($('#styles').css('transform') == null, 'transform style returns null');
-            ok($('#styles').css('transform-origin') == null, 'transform style returns null');
+            ok($('#styles').css('transform-origin') == null, 'transform-origin style returns null');
             var ex = false
             try {
               $('#styles').css({'transform': 'rotate(30deg) scale(4)', 'transform-origin':'40% 60%'});
