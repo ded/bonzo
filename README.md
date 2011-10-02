@@ -151,6 +151,14 @@ Tests
 
     $ open tests/tests.html
 
+Browser support
+---------------
+  * IE6+
+  * Chrome
+  * Safari 4+
+  * Firefox 3+
+  * Opera
+
 Ender integration
 ----------
 Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, ever. As a side note the *query engine host* is set for you when you include it with Ender.
