@@ -31,6 +31,14 @@
     , px = 'px'
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
+    , byTag = 'getElementsByTagName'
+    , featureTest = function() {
+        var e = doc.createElement('div')
+        e.innerHTML = '<a href="#x">x</a><table></table>'
+        return e
+      }()
+    , hrefExtended = featureTest[byTag]('a')[0][getAttribute]('href') != '#x' //IE<8
+    , autoTbody = featureTest[byTag]('tbody').length !== 0 //IE<8
     , trimReplace = /(^\s*|\s*$)/g
     , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
     , transform = function () {
@@ -456,7 +464,8 @@
         return typeof v == 'undefined' ?
           specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
-              true : el[k] : el[getAttribute](k) :
+              true : el[k] : (k == 'href' || k =='src') && hrefExtended ?
+                el[getAttribute](k, 2) : el[getAttribute](k) :
           this.each(function (el) {
             specialAttributes.test(k) ? (el[k] = set(el, v)) : el[setAttribute](k, set(el, v))
           })
@@ -570,17 +579,25 @@
   bonzo.create = function (node) {
     return typeof node == 'string' && node !== '' ?
       function () {
-        var tag = /^<([^\s>]+)/.exec(node)
+        var tag = /^\s*<([^\s>]+)/.exec(node)
           , el = doc.createElement('div')
           , els = []
           , p = tag ? tagMap[tag[1].toLowerCase()] : null
           , dep = p ? p[2] + 1 : 1
+          , pn = parentNode
+          , tb = autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
         el.innerHTML = p ? (p[0] + node + p[1]) : node
-        for (var i = 0; i < dep; i++) el = el.firstChild
-        el.nodeType == 1 && els.push(el)
-        while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
+        while (dep--) el = el.firstChild
+        do {
+          // tbody special case for IE<8, creates tbody on any empty table
+          // we don't want it if we're just after a <thead>, <caption>, etc.
+          if (el.nodeType == 1 && (!tb || el.tagName.toLowerCase() != 'tbody')) {
+            els.push(el)
+          }
+        } while (el = el.nextSibling)
         // IE<9 gives us a parentNode which messes up insert() check for cloning
-        each(els, function(el) { el[parentNode] && el[parentNode].removeChild(el) })
+        // `dep` > 1 can also cause problems with the insert() check (must do this last)
+        each(els, function(el) { el[pn] && el[pn].removeChild(el) })
         return els
 
       }() : is(node) ? [node.cloneNode(true)] : []

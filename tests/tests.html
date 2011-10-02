@@ -94,8 +94,17 @@
       </div>
       <div id="attrs">
         <a id="twitter" href="http://twitter.com/">twitter.com</a>
-        <input type="hidden" value="eyo">
-        <input type="checkbox" checked>
+        <a id="hrefrel" href="/relative">relative</a>
+        <a id="hrefname" href="#name">name</a>
+        <img id="srcabs" src="http://a2.twimg.com/a/1317419607/phoenix/img/twitter_logo_right.png">
+        <img id="srcrel" src="/relative">
+        <form id="resetme">
+          <input type="text" value="eyo">
+          <input type="checkbox" checked>
+        </form>
+        <script type="text/javascript">
+          document.forms[0].reset() // IE sometimes caches the value we set on the input between reloads
+        </script>
       </div>
       <div id="first-last">
         <div id="first"></div>
@@ -325,18 +334,22 @@
           ok(!$.isAncestor(document.body, orphans[0]), 'orphans do not exist in document');
         });
 
-        test('setting & getting attributes', 5, function () {
-          var input = $('#attrs input[type="hidden"]');
-          ok($('#attrs a').attr('href').match(/twitter\.com/), 'retrieves "href" attribute from anchor');
+        test('setting & getting attributes', 9, function () {
+          ok($('a#twitter').attr('href') == 'http://twitter.com/', 'retrieves "href" attribute from anchor');
+          ok($('a#hrefrel').attr('href') == '/relative', 'retrieves relative "href" attribute from anchor');
+          ok($('a#hrefname').attr('href') == '#name', 'retrieves plain #name "href" attribute from anchor');
+          ok($('img#srcabs').attr('src') == 'http://a2.twimg.com/a/1317419607/phoenix/img/twitter_logo_right.png', 'retrieves "src" attribute from image');
+          ok($('img#srcrel').attr('src') == '/relative', 'retrieves relative "src" attribute from image');
+          var input = $('#attrs input[type="text"]');
           ok(input.val() == 'eyo', 'retrieves "value" attribute from {input} element');
           ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true');
           ok(input.attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input');
-          input.val('eyo');
-          ok(input.val() == 'eyo', 'val(val) can set value on input')
+          input.val('eyoeyo');
+          ok(input.val() == 'eyoeyo', 'val(val) can set value on input')
         });
 
         test('setting attributes using object', 2, function () {
-          var input = $('#attrs input[type="hidden"]');
+          var input = $('#attrs input[type="text"]');
           input.attr({'value' : 'new-value', 'class' : 'css-class'});
           ok(input.val() == 'new-value', 'sets value attribute of input');
           ok(input.attr('class') == 'css-class', 'sets regular attribute');
@@ -381,28 +394,40 @@
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
         });
 
-        // conditional tests, don't run transform tests in browsers where we don't expect support
-        test('setting & getting styles', 6, function () {
+        test('setting & getting styles', 3, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
           $('#styles').css({marginLeft: '15px'});
           ok($('#styles').css('margin-left') == '15px', 'blue after setting color with object');
-          if ((bowser.msie && bowser.version > 8) || (bowser.firefox && bowser.version > 3.5)) {
+        })
+
+        if (!(bowser.msie && bowser.version <= 8) && !(bowser.firefox && bowser.version < 3.5)) {
+
+          test('setting & getting transform styles', 3, function () {
             ok($('#styles').css('transform') == 'none', 'transform style blank by default');
             $('#styles').css({'transform':'rotate(30deg) scale(4)'});
             ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
-          } else {
-            ok(true, 'old browser, no transform tests run');
-            ok(true, 'old browser, no transform tests run');
-          }
-          if ((bowser.msie && bowser.version > 9) || (bowser.firefox && bowser.version > 3.5)) {
-            $('#styles').css({'transform-origin':'50% 50%'});
-            ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
-          } else {
-            ok(true, 'old browser, no transform-origin test run');
-          }
-        })
+            $('#styles').css({'transform-origin':'40% 60%'});
+            ok($('#styles').css('transform-origin') == '40% 60%', '40% 60% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
+          })
+
+        } else {
+
+          test('setting & getting transform styles (old browser)', 3, function () {
+            ok($('#styles').css('transform') == null, 'transform style returns null');
+            ok($('#styles').css('transform-origin') == null, 'transform style returns null');
+            var ex = false
+            try {
+              $('#styles').css({'transform': 'rotate(30deg) scale(4)', 'transform-origin':'40% 60%'});
+            } catch (e) {
+              ex = true
+            } finally {
+              ok(!ex, 'setting transform style doesn\'t throw exception');
+            }
+          })
+
+        }
 
         test('settings styles with a callback method', 2, function () {
           $('#callback-styles').css('margin-left', function (el) {
@@ -436,14 +461,14 @@
            var e, ex
            try { e = $.create('<' + node + '>') } catch (e) {}
            ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
+if (e.length != 1) alert(!e.length)
            ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
            delete e;
         }
 
-        // omitted from this list: AREA, BASE, FRAME, FRAMESET, HEAD, HTML, ISINDEX, LINK, MAP, OBJECT, PARAM, STYLE, TITLE
+        // omitted from this list: ABBR, AREA, BASE, FRAME, FRAMESET, HEAD, HTML, ISINDEX, LINK, MAP, OBJECT, PARAM, STYLE, TITLE
         var html4Nodes = [
           'A',
-          'ABBR',
           'ACRONYM',
           'ADDRESS',
           'B',
