@@ -382,27 +382,25 @@
         });
 
         // conditional tests, don't run transform tests in browsers where we don't expect support
-        var runTransform = true, runTransformOrigin = true;
-        if (bowser.msie) {
-          bowser.version <= 9 && (runTransformOrigin = false)
-          bowser.version <= 8 && (runTransform = false)
-        }
-        if (bowser.firefox && bowser.version < 3.5) runTransform = runTransformOrigin = false;
-
-        test('setting & getting styles', 3 + (runTransform ? 2 : 0) + (runTransformOrigin ? 1 : 0), function () {
+        test('setting & getting styles', 6, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
           $('#styles').css('margin-left', 10);
           ok($('#styles').css('margin-left') == '10px', '10px after update. can also use unitless values');
           $('#styles').css({marginLeft: '15px'});
           ok($('#styles').css('margin-left') == '15px', 'blue after setting color with object');
-          if (runTransform) {
+          if ((bowser.msie && bowser.version > 8) || (bowser.firefox && bowser.version > 3.5)) {
             ok($('#styles').css('transform') == 'none', 'transform style blank by default');
             $('#styles').css({'transform':'rotate(30deg) scale(4)'});
             ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'');
+          } else {
+            ok(true, 'old browser, no transform tests run');
+            ok(true, 'old browser, no transform tests run');
           }
-          if (runTransformOrigin) {
+          if ((bowser.msie && bowser.version > 9) || (bowser.firefox && bowser.version > 3.5)) {
             $('#styles').css({'transform-origin':'50% 50%'});
             ok($('#styles').css('transform-origin') == '50% 50%', '50% 50% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'));
+          } else {
+            ok(true, 'old browser, no transform-origin test run');
           }
         })
 
