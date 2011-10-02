@@ -307,12 +307,7 @@
         });
 
         test('width & height can be accessed on window and document', 2, function () {
-//alert ($(window).css('width') +'=='+ $(document).css('width'));
           ok($(window).css('width') == $(document).css('width'), 'win and doc have same width');
-//alert('start');
-//alert(/msie/i.test(navigator.userAgent) + ','+document.body.scrollHeight + ',' + document.documentElement.scrollHeight + ',' + document.documentElement.clientHeight);
-//alert ($(window).css('height') +'<'+ $(document).css('height'));
-//alert(bonzo.viewport().height);
           ok($(window).css('height') < $(document).css('height'), 'document height is much larger than win height');
         })
 
@@ -441,9 +436,9 @@
 
         function testCreate(node) {
            var e, ex
-           try { e = $.create('<' + node + '>') } catch (e) { ex = e }
-           ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element ' + (e && e.length == 1 && e[0].tagName.toUpperCase() == node ? '' : '(X)'))
-           ok(!ex, 'no exception while creating &lt;' + node + '&gt; element ' + (!ex ? '' : '(X)'))
+           try { e = $.create('<' + node + '>') } catch (e) {}
+           ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
+           ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
            delete e;
         }
 

@@ -584,6 +584,8 @@
         for (var i = 0; i < dep; i++) el = el.firstChild
         el.nodeType == 1 && els.push(el)
         while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
+        // IE<9 gives us a parentNode which messes up insert() check for cloning
+        each(els, function(el) { el[parentNode] && el[parentNode].removeChild(el) })
         return els
 
       }() : is(node) ? [node.cloneNode(true)] : []
