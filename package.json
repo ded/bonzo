@@ -1,7 +1,7 @@
 {
     "name": "bonzo"
   , "description": "Library agnostic, extensible DOM utility"
-  , "version": "0.7.3"
+  , "version": "0.7.4"
   , "homepage": "https://github.com/ded/bonzo"
   , "author": "Dustin Diaz <dustin@dustindiaz.com> (http://dustindiaz.com)"
   , "keywords": ["ender", "dom", "nodes", "jquery", "iteration", "css"]
