@@ -71,15 +71,15 @@ All other API methods
   * last()
   * next()
   * previous()
-  * append(html)
-  * appendTo(target)
-  * prepend(html)
-  * prependTo(target)
-  * before(html)
-  * insertBefore(target)
-  * after(html)
-  * insertAfter(target)
-  * replaceWith(html)
+  * append(html || node)
+  * appendTo(target || selector)
+  * prepend(html || node)
+  * prependTo(target || selector)
+  * before(html || node)
+  * insertBefore(target || selector)
+  * after(html || node)
+  * insertAfter(target || selector)
+  * replaceWith(html || node)
   * css()
     - css(prop) get
     - css(prop, val) set
@@ -150,6 +150,14 @@ Tests
 -----
 
     $ open tests/tests.html
+
+Browser support
+---------------
+  * IE6+
+  * Chrome
+  * Safari 4+
+  * Firefox 3+
+  * Opera
 
 Ender integration
 ----------

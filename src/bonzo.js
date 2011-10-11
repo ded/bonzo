@@ -1,9 +1,10 @@
 !function (name, definition) {
   if (typeof module != 'undefined') module.exports = definition()
-  else if (typeof define == 'function' && typeof define.amd == 'object') define(definition)
+  else if (typeof define == 'function' && define.amd) define(name, definition)
   else this[name] = definition()
 }('bonzo', function() {
   var context = this
+    , old = context.bonzo
     , win = window
     , doc = win.document
     , html = doc.documentElement
@@ -11,8 +12,18 @@
     , query = null
     , specialAttributes = /^checked|value|selected$/
     , specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i
-    , table = 'table'
-    , tagMap = { thead: table, tbody: table, tfoot: table, tr: 'tbody', th: 'tr', td: 'tr', fieldset: 'form', option: 'select' }
+    , table = [ '<table>', '</table>', 1 ]
+    , td = [ '<table><tbody><tr>', '</tr></tbody></table>', 3 ]
+    , option = [ '<select>', '</select>', 1 ]
+    , tagMap = {
+        thead: table, tbody: table, tfoot: table, colgroup: table, caption: table
+        , tr: [ '<table><tbody>', '</tbody></table>', 2 ]
+        , th: td , td: td
+        , col: [ '<table><colgroup>', '</colgroup></table>', 2 ]
+        , fieldset: [ '<form>', '</form>', 1 ]
+        , legend: [ '<form><fieldset>', '</fieldset></form>', 2 ]
+        , option: option
+        , optgroup: option }
     , stateAttributes = /^checked|selected$/
     , ie = /msie/i.test(navigator.userAgent)
     , uidList = []
@@ -21,16 +32,25 @@
     , px = 'px'
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
-    , trimReplace = /(^\s*|\s*$)/g
-    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
-    , transform = function () {
-        var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
-        for (i = 0; i < props.length; i++) {
-          if (props[i] in doc.createElement('a').style) {
-            return props[i]
-          }
+    , byTag = 'getElementsByTagName'
+    , features = function() {
+        var e = doc.createElement('p')
+        e.innerHTML = '<a href="#x">x</a><table style="float:left;"></table>'
+        return {
+          hrefExtended: e[byTag]('a')[0][getAttribute]('href') != '#x' //IE<8
+          , autoTbody: e[byTag]('tbody').length !== 0 //IE<8
+          , computedStyle: doc.defaultView && doc.defaultView.getComputedStyle
+          , cssFloat: e[byTag]('table')[0].style.styleFloat ? 'styleFloat' : 'cssFloat'
+          , transform: function () {
+              var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
+              for (i = 0; i < props.length; i++) {
+                if (props[i] in e.style) return props[i]
+              }
+            }()
         }
       }()
+    , trimReplace = /(^\s*|\s*$)/g
+    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
     , trim = String.prototype.trim ?
         function (s) {
           return s.trim()
@@ -54,34 +74,33 @@
     })
   }
 
-  function is(node) {
+  function isNode(node) {
     return node && node.nodeName && node.nodeType == 1
   }
 
   function some(ar, fn, scope, i) {
-    for (i = 0, j = ar.length; i < j; ++i) {
-      if (fn.call(scope, ar[i], i, ar)) return true
-    }
+    for (i = 0, j = ar.length; i < j; ++i) if (fn.call(scope, ar[i], i, ar)) return true
     return false
   }
 
-  var getStyle = doc.defaultView && doc.defaultView.getComputedStyle ?
+  function styleProperty(p) {
+      (p == 'transform' && (p = features.transform)) ||
+        (/^transform-?[Oo]rigin$/.test(p) && (p = features.transform + "Origin")) ||
+        (p == 'float' && (p = features.cssFloat))
+      return p ? camelize(p) : null
+  }
+
+  var getStyle = features.computedStyle ?
     function (el, property) {
-      property = property == 'transform' ? transform : property
-      property = property == 'transform-origin' ? transform + "Origin" : property
       var value = null
-      if (property == 'float') {
-        property = 'cssFloat'
-      }
-      var computed = doc.defaultView.getComputedStyle(el, '')
-      computed && (value = computed[camelize(property)])
+        , computed = doc.defaultView.getComputedStyle(el, '')
+      computed && (value = computed[property])
       return el.style[property] || value
-    } : (ie && html.currentStyle) ?
+    } :
+
+    (ie && html.currentStyle) ?
 
     function (el, property) {
-      property = camelize(property)
-      property = property == 'float' ? 'styleFloat' : property
-
       if (property == 'opacity') {
         var val = 100
         try {
@@ -98,7 +117,7 @@
     } :
 
     function (el, property) {
-      return el.style[camelize(property)]
+      return el.style[property]
     }
 
   function insert(target, host, fn) {
@@ -162,7 +181,7 @@
   //   return el.getAttribute('data-original-color')
   // })
 
-  function set(el, v) {
+  function setter(el, v) {
     return typeof v == 'function' ? v(el) : v
   }
 
@@ -210,7 +229,7 @@
 
     , html: function (h, text) {
         var method = text ?
-          html.textContent === null ?
+          html.textContent === undefined ?
             'innerText' :
             'textContent' :
           'innerHTML', m;
@@ -235,13 +254,13 @@
 
     , addClass: function (c) {
         return this.each(function (el) {
-          hasClass(el, set(el, c)) || addClass(el, set(el, c))
+          hasClass(el, setter(el, c)) || addClass(el, setter(el, c))
         })
       }
 
     , removeClass: function (c) {
         return this.each(function (el) {
-          hasClass(el, set(el, c)) && removeClass(el, set(el, c))
+          hasClass(el, setter(el, c)) && removeClass(el, setter(el, c))
         })
       }
 
@@ -371,11 +390,11 @@
           if (!v) {
             return null
           }
-          if (v == doc || v == win) {
-            p = (v == doc) ? bonzo.doc() : bonzo.viewport()
+          if (v === doc || v === win) {
+            p = (v === doc) ? bonzo.doc() : bonzo.viewport()
             return o == 'width' ? p.width : o == 'height' ? p.height : ''
           }
-          return getStyle(v, o)
+          return (o = styleProperty(o)) ? getStyle(v, o) : null
         }
         var iter = o
         if (typeof o == 'string') {
@@ -391,21 +410,13 @@
           delete iter.opacity;
         }
 
-        if (v = iter['float']) {
-          // float is a reserved style word. w3 uses cssFloat, ie uses styleFloat
-          ie ? (iter.styleFloat = v) : (iter.cssFloat = v);
-          delete iter['float'];
-        }
-
         function fn(el, p, v) {
           for (var k in iter) {
             if (iter.hasOwnProperty(k)) {
               v = iter[k];
               // change "5" to "5px" - unless you're line-height, which is allowed
-              (p = camelize(k)) && digit.test(v) && !(p in unitless) && (v += px)
-              p = p == 'transform' ? transform : p
-              p = p == 'transformOrigin' ? transform + 'Origin' : p
-              el.style[p] = set(el, v)
+              (p = styleProperty(k)) && digit.test(v) && !(p in unitless) && (v += px)
+              el.style[p] = setter(el, v)
             }
           }
         }
@@ -447,9 +458,10 @@
         return typeof v == 'undefined' ?
           specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
-              true : el[k] : el[getAttribute](k) :
+              true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
+                el[getAttribute](k, 2) : el[getAttribute](k) :
           this.each(function (el) {
-            specialAttributes.test(k) ? (el[k] = set(el, v)) : el[setAttribute](k, set(el, v))
+            specialAttributes.test(k) ? (el[k] = setter(el, v)) : el[setAttribute](k, setter(el, v))
           })
       }
 
@@ -464,17 +476,17 @@
       }
 
     , data: function (k, v) {
-        var el = this[0]
+        var el = this[0], uid, o
         if (typeof v === 'undefined') {
           el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
-          var uid = el[getAttribute]('data-node-uid')
+          uid = el[getAttribute]('data-node-uid')
           uidList[uid] || (uidList[uid] = {})
           return uidList[uid][k]
         } else {
           return this.each(function (el) {
             el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
-            var uid = el[getAttribute]('data-node-uid')
-              , o = uidList[uid] || (uidList[uid] = {})
+            uid = el[getAttribute]('data-node-uid')
+            o = uidList[uid] || (uidList[uid] = {})
             o[k] = v
           })
         }
@@ -518,7 +530,7 @@
   }
 
   function normalize(node) {
-    return typeof node == 'string' ? bonzo.create(node) : is(node) ? [node] : node // assume [nodes]
+    return typeof node == 'string' ? bonzo.create(node) : isNode(node) ? [node] : node // assume [nodes]
   }
 
   function scroll(x, y, type) {
@@ -561,20 +573,32 @@
   bonzo.create = function (node) {
     return typeof node == 'string' && node !== '' ?
       function () {
-        var tag = /^<([^\s>]+)/.exec(node)
-          , el = doc.createElement(tag && tagMap[tag[1].toLowerCase()] || 'div'), els = []
-        el.innerHTML = node
-        var nodes = el.childNodes
-        el = el.firstChild
-        el.nodeType == 1 && els.push(el)
-        while (el = el.nextSibling) (el.nodeType == 1) && els.push(el)
+        var tag = /^\s*<([^\s>]+)/.exec(node)
+          , el = doc.createElement('div')
+          , els = []
+          , p = tag ? tagMap[tag[1].toLowerCase()] : null
+          , dep = p ? p[2] + 1 : 1
+          , pn = parentNode
+          , tb = features.autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
+        el.innerHTML = p ? (p[0] + node + p[1]) : node
+        while (dep--) el = el.firstChild
+        do {
+          // tbody special case for IE<8, creates tbody on any empty table
+          // we don't want it if we're just after a <thead>, <caption>, etc.
+          if (el.nodeType == 1 && (!tb || el.tagName.toLowerCase() != 'tbody')) {
+            els.push(el)
+          }
+        } while (el = el.nextSibling)
+        // IE < 9 gives us a parentNode which messes up insert() check for cloning
+        // `dep` > 1 can also cause problems with the insert() check (must do this last)
+        each(els, function(el) { el[pn] && el[pn].removeChild(el) })
         return els
 
-      }() : is(node) ? [node.cloneNode(true)] : []
+      }() : isNode(node) ? [node.cloneNode(true)] : []
   }
 
   bonzo.doc = function () {
-    var vp = this.viewport()
+    var vp = bonzo.viewport()
     return {
         width: Math.max(doc.body.scrollWidth, html.scrollWidth, vp.width)
       , height: Math.max(doc.body.scrollHeight, html.scrollHeight, vp.height)
@@ -583,9 +607,7 @@
 
   bonzo.firstChild = function (el) {
     for (var c = el.childNodes, i = 0, j = (c && c.length) || 0, e; i < j; i++) {
-      if (c[i].nodeType === 1) {
-        e = c[j = i]
-      }
+      if (c[i].nodeType === 1) e = c[j = i]
     }
     return e
   }
@@ -613,7 +635,6 @@
       return false
     }
 
-  var old = context.bonzo
   bonzo.noConflict = function () {
     context.bonzo = old
     return this
