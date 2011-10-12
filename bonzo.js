@@ -246,7 +246,7 @@
         }
         return typeof h !== 'undefined' ?
             this.each(function (el) {
-              (m = el.tagName.match(specialTags)) ?
+              !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
                 (el[method] = h)
             }) :
@@ -585,12 +585,13 @@
           , dep = p ? p[2] + 1 : 1
           , pn = parentNode
           , tb = features.autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
+
         el.innerHTML = p ? (p[0] + node + p[1]) : node
         while (dep--) el = el.firstChild
         do {
           // tbody special case for IE<8, creates tbody on any empty table
           // we don't want it if we're just after a <thead>, <caption>, etc.
-          if (el.nodeType == 1 && (!tb || el.tagName.toLowerCase() != 'tbody')) {
+          if ((!tag || el.nodeType == 1) && (!tb || el.tagName.toLowerCase() != 'tbody')) {
             els.push(el)
           }
         } while (el = el.nextSibling)
