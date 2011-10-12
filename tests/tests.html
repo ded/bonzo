@@ -481,7 +481,6 @@
            var e, ex
            try { e = $.create('<' + node + '>') } catch (e) {}
            ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
-if (e.length != 1) alert(!e.length)
            ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
            delete e;
         }
@@ -558,7 +557,13 @@ if (e.length != 1) alert(!e.length)
           'VAR'
         ];
 
-        test('`create` special cases', html4Nodes.length * 2, function() {
+        test('`create` special cases', 4 + html4Nodes.length * 2, function() {
+          var e = $.create('  <p>something in here</p>  <div/>\t')
+          ok(e && e.length == 2, 'create() 2 elements with extra whitespace')
+          ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].tagName.toLowerCase() == 'p', 'first element of create() called with additional whitespace')
+          ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].innerHTML == 'something in here', 'content of first element of create() called with additional whitespace')
+          ok(e && e.length == 2 && e[1].nodeType == 1 && e[1].tagName.toLowerCase() == 'div', 'second element of create() called with additional whitespace')
+
           for (var i = 0; i < html4Nodes.length; i++) testCreate(html4Nodes[i])
         })
       });
