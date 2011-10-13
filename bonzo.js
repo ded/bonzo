@@ -289,7 +289,7 @@
         })
       }
 
-    , hide: function (elements) {
+    , hide: function () {
         return this.each(function (el) {
           el.style.display = 'none'
         })
@@ -434,15 +434,34 @@
             xy(el, x, y)
           })
         }
+
         var el = this[0]
+          , orig = !el.offsetWidth && !el.offsetHeight ? 
+             // el isn't visible, can't be measured properly, so fix that
+             function(t, s) {
+                s = {
+                  position: el.style.position || ''
+                  , visibility: el.style.visibility || ''
+                  , display: el.style.display || ''
+                }
+                t.css({
+                  position: 'absolute'
+                  , visibility: 'hidden'
+                  , display: 'block'
+                })
+                return s
+              }(this) : null
           , width = el.offsetWidth
           , height = el.offsetHeight
           , top = el.offsetTop
           , left = el.offsetLeft
+
         while (el = el.offsetParent) {
           top = top + el.offsetTop
           left = left + el.offsetLeft
         }
+
+        orig && this.css(orig)
 
         return {
             top: top

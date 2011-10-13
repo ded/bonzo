@@ -269,18 +269,22 @@
           $('#toggle').toggle(function () {
             ok(true, 'callback in toggle gets called')
           })
-          ok($('#toggle').offset().width == 0, 'element has no flow')
+          ok($('#toggle')[0].offsetWidth == 0, 'element has no flow')
           $('#toggle').toggle()
-          ok($('#toggle').offset().width > 0, 'element has flow after toggling again')
-
+          ok($('#toggle')[0].offsetWidth > 0, 'element has flow after toggling again')
         })
 
-        test('offsets', 6, function () {
+        test('offsets', 9, function () {
           var $el = $(dom.create('<div/>')).css({
-            position: 'absolute',
-            left: '50px',
-            top: -999
-          }).appendTo(document.body);
+                position: 'absolute',
+                left: '50px',
+                top: -999
+              }).appendTo(document.body)
+            , $hidden = $(dom.create('<p>some text in here</p>')).hide().css({
+                 marginLeft: '100px',
+                 marginRight: '100px'
+              }).appendTo(document.body)
+
           ok($el.offset().left == 50, 'initial offset.left is 50');
           ok($el.offset().left == 50, 'initial offset.top is -999');
           $el.offset(100, null);
@@ -291,6 +295,10 @@
           $el.offset(0, 0);
           ok($el.offset().top == 0, 'setting "0" doesnt become falsy')
           ok($el.offset().left == 0, 'setting "0" doesnt become falsy')
+
+          ok($hidden.offset().top > 0 && $hidden.offset().left > 0, 'hidden element offset.top&left non-zero');
+          ok($hidden.offset().height > 0 && $hidden.offset().width > 0, 'hidden element offset.height&width non-zero');
+          ok($hidden[0].style.display == 'none', 'hidden element is still hidden after offset() call'); 
         });
 
         test('should augment special methods', 3, function () {
