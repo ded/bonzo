@@ -439,7 +439,7 @@
                   , visibility: el.style.visibility || ''
                   , display: el.style.display || ''
                 }
-                t.css({
+                t.first().css({
                   position: 'absolute'
                   , visibility: 'hidden'
                   , display: 'block'
