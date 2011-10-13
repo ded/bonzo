@@ -461,7 +461,7 @@
           left = left + el.offsetLeft
         }
 
-        orig && this.css(orig)
+        orig && this.first().css(orig)
 
         return {
             top: top
