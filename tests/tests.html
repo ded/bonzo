@@ -79,6 +79,7 @@
       <div id="insert-after-last"><div class="after-last-target"></div></div>
       <div id="html"></div>
       <div id="html-select"></div>
+      <div id="html-table"></div>
       <div id="text"></div>
       <div id="show-hide" style="width:10px"></div>
       <div id="toggle" style="width:10px"></div>
@@ -219,16 +220,23 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 2, function () {
-          var fixture = '<p>oh yeeeeeah!</p>';
+        test('get and set html', 4, function () {
+          var fixture = '<p>oh yeeeeeah!</p>'
+            , fixture2 = '&lt;oh yeeeeeah&gt;'
+
           $('#html').html(fixture);
           ok(Q('#html')[0].innerHTML.toLowerCase() == fixture, 'sets appropriate fixture html');
           ok($('#html').html().toLowerCase() == fixture, 'gets appropriate fixture html');
+
+          $('#html').empty().html(fixture2);
+          ok(Q('#html')[0].innerHTML == fixture2, 'sets appropriate tag-less fixture html');
+          ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
         });
 
-        test('set html on special tags', 2, function () {
-          var fixture = '<option class="bad">i am an option</option>';
-          var fixture2 = '<option>i am an option</option><option>and yet another</option>';
+        test('set html on special tags', 3, function () {
+          var fixture = '<option class="bad">i am an option</option>'
+            , fixture2 = '<option>i am an option</option><option>and yet another</option>'
+            , fixture3 = 'chicka chicka chomp chomp'
 
           $('#html-select').append('<select id="select-test-2"/>');
           $('#select-test-2').html(fixture2);
@@ -238,14 +246,23 @@
           $('#select-test').html(fixture);
           ok($('#select-test option').length == 1, "$('#select-test option').length == 1");
 
+          $('#html-table').append('<table><tbody><tr><td id="table-test"></td></tr></tbody></table>')
+          $('#table-test').html(fixture3)
+          ok($('#table-test')[0].innerHTML == fixture3, 'sets appropriate html in TD element')
         });
 
-        test('get and set text', 2, function () {
-          var fixture = '<p>boosh</p>';
-          var expected = '&lt;p&gt;boosh&lt;/p&gt;';
+        test('get and set text', 4, function () {
+          var fixture = '<p>boosh</p>'
+            , expected = '&lt;p&gt;boosh&lt;/p&gt;';
+
           $('#text').text(fixture);
           ok(Q('#text')[0].innerHTML.toLowerCase() == expected, 'sets appropriate fixture text');
           ok($('#text').text().toLowerCase() == fixture, 'gets appropriate fixture text');
+
+          $('#html-table').empty().append('<table><tbody><tr><td id="table-test"></td></tr></tbody></table>')
+          $('#table-test').text(fixture)
+          ok($('#table-test')[0].innerHTML == expected, 'sets appropriate fixture text in TD element')
+          ok($('#table-test').text() == fixture, 'gets appropriate fixture text in TD element');
         });
 
         test('show and hide', 6, function () {
@@ -472,7 +489,6 @@
            var e, ex
            try { e = $.create('<' + node + '>') } catch (e) {}
            ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
-if (e.length != 1) alert(!e.length)
            ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
            delete e;
         }
@@ -549,7 +565,13 @@ if (e.length != 1) alert(!e.length)
           'VAR'
         ];
 
-        test('`create` special cases', html4Nodes.length * 2, function() {
+        test('`create` special cases', 4 + html4Nodes.length * 2, function() {
+          var e = $.create('  <p>something in here</p>  <div/>\t')
+          ok(e && e.length == 2, 'create() 2 elements with extra whitespace')
+          ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].tagName.toLowerCase() == 'p', 'first element of create() called with additional whitespace')
+          ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].innerHTML == 'something in here', 'content of first element of create() called with additional whitespace')
+          ok(e && e.length == 2 && e[1].nodeType == 1 && e[1].tagName.toLowerCase() == 'div', 'second element of create() called with additional whitespace')
+
           for (var i = 0; i < html4Nodes.length; i++) testCreate(html4Nodes[i])
         })
       });

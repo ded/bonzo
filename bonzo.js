@@ -246,7 +246,7 @@
         }
         return typeof h !== 'undefined' ?
             this.each(function (el) {
-              (m = el.tagName.match(specialTags)) ?
+              !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
                 (el[method] = h)
             }) :
@@ -289,7 +289,7 @@
         })
       }
 
-    , hide: function () {
+    , hide: function (elements) {
         return this.each(function (el) {
           el.style.display = 'none'
         })
@@ -434,34 +434,15 @@
             xy(el, x, y)
           })
         }
-
         var el = this[0]
-          , orig = !el.offsetWidth && !el.offsetHeight ? 
-             // el isn't visible, can't be measured properly, so fix that
-             function(t, s) {
-                s = {
-                  position: el.style.position || ''
-                  , visibility: el.style.visibility || ''
-                  , display: el.style.display || ''
-                }
-                t.first().css({
-                  position: 'absolute'
-                  , visibility: 'hidden'
-                  , display: 'block'
-                })
-                return s
-              }(this) : null
           , width = el.offsetWidth
           , height = el.offsetHeight
           , top = el.offsetTop
           , left = el.offsetLeft
-
         while (el = el.offsetParent) {
           top = top + el.offsetTop
           left = left + el.offsetLeft
         }
-
-        orig && this.first().css(orig)
 
         return {
             top: top
@@ -604,12 +585,13 @@
           , dep = p ? p[2] + 1 : 1
           , pn = parentNode
           , tb = features.autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
+
         el.innerHTML = p ? (p[0] + node + p[1]) : node
         while (dep--) el = el.firstChild
         do {
           // tbody special case for IE<8, creates tbody on any empty table
           // we don't want it if we're just after a <thead>, <caption>, etc.
-          if (el.nodeType == 1 && (!tb || el.tagName.toLowerCase() != 'tbody')) {
+          if ((!tag || el.nodeType == 1) && (!tb || el.tagName.toLowerCase() != 'tbody')) {
             els.push(el)
           }
         } while (el = el.nextSibling)
