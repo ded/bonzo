@@ -429,7 +429,25 @@
             xy(el, x, y)
           })
         }
+        var el = this[0]
+          , width = el.offsetWidth
+          , height = el.offsetHeight
+          , top = el.offsetTop
+          , left = el.offsetLeft
+        while (el = el.offsetParent) {
+          top = top + el.offsetTop
+          left = left + el.offsetLeft
+        }
 
+        return {
+            top: top
+          , left: left
+          , height: height
+          , width: width
+        }
+      }
+
+    , dim: function() {
         var el = this[0]
           , orig = !el.offsetWidth && !el.offsetHeight ? 
              // el isn't visible, can't be measured properly, so fix that
@@ -448,22 +466,9 @@
               }(this) : null
           , width = el.offsetWidth
           , height = el.offsetHeight
-          , top = el.offsetTop
-          , left = el.offsetLeft
-
-        while (el = el.offsetParent) {
-          top = top + el.offsetTop
-          left = left + el.offsetLeft
-        }
 
         orig && this.first().css(orig)
-
-        return {
-            top: top
-          , left: left
-          , height: height
-          , width: width
-        }
+        return { height: height, width: width }
       }
 
     , attr: function (k, v) {
