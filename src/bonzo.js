@@ -284,7 +284,7 @@
         })
       }
 
-    , hide: function (elements) {
+    , hide: function () {
         return this.each(function (el) {
           el.style.display = 'none'
         })
@@ -445,6 +445,30 @@
           , height: height
           , width: width
         }
+      }
+
+    , dim: function() {
+        var el = this[0]
+          , orig = !el.offsetWidth && !el.offsetHeight ? 
+             // el isn't visible, can't be measured properly, so fix that
+             function(t, s) {
+                s = {
+                  position: el.style.position || ''
+                  , visibility: el.style.visibility || ''
+                  , display: el.style.display || ''
+                }
+                t.first().css({
+                  position: 'absolute'
+                  , visibility: 'hidden'
+                  , display: 'block'
+                })
+                return s
+              }(this) : null
+          , width = el.offsetWidth
+          , height = el.offsetHeight
+
+        orig && this.first().css(orig)
+        return { height: height, width: width }
       }
 
     , attr: function (k, v) {

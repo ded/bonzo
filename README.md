@@ -91,6 +91,9 @@ All other API methods
       - left
       - width
       - height
+  * dim()
+    - width
+    - height
   * attr
     - attr(k) get
     - attr(k, v) set
