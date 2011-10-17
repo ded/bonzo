@@ -55,11 +55,11 @@
     },
 
     first: function () {
-      return this.length ? $(this[0]) : this
+      return $(this.length ? this[0] : this)
     },
 
     last: function () {
-      return this.length ? $(this[this.length - 1]) : this
+      return $(this.length ? this[this.length - 1] : [])
     },
 
     next: function () {
