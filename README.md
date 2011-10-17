@@ -48,7 +48,7 @@ bonzo.aug({
 $('p').color('aqua')
 ```
 
-All other API methods
+Bonzo Full API
 ---------------------
 
   * each(callback)
