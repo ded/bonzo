@@ -494,7 +494,7 @@
       }
 
     , data: function (k, v) {
-        var el = this[0], uid, o, d, m
+        var el = this[0], uid, o, m
         if (typeof v === 'undefined') {
           o = data(el)
           if (typeof k === 'undefined') {
