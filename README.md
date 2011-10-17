@@ -91,6 +91,9 @@ Bonzo Full API
       - left
       - width
       - height
+  * dim()
+    - width
+    - height
   * attr
     - attr(k) get
     - attr(k, v) set
