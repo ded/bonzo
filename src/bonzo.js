@@ -38,8 +38,8 @@
         var e = doc.createElement('p')
         e.innerHTML = '<a href="#x">x</a><table style="float:left;"></table>'
         return {
-          hrefExtended: e[byTag]('a')[0][getAttribute]('href') != '#x' //IE<8
-          , autoTbody: e[byTag]('tbody').length !== 0 //IE<8
+          hrefExtended: e[byTag]('a')[0][getAttribute]('href') != '#x' // IE < 8
+          , autoTbody: e[byTag]('tbody').length !== 0 // IE < 8
           , computedStyle: doc.defaultView && doc.defaultView.getComputedStyle
           , cssFloat: e[byTag]('table')[0].style.styleFloat ? 'styleFloat' : 'cssFloat'
           , transform: function () {
@@ -138,14 +138,21 @@
       return el.style[property]
     }
 
+  // this insert method is intense
   function insert(target, host, fn) {
     var i = 0, self = host || this, r = []
+      // target nodes could be a css selector if it's a string and a selector engine is present
+      // otherwise, just use target
       , nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? query(target) : target
+    // normalize each node in case it's still a string and we need to create nodes on the fly
     each(normalize(nodes), function (t) {
       each(self, function (el) {
         var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
           function () {
             var c = el.cloneNode(true)
+            // check for existence of an event cloner
+            // preferably https://github.com/fat/bean
+            // otherwise Bonzo won't do this for you
             self.$ && self.cloneEvents && self.$(c).cloneEvents(el)
             return c
           }() : el
@@ -302,7 +309,7 @@
         })
       }
 
-    , hide: function (elements) {
+    , hide: function () {
         return this.each(function (el) {
           el.style.display = 'none'
         })
@@ -461,6 +468,33 @@
             top: top
           , left: left
           , height: height
+          , width: width
+        }
+      }
+
+    , dim: function () {
+        var el = this[0]
+          , orig = !el.offsetWidth && !el.offsetHeight ?
+             // el isn't visible, can't be measured properly, so fix that
+             function (t, s) {
+                s = {
+                    position: el.style.position || ''
+                  , visibility: el.style.visibility || ''
+                  , display: el.style.display || ''
+                }
+                t.first().css({
+                    position: 'absolute'
+                  , visibility: 'hidden'
+                  , display: 'block'
+                })
+                return s
+              }(this) : null
+          , width = el.offsetWidth
+          , height = el.offsetHeight
+
+        orig && this.first().css(orig)
+        return {
+            height: height
           , width: width
         }
       }
