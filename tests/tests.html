@@ -137,6 +137,7 @@
     </div>
     <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
+    <div id="data-test" data-foo="bar" data-hoo-haa="true" data-number="100"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -475,6 +476,26 @@
           ok(checkedCount() == 0, 'no checkboxes are checked again')
           $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
           ok(checkedCount() == 3, 'all checkboxes are checked!')
+        })
+
+        test('data', 3, function() {
+          var el = $('#data-test'), data
+
+          el.data('disco', 'stu')
+          el.data('neverGunna', 'give you up')
+
+          ok(el.data('foo') == 'bar', 'read existing data-* from dom')
+          ok(el.data('disco') == 'stu', 'read data set by data(k,v)')
+
+          data = el.data()          
+          ok(
+            data &&
+            data.foo == 'bar' &&
+            data.disco == 'stu' &&
+            data.neverGunna == 'give you up' &&
+            data.hooHaa === true &&
+            data.number == 100
+            , 'read all data, as correct type, with data()')
         })
 
         function testCreate(node) {
