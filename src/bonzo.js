@@ -447,18 +447,18 @@
         }
       }
 
-    , dim: function() {
+    , dim: function () {
         var el = this[0]
-          , orig = !el.offsetWidth && !el.offsetHeight ? 
+          , orig = !el.offsetWidth && !el.offsetHeight ?
              // el isn't visible, can't be measured properly, so fix that
-             function(t, s) {
+             function (t, s) {
                 s = {
-                  position: el.style.position || ''
+                    position: el.style.position || ''
                   , visibility: el.style.visibility || ''
                   , display: el.style.display || ''
                 }
                 t.first().css({
-                  position: 'absolute'
+                    position: 'absolute'
                   , visibility: 'hidden'
                   , display: 'block'
                 })
@@ -468,7 +468,10 @@
           , height = el.offsetHeight
 
         orig && this.first().css(orig)
-        return { height: height, width: width }
+        return {
+            height: height
+          , width: width
+        }
       }
 
     , attr: function (k, v) {
