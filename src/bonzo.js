@@ -227,11 +227,11 @@
       }
 
     , first: function () {
-        return bonzo(this[0])
+        return bonzo(this.length ? this[0] : [])
       }
 
     , last: function () {
-        return bonzo(this[this.length - 1])
+        return bonzo(this.length ? this[this.length - 1] : [])
       }
 
     , html: function (h, text) {
