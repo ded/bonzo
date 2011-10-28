@@ -65,6 +65,7 @@ Bonzo Full API
   * addClass(c)
   * removeClass(c)
   * hasClass(c)
+  * toggleClass(c)
   * show()
   * hide()
   * first()
