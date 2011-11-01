@@ -495,7 +495,7 @@
           return this
         }
         return typeof v == 'undefined' ?
-          specialAttributes.test(k) ?
+          specialAttributes.test(k) && el.nodeName != "data" ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
                 el[getAttribute](k, 2) : el[getAttribute](k) :
