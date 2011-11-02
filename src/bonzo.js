@@ -29,6 +29,7 @@
     , uidList = []
     , uuids = 0
     , digit = /^-?[\d\.]+$/
+    , dattr = /^data-(.+)$/
     , px = 'px'
     , setAttribute = 'setAttribute'
     , getAttribute = 'getAttribute'
@@ -72,6 +73,23 @@
     return s.replace(/-(.)/g, function (m, m1) {
       return m1.toUpperCase()
     })
+  }
+
+  function decamelize(s) {
+    return s ? s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : s
+  }
+
+  function data(el) {
+    el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
+    uid = el[getAttribute]('data-node-uid')
+    return uidList[uid] || (uidList[uid] = {})
+  }
+
+  function dataValue(d) {
+    try {
+      return d === 'true' ? true : d === 'false' ? false : d === 'null' ? null : !isNaN(d) ? parseFloat(d) : d;
+    } catch(e) {}
+    return undefined
   }
 
   function isNode(node) {
@@ -510,19 +528,20 @@
       }
 
     , data: function (k, v) {
-        var el = this[0], uid, o
+        var el = this[0], uid, o, m
         if (typeof v === 'undefined') {
-          el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
-          uid = el[getAttribute]('data-node-uid')
-          uidList[uid] || (uidList[uid] = {})
-          return uidList[uid][k]
+          o = data(el)
+          if (typeof k === 'undefined') {
+            each(el.attributes, function(a) {
+              (m = (''+a.name).match(dattr)) && (o[camelize(m[1])] = dataValue(a.value))
+            })
+            return o
+          } else {
+            return typeof o[k] === 'undefined' ?
+              (o[k] = dataValue(this.attr('data-' + decamelize(k)))) : o[k]
+          }
         } else {
-          return this.each(function (el) {
-            el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
-            uid = el[getAttribute]('data-node-uid')
-            o = uidList[uid] || (uidList[uid] = {})
-            o[k] = v
-          })
+          return this.each(function (el) { data(el)[k] = v })
         }
       }
 

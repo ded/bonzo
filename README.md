@@ -102,6 +102,10 @@ Bonzo Full API
   * val
     - val() get
     - val(s) set
+  * data
+    - data() get all
+    - data(k) get
+    - data(k, v) set
   * remove()
   * empty()
   * detach()
