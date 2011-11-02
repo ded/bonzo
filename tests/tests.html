@@ -309,7 +309,15 @@
           $el.offset(0, 0);
           ok($el.offset().top == 0, 'setting "0" doesnt become falsy')
           ok($el.offset().left == 0, 'setting "0" doesnt become falsy')
-        });
+        })
+
+        test('offset() returns 0s when element not found', 4, function () {
+          var nullSet = $('div.this-element-dont-exist').offset()
+          ok(!nullSet.left, 'no offset().left')
+          ok(!nullSet.top, 'no offset().top')
+          ok(!nullSet.width, 'no offset().width')
+          ok(!nullSet.height, 'no offset().height')
+        })
 
         test('dimensions', 5, function () {
           var $el = $(dom.create('<div/>')).css({
@@ -330,7 +338,7 @@
 
           ok($hidden.dim().height > 0 && $hidden.dim().height < 100, 'hidden element dim().height is reasonable non-zero');
           ok($hidden.dim().width > 0 && $hidden.dim().width < 10000, 'hidden element dim().width is reasonable non-zero');
-          ok($hidden[0].style.display == 'none', 'hidden element is still hidden after offset() call'); 
+          ok($hidden[0].style.display == 'none', 'hidden element is still hidden after offset() call');
         });
 
         test('should augment special methods', 3, function () {
@@ -405,7 +413,7 @@
             , append = Q('#append-to')[0]
           $(node).appendTo(append);
           ok($('#append-to p').length == 1, '$("#append-to p").length == 1 - appended to target node');
-        });
+        })
 
         test('prependTo', 3, function () {
           var node = $.create('<p>world</p>')[0]
@@ -416,15 +424,15 @@
           ok($('#prepend-to p').length == 2, '$("#prepend-to p").length == 2 - prepended to target node');
           ok($('#prepend-to p').first().html() == 'hello', 'first node is "hello"');
           ok($('#prepend-to p').last().html() == 'world', 'last node is "world"');
-        });
+        })
 
         test('next', 1, function () {
           ok($('#sibling-tests li.nextr').next().length == 2, 'els.next().length == 2');
-        });
+        })
 
         test('previous', 1, function () {
           ok($('#sibling-tests li.nextr').previous().length == 3, 'els.previous().length == 3');
-        });
+        })
 
         test('scrollTop && scrollLeft', 2, function () {
           // there's gotta be a better way to test this than making the spec page height: 10000px
@@ -432,7 +440,7 @@
           ok($(window).scrollTop() == 1, 'condition1');
           $('#overflowed').scrollLeft(150);
           ok($('#overflowed').scrollLeft() == 150, 'condition2');
-        });
+        })
 
         test('setting & getting styles', 5, function () {
           ok($('#styles').css('margin-left') == '5px', 'margin-left is 5px by default');
@@ -509,7 +517,7 @@
           ok(el.data('foo') == 'bar', 'read existing data-* from dom')
           ok(el.data('disco') == 'stu', 'read data set by data(k,v)')
 
-          data = el.data()          
+          data = el.data()
           ok(
             data &&
             data.foo == 'bar' &&

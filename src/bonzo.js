@@ -454,6 +454,12 @@
             xy(el, x, y)
           })
         }
+        if (!this[0]) return {
+            top: 0
+          , left: 0
+          , height: 0
+          , width: 0
+        }
         var el = this[0]
           , width = el.offsetWidth
           , height = el.offsetHeight
