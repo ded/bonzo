@@ -120,8 +120,9 @@
     return v ?
       self.css(which, v) :
       function (r) {
+        if (!self[0]) return 0
         r = parseInt(self.css(which), 10);
-        return isNaN(r) ? self[0]['offset' + which.replace(/^\w/, function (m) {return m.toUpperCase()})] : r
+        return isNaN(r) ? self[0] ? self[0]['offset' + which.replace(/^\w/, function (m) {return m.toUpperCase()})] : r
       }()
   }
 
