@@ -524,7 +524,7 @@
       }
 
     , val: function (s) {
-        return (typeof s == 'string') ? this.attr('value', s) : this[0].value
+        return (typeof s == 'string') ? this.attr('value', s) : (this[0] && this[0].value || null)
       }
 
     , removeAttr: function (k) {
