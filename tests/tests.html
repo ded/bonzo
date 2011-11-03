@@ -338,7 +338,7 @@
 
           ok($hidden.dim().height > 0 && $hidden.dim().height < 100, 'hidden element dim().height is reasonable non-zero');
           ok($hidden.dim().width > 0 && $hidden.dim().width < 10000, 'hidden element dim().width is reasonable non-zero');
-          ok($hidden[0].style.display == 'none', 'hidden element is still hidden after offset() call');
+          ok($hidden[0].style.display == 'none', 'hidden element is still hidden after dim() call');
         });
 
         test('should augment special methods', 3, function () {
