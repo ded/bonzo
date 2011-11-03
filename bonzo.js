@@ -16,6 +16,7 @@
     , parentNode = 'parentNode'
     , query = null
     , specialAttributes = /^checked|value|selected$/
+    , valueTags = /data|li/i
     , specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i
     , table = [ '<table>', '</table>', 1 ]
     , td = [ '<table><tbody><tr>', '</tr></tbody></table>', 3 ]
@@ -519,7 +520,7 @@
           return this
         }
         return typeof v == 'undefined' ?
-          specialAttributes.test(k) ?
+          specialAttributes.test(k) && !(/value/i.test(k) && valueTags.test(el.nodeName)) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
                 el[getAttribute](k, 2) : el[getAttribute](k) :
