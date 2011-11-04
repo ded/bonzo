@@ -137,6 +137,9 @@
     </div>
     <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
+    <ul id="value-test">
+      <li value="2" ><data value="kittens"></data></li>
+    </ul>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -497,6 +500,14 @@
           ok(checkedCount() == 0, 'no checkboxes are checked again')
           $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
           ok(checkedCount() == 3, 'all checkboxes are checked!')
+        })
+
+        test('value attribute', 2, function() {
+          var li = $('#value-test li')
+              , data = $('#value-test data')
+          // @TODO <li> value must be an integer and be inside an <ol>
+          ok(li.attr('value') == 2, 'on li')
+          ok(data.attr('value') == 'kittens', 'on data')
         })
 
         function testCreate(node) {
