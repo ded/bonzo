@@ -541,11 +541,11 @@
           fake = dom({
             attributes: [ { name: 'data-node-uid', value: uid } ],
             getAttribute: function () { return uid }
-          })
+          }).data()
 
           ok(data, 'stored data object is intact after removal')
           ok(data.foo == 'bar', 'data object retains old values')
-          ok(fake.foo === undefined, 'new data object is wiped clean')
+          ok(fake.nodeUid === 2 && fake.foo === undefined, 'new data object is wiped clean')
         })
 
         function testCreate(node) {
