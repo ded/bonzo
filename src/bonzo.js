@@ -26,7 +26,7 @@
         , optgroup: option }
     , stateAttributes = /^checked|selected$/
     , ie = /msie/i.test(navigator.userAgent)
-    , uidList = []
+    , uidMap = {}
     , uuids = 0
     , digit = /^-?[\d\.]+$/
     , dattr = /^data-(.+)$/
@@ -69,6 +69,16 @@
     return ar
   }
 
+  function deepEach(ar, fn, scope) {
+    for (var i = 0, l = ar.length; i < l; i++) {
+      if (isNode(ar[i])) {
+        deepEach(ar[i].childNodes, fn, scope);
+        fn.call(scope || ar[i], ar[i], i, ar);
+      }
+    }
+    return ar;
+  }
+
   function camelize(s) {
     return s.replace(/-(.)/g, function (m, m1) {
       return m1.toUpperCase()
@@ -82,7 +92,12 @@
   function data(el) {
     el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
     uid = el[getAttribute]('data-node-uid')
-    return uidList[uid] || (uidList[uid] = {})
+    return uidMap[uid] || (uidMap[uid] = {})
+  }
+
+  function clearData(el) {
+    uid = el[getAttribute]('data-node-uid')
+    uid && (delete uidMap[uid])
   }
 
   function dataValue(d) {
@@ -235,6 +250,10 @@
         return each(this, fn, scope)
       }
 
+    , deepEach: function (fn, scope) {
+        return deepEach(this, fn, scope)
+      }
+      
     , map: function (fn, reject) {
         var m = [], n, i
         for (i = 0; i < this.length; i++) {
@@ -259,13 +278,12 @@
             'textContent' :
           'innerHTML', m;
         function append(el) {
-          while (el.firstChild) el.removeChild(el.firstChild)
           each(normalize(h), function (node) {
             el.appendChild(node)
           })
         }
         return typeof h !== 'undefined' ?
-            this.each(function (el) {
+            this.empty().each(function (el) {
               !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
                 (el[method] = h)
@@ -552,6 +570,10 @@
       }
 
     , remove: function () {
+        this.deepEach(function (el) {
+          clearData(el)
+        })
+
         return this.each(function (el) {
           el[parentNode] && el[parentNode].removeChild(el)
         })
@@ -559,9 +581,7 @@
 
     , empty: function () {
         return this.each(function (el) {
-          while (el.firstChild) {
-            el.removeChild(el.firstChild)
-          }
+          bonzo(el.childNodes).remove()
         })
       }
 
