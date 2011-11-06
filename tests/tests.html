@@ -138,6 +138,7 @@
     <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
     <div id="data-test" data-foo="bar" data-hoo-haa="true" data-number="100"></div>
+    <div id="data-temp"></div>
 
     <h1>Bonzo Tests</h1>
     <ol id="tests"></ol>
@@ -526,6 +527,25 @@
             data.hooHaa === true &&
             data.number == 100
             , 'read all data, as correct type, with data()')
+        })
+
+        test('data removal', 3, function() {
+          var el = $('#data-temp'), fake, data, uid
+
+          el.data('foo', 'bar')
+          
+          data = el.data()
+          uid = el.data('node-uid')
+          el.remove()
+
+          fake = dom({
+            attributes: [ { name: 'data-node-uid', value: uid } ],
+            getAttribute: function () { return uid }
+          })
+
+          ok(data, 'stored data object is intact after removal')
+          ok(data.foo == 'bar', 'data object retains old values')
+          ok(fake.foo === undefined, 'new data object is wiped clean')
         })
 
         function testCreate(node) {
