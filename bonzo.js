@@ -425,6 +425,8 @@
       }
 
     , replaceWith: function(html) {
+        this.deepEach(clearData)
+        
         return this.each(function (el) {
           el.parentNode.replaceChild(bonzo.create(html)[0], el)
         })
@@ -575,9 +577,7 @@
       }
 
     , remove: function () {
-        this.deepEach(function (el) {
-          clearData(el)
-        })
+        this.deepEach(clearData)
 
         return this.each(function (el) {
           el[parentNode] && el[parentNode].removeChild(el)
@@ -586,7 +586,11 @@
 
     , empty: function () {
         return this.each(function (el) {
-          bonzo(el.childNodes).remove()
+          deepEach(el.childNodes, clearData)
+          
+          while (el.firstChild) {
+            el.removeChild(el.firstChild)
+          }
         })
       }
 
