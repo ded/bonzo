@@ -253,7 +253,7 @@
     , deepEach: function (fn, scope) {
         return deepEach(this, fn, scope)
       }
-      
+
     , map: function (fn, reject) {
         var m = [], n, i
         for (i = 0; i < this.length; i++) {
@@ -421,7 +421,7 @@
 
     , replaceWith: function(html) {
         this.deepEach(clearData)
-        
+
         return this.each(function (el) {
           el.parentNode.replaceChild(bonzo.create(html)[0], el)
         })
@@ -582,7 +582,7 @@
     , empty: function () {
         return this.each(function (el) {
           deepEach(el.childNodes, clearData)
-          
+
           while (el.firstChild) {
             el.removeChild(el.firstChild)
           }
@@ -603,9 +603,9 @@
         return scroll.call(this, x, null, 'x')
       }
 
-    , toggle: function(callback) {
+    , toggle: function (callback, type) {
         this.each(function (el) {
-          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : 'block'
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : type || ''
         })
         callback && callback()
         return this

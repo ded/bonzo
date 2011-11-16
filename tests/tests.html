@@ -283,7 +283,7 @@
           ok($('#show-hide').css('display') == 'inline', 'element has flow');
         });
 
-        test('toggle', 4, function () {
+        test('toggle', 5, function () {
           ok($('#toggle').offset().width > 0, 'element has flow')
           $('#toggle').toggle(function () {
             ok(true, 'callback in toggle gets called')
@@ -291,6 +291,9 @@
           ok($('#toggle').offset().width == 0, 'element has no flow')
           $('#toggle').toggle()
           ok($('#toggle').offset().width > 0, 'element has flow after toggling again')
+          $('#toggle').toggle()
+          $('#toggle').toggle(null, 'inline')
+          ok($('#toggle')[0].style.display == 'inline', 'toggle accepts type override')
         })
 
         test('offsets', 6, function () {
@@ -533,7 +536,7 @@
           var el = $('#data-temp'), fake, data, uid
 
           el.data('foo', 'bar')
-          
+
           data = el.data()
           uid = el.data('node-uid')
           el.remove()

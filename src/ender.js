@@ -15,9 +15,7 @@
   }
 
   function indexOf(ar, val) {
-    for (var i = 0; i < ar.length; i++) {
-      if (ar[i] === val) return i
-    }
+    for (var i = 0; i < ar.length; i++) if (ar[i] === val) return i
     return -1
   }
 
