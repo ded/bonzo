@@ -100,9 +100,13 @@
     uid && (delete uidMap[uid])
   }
 
-  function dataValue(d) {
+  function dataValue(d, f) {
     try {
-      return d === 'true' ? true : d === 'false' ? false : d === 'null' ? null : !isNaN(d) ? parseFloat(d) : d;
+      return d === null || d === undefined ? undefined : 
+        d === 'true' ? true :
+          d === 'false' ? false :
+            d === 'null' ? null :
+              (f = parseFloat(d)) == d ? f : d;
     } catch(e) {}
     return undefined
   }
@@ -563,8 +567,8 @@
             })
             return o
           } else {
-            return typeof o[k] === 'undefined' ?
-              (o[k] = dataValue(this.attr('data-' + decamelize(k)))) : o[k]
+            if (typeof o[k] === 'undefined') o[k] = dataValue(this.attr('data-' + decamelize(k)))
+            return o[k] || null
           }
         } else {
           return this.each(function (el) { data(el)[k] = v })

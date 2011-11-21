@@ -137,7 +137,7 @@
     </div>
     <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
-    <div id="data-test" data-foo="bar" data-hoo-haa="true" data-number="100"></div>
+    <div id="data-test" data-foo="bar" data-hoo-haa="true" data-int="100" data-float="111.11" data-empty="" data-whitespace="   " data-nulltastic="null"></div>
     <div id="data-temp"></div>
 
     <h1>Bonzo Tests</h1>
@@ -325,20 +325,21 @@
 
         test('dimensions', 5, function () {
           var $el = $(dom.create('<div/>')).css({
-                position: 'absolute',
-                left: '50px',
-                top: -999,
-                height: '30px',
-                width: '40px',
-                border: 'solid 2px red'
+                  position: 'absolute'
+                , left: '50px'
+                , top: '-999px'
+                , height: '30px'
+                , width: '40px'
+                , padding: 0
+                , border: 'solid 1px #f00'
               }).appendTo(document.body)
             , $hidden = $(dom.create('<p>some text in here</p>')).hide().css({
-                 marginLeft: '100px',
-                 marginRight: '100px'
+                   marginLeft: '100px'
+                 , marginRight: '100px'
               }).appendTo(document.body)
 
-          ok($el.dim().height == 34, 'dim().height is 34');
-          ok($el.dim().width == 44, 'dim().width is 44');
+          ok($el.dim().height == 32, 'dim().height is 32');
+          ok($el.dim().width == 42, 'dim().width is 42');
 
           ok($hidden.dim().height > 0 && $hidden.dim().height < 100, 'hidden element dim().height is reasonable non-zero');
           ok($hidden.dim().width > 0 && $hidden.dim().width < 10000, 'hidden element dim().width is reasonable non-zero');
@@ -512,11 +513,20 @@
           ok(checkedCount() == 3, 'all checkboxes are checked!')
         })
 
-        test('data', 3, function() {
+        test('data read and write', 8, function() {
           var el = $('#data-test'), data
+            , attrCount = function(i, c) {
+                for (i = c = 0; i < el[0].attributes.length; i++) !!el[0].attributes[i].nodeValue && c++;
+                return c
+              }
+            , expectedAttributes = attrCount()
+
+          // test our DOM impact along the way, should only add a data-uid attribute & nothing else except via attr()
 
           el.data('disco', 'stu')
           el.data('neverGunna', 'give you up')
+          ok(attrCount() == ++expectedAttributes
+            , 'element has ' + expectedAttributes + ' attributes after data(k,v) calls (uid)')
 
           ok(el.data('foo') == 'bar', 'read existing data-* from dom')
           ok(el.data('disco') == 'stu', 'read data set by data(k,v)')
@@ -524,12 +534,27 @@
           data = el.data()
           ok(
             data &&
-            data.foo == 'bar' &&
-            data.disco == 'stu' &&
-            data.neverGunna == 'give you up' &&
+            data.foo === 'bar' &&
+            data.disco === 'stu' &&
+            data.neverGunna === 'give you up' &&
             data.hooHaa === true &&
-            data.number == 100
+            data.int === 100 &&
+            data.float === 111.11 &&
+            data.empty === '' &&
+            data.whitespace === '   ' &&
+            data.nulltastic === null
             , 'read all data, as correct type, with data()')
+
+          ok(el.data('nosuchdata') === null, 'reading non-existant data yields null')
+          ok(attrCount() == expectedAttributes
+            , 'element still has ' + expectedAttributes + ' attributes after data(k,v),data(k) &amp; data() calls')
+
+          // should be able to set a data-* attrib and read data from it, even after data() has looked for it previously
+          el.attr('data-nosuchdata', 'such data!')
+          ok(el.data('nosuchdata') === 'such data!'
+            , 'reading previously non-existant data yields data written via attrib()')
+          ok(attrCount() == ++expectedAttributes
+            , 'element now has ' + expectedAttributes + ' attributes writing using attrib()')
         })
 
         test('data removal', 3, function() {
