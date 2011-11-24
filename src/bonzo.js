@@ -286,7 +286,10 @@
             this.empty().each(function (el) {
               !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
-                (el[method] = h)
+                !function() {
+                  try { (el[method] = h) }
+                  catch(e) { append(el) }
+                }();
             }) :
           this[0] ? this[0][method] : ''
       }
