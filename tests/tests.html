@@ -223,7 +223,7 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 6, function () {
+        test('get and set html', 5, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
             , fixture3 = '<div>oh yeeeeeah!</div>'
@@ -236,9 +236,14 @@
           ok(Q('#html')[0].innerHTML == fixture2, 'sets appropriate tag-less fixture html');
           ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
 
-          $('#html-p').html(fixture3);
-          ok(Q('#html-p')[0].innerHTML == fixture3, 'sets block-level fixture html inside inline element');
-          ok($('#html-p').html() == fixture3, 'gets appropriate block-level fixture html from inline element');
+          var ex = false
+          try {
+            $('#html-p').html(fixture3);
+          } catch(e) {
+            ex = true
+          } finally {
+            ok(!ex, 'setting block-level fixture inside inline element doesn\'t throw exception');
+          }
         });
 
         test('set html on special tags', 3, function () {
