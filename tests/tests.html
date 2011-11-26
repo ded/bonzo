@@ -78,6 +78,7 @@
       </div>
       <div id="insert-after-last"><div class="after-last-target"></div></div>
       <div id="html"></div>
+      <p id="html-p"></div>
       <div id="html-select"></div>
       <div id="html-table"></div>
       <div id="text"></div>
@@ -222,9 +223,10 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 4, function () {
+        test('get and set html', 6, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
+            , fixture3 = '<div>oh yeeeeeah!</div>'
 
           $('#html').html(fixture);
           ok(Q('#html')[0].innerHTML.toLowerCase() == fixture, 'sets appropriate fixture html');
@@ -233,6 +235,10 @@
           $('#html').empty().html(fixture2);
           ok(Q('#html')[0].innerHTML == fixture2, 'sets appropriate tag-less fixture html');
           ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
+
+          $('#html-p').html(fixture3);
+          ok(Q('#html-p')[0].innerHTML == fixture3, 'sets block-level fixture html inside inline element');
+          ok($('#html-p').html() == fixture3, 'gets appropriate block-level fixture html from inline element');
         });
 
         test('set html on special tags', 3, function () {
