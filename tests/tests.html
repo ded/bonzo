@@ -78,7 +78,9 @@
       </div>
       <div id="insert-after-last"><div class="after-last-target"></div></div>
       <div id="html"></div>
-      <p id="html-p"></div>
+      <p id="html-p"></p>
+      <span id="html-span"></span>
+      <p><div id="html-nestdiv"></div></p>
       <div id="html-select"></div>
       <div id="html-table"></div>
       <div id="text"></div>
@@ -223,7 +225,7 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 5, function () {
+        test('get and set html', 7, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
             , fixture3 = '<div>oh yeeeeeah!</div>'
@@ -235,14 +237,32 @@
           $('#html').empty().html(fixture2);
           ok(Q('#html')[0].innerHTML == fixture2, 'sets appropriate tag-less fixture html');
           ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
-
+      
           var ex = false
           try {
             $('#html-p').html(fixture3);
           } catch(e) {
             ex = true
           } finally {
-            ok(!ex, 'setting block-level fixture inside inline element doesn\'t throw exception');
+            ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
+          }
+      
+          ex = false
+          try {
+            $('#html-span').html(fixture3);
+          } catch(e) {
+            ex = true
+          } finally {
+            ok(!ex, 'setting block-level fixture inside span element doesn\'t throw exception');
+          }
+      
+          ex = false
+          try {
+            $('#html-nestdiv').html(fixture3);
+          } catch(e) {
+            ex = true
+          } finally {
+            ok(!ex, 'setting block-level fixture inside block element nested inside paragraph element doesn\'t throw exception');
           }
         });
 
