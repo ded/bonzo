@@ -223,7 +223,7 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 6, function () {
+        test('get and set html', 7, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
             , fixture3 = '<div>oh yeeeeeah!</div>'
@@ -238,21 +238,24 @@
           ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
 
           var ex = false
-          try {
-            $('#html-p').html(fixture3);
-          } catch(e) {
-            ex = true
-          } finally {
-            ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
+          try { $('#html-p').html(fixture3); } 
+          catch(e) { ex = true } 
+          finally { 
+            ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception'); 
           }
 
           var ex = false
-          try {
-            $('#html-p').html(fixture4);
-          } catch(e) {
-            ex = true
-          } finally {
-            ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception');
+          try { $('#html-p').html(fixture4); } 
+          catch(e) { ex = true } 
+          finally { 
+            ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception'); 
+          }
+
+          var ex = false
+          try { var el = $($.create(fixture)).html(fixture)[0]; }
+          catch(e) { ex = true }
+          finally {
+            ok(el && el.innerHTML.toLowerCase().indexOf(fixture) != -1, 'got a &lt;p&gt; into a &lt;p&gt;');
           }
         });
 
