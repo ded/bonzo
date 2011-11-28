@@ -223,7 +223,7 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 7, function () {
+        test('get and set html', 9, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
             , fixture3 = '<div>oh yeeeeeah!</div>'
@@ -241,14 +241,16 @@
           try { $('#html-p').html(fixture3); } 
           catch(e) { ex = true } 
           finally { 
-            ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception'); 
+            ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
+            ok($('#html-p').html() == fixture3, 'block-level element actually got appended to &lt;p&gt;') 
           }
 
           var ex = false
           try { $('#html-p').html(fixture4); } 
           catch(e) { ex = true } 
           finally { 
-            ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception'); 
+            ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception');
+            ok($('#html-p').html() == fixture4, 'inline element actually got appended to &lt;p&gt;');
           }
 
           var ex = false
