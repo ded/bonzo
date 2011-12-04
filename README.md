@@ -71,6 +71,8 @@ Bonzo Full API
   * first()
   * last()
   * next()
+  * focus()
+  * blur()
   * previous()
   * append(html || node)
   * appendTo(target || selector)

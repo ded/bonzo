@@ -394,6 +394,18 @@
         })
       }
 
+    , focus: function () {
+        return this.each(function (el) {
+          el.focus()
+        })
+      }
+
+    , blur: function () {
+        return this.each(function (el) {
+          el.blur()
+        })
+      }
+
     , css: function (o, v, p) {
         // is this a request for just getting a style?
         if (v === undefined && typeof o == 'string') {
