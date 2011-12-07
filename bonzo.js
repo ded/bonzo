@@ -210,14 +210,22 @@
 
   }
 
-  function hasClass(el, c) {
-    return features.classList ? el.classList.contains(c) : classReg(c).test(el.className);
+  var hasClass = features.classList ? function (el, c) {
+    return el.classList.contains(c)
+  } : function (el, c) {
+    return classReg(c).test(el.className)
   }
-  function addClass(el, c) {
-    features.classList ? el.classList.add(c) : el.className = trim(el.className + ' ' + c)
+
+  var addClass = features.classList ? function (el, c) {
+    return el.classList.add(c)
+  } : function (el, c) {
+    return el.className = trim(el.className + ' ' + c)
   }
-  function removeClass(el, c) {
-    features.classList ? el.classList.remove(c) : el.className = trim(el.className.replace(classReg(c), ' '))
+
+  var removeClass = features.classList ? function (el, c) {
+    return el.classList.remove(c)
+  } : function (el, c) {
+    return el.className = trim(el.className.replace(classReg(c), ' '))
   }
 
   // this allows method calling for setting values
