@@ -53,6 +53,7 @@
                 if (props[i] in e.style) return props[i]
               }
             }()
+          , classList: 'classList' in e
         }
       }()
     , trimReplace = /(^\s*|\s*$)/g
@@ -210,13 +211,13 @@
   }
 
   function hasClass(el, c) {
-    return classReg(c).test(el.className)
+    return features.classList ? el.classList.contains(c) : classReg(c).test(el.className);
   }
   function addClass(el, c) {
-    el.className = trim(el.className + ' ' + c)
+    features.classList ? el.classList.add(c) : el.className = trim(el.className + ' ' + c)
   }
   function removeClass(el, c) {
-    el.className = trim(el.className.replace(classReg(c), ' '))
+    features.classList ? el.classList.remove(c) : el.className = trim(el.className.replace(classReg(c), ' '))
   }
 
   // this allows method calling for setting values
