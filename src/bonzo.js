@@ -390,7 +390,7 @@
       }
 
     , focus: function () {
-        return this.length != 0 ? this[0].focus() : null
+        return this.length > 0 ? this[0].focus() : null
       }
 
     , blur: function () {
