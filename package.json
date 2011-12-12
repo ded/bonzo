@@ -15,5 +15,6 @@
       "qwery": "*"
     , "bowser": "*"
     , "sink-test": "*"
+    , "smoosh": "*"
   }
 }
