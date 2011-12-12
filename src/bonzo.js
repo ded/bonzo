@@ -427,6 +427,16 @@
         })
       }
 
+    , focus: function () {
+        return this.length > 0 ? this[0].focus() : null
+      }
+
+    , blur: function () {
+        return this.each(function (el) {
+          el.blur()
+        })
+      }
+
     , css: function (o, v, p) {
         // is this a request for just getting a style?
         if (v === undefined && typeof o == 'string') {
