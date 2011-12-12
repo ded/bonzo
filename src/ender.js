@@ -20,17 +20,17 @@
   }
 
   function uniq(ar) {
-    var a = [], i, j
-    label:
-    for (i = 0; i < ar.length; i++) {
-      for (j = 0; j < a.length; j++) {
-        if (a[j] == ar[i]) {
-          continue label
+    var r = [], i = 0, j = 0, k, item, inIt
+    for (; item = ar[i]; ++i) {
+      inIt = false
+      for (k = 0; k < r.length; ++k) {
+        if (r[k] === item) {
+          inIt = true; break
         }
       }
-      a[a.length] = ar[i]
+      if (!inIt) r[j++] = item
     }
-    return a
+    return r
   }
 
   $.ender({
