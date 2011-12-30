@@ -577,6 +577,18 @@
           ok(fake.nodeUid === uid && fake.foo === undefined, 'new data object is wiped clean')
         })
 
+        test('removal extensions', 2, function () {
+          var parent = $.create('<p><span></span></p>')[0]
+            , child = parent.childNodes[0]
+            , match = child
+          $('#fixtures').append(parent)
+          dom._extend('remove', function (e) {
+            // first call should match the child, second call should match parent
+            ok(e === match && (match = parent), 'bonzo "remove" extension point added')
+          })
+          $(parent).remove()
+        })
+
         function testCreate(node) {
            var e, ex
            try { e = $.create('<' + node + '>') } catch (e) {}

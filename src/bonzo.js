@@ -59,6 +59,7 @@
         function (s) {
           return s.replace(trimReplace, '')
         }
+    , extensions = {}
 
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)")
@@ -223,6 +224,15 @@
 
   function setter(el, v) {
     return typeof v == 'function' ? v(el) : v
+  }
+
+  function invokeExtensions(type, elements, deep) {
+    var i, l, fns = extensions[type]
+    if (fns && (l = fns.length)) {
+      (deep ? deepEach : each)(elements, function (el) {
+        for (i = 0; i < l; i++) fns[i](el)
+      })
+    }
   }
 
   function Bonzo(elements) {
@@ -423,7 +433,7 @@
       }
 
     , replaceWith: function(html) {
-        this.deepEach(clearData)
+        invokeExtensions('remove', this, true)
 
         return this.each(function (el) {
           el.parentNode.replaceChild(bonzo.create(html)[0], el)
@@ -585,7 +595,7 @@
       }
 
     , remove: function () {
-        this.deepEach(clearData)
+        invokeExtensions('remove', this, true)
 
         return this.each(function (el) {
           el[parentNode] && el[parentNode].removeChild(el)
@@ -594,7 +604,7 @@
 
     , empty: function () {
         return this.each(function (el) {
-          deepEach(el.childNodes, clearData)
+          invokeExtensions('remove', el.childNodes, true)
 
           while (el.firstChild) {
             el.removeChild(el.firstChild)
@@ -731,6 +741,12 @@
       }
       return false
     }
+
+  bonzo._extend = function (type, fn) {
+    (extensions[type] || (extensions[type] = [])).push(fn)
+  }
+
+  bonzo._extend('remove', clearData)
 
   bonzo.noConflict = function () {
     context.bonzo = old

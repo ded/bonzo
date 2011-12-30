@@ -1,7 +1,20 @@
 !function ($) {
 
   var b = require('bonzo')
+    , removeExtension = function (el) {
+        try {
+          var bean = require('bean')
+          !(removeExtension = function (el) {
+            bean.remove(el)
+          })(el)
+        } catch (e) {
+          removeExtension = null
+        }
+      }
+
   b.setQueryEngine($)
+  b._extend('remove', function (el) { removeExtension && removeExtension(el) })
+
   $.ender(b)
   $.ender(b(), true)
   $.ender({

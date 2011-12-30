@@ -41,6 +41,12 @@
             alert('hello')
           })
           .appendTo('body')
+        var evel = $('#evel')
+        evel.listen('removetest', function (event) {
+          $('<div>you should not see me!</div>').appendTo('body')
+        })
+        $('#removable').remove()
+        evel.trigger('removetest')
       });
     </script>
   </head>
@@ -65,6 +71,9 @@
     <div class="hello">world</div>
     <div id="hello-world">
 
+    </div>
+    <div id="removable">
+      <div id="evel"></div>
     </div>
   </body>
 </html>
