@@ -290,7 +290,10 @@
             this.empty().each(function (el) {
               !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
-                (el[method] = h)
+                !function() {
+                  try { (el[method] = h) }
+                  catch(e) { append(el) }
+                }();
             }) :
           this[0] ? this[0][method] : ''
       }
@@ -428,6 +431,16 @@
 
         return this.each(function (el) {
           el.parentNode.replaceChild(bonzo.create(html)[0], el)
+        })
+      }
+
+    , focus: function () {
+        return this.length > 0 ? this[0].focus() : null
+      }
+
+    , blur: function () {
+        return this.each(function (el) {
+          el.blur()
         })
       }
 
