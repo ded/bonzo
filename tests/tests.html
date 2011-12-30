@@ -570,7 +570,6 @@
             data.whitespace === '   ' &&
             data.nulltastic === null
             , 'read all data, as correct type, with data()')
-
           ok(el.data('nosuchdata') === null, 'reading non-existant data yields null')
           ok(attrCount() == expectedAttributes
             , 'element still has ' + expectedAttributes + ' attributes after data(k,v),data(k) &amp; data() calls')
