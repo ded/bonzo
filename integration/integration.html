@@ -11,6 +11,7 @@
       $.domReady(function () {
         $('<h1>**Ender integration test**</h1>').prependTo('body');
         var li = $('li');
+		console.log(li.parent());
         var el1 = li.first().css('color', 'red').next().css('color', 'blue');
         var el2 = li.last().css('color', 'green');
         $('input[type=text]').val('hello');

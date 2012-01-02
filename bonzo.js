@@ -291,7 +291,10 @@
             this.empty().each(function (el) {
               !text && (m = el.tagName.match(specialTags)) ?
                 append(el, m[0]) :
-                (el[method] = h)
+                !function() {
+                  try { (el[method] = h) }
+                  catch(e) { append(el) }
+                }();
             }) :
           this[0] ? this[0][method] : ''
       }
@@ -375,6 +378,10 @@
         return this.related('previousSibling')
       }
 
+    , parent: function() {
+		return this.related('parentNode')
+      }
+
     , related: function (method) {
         return this.map(
           function (el) {
@@ -433,9 +440,7 @@
       }
 
     , focus: function () {
-        return this.each(function (el) {
-          el.focus()
-        })
+        return this.length > 0 ? this[0].focus() : null
       }
 
     , blur: function () {
