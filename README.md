@@ -101,6 +101,7 @@ Bonzo Full API
     - attr(k) get
     - attr(k, v) set
     - attr(obj) set
+  * removeAttr(k)
   * val
     - val() get
     - val(s) set
