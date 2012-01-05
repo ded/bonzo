@@ -373,6 +373,10 @@
         return this.related('previousSibling')
       }
 
+    , parent: function() {
+		return this.related('parentNode')
+      }
+
     , related: function (method) {
         return this.map(
           function (el) {

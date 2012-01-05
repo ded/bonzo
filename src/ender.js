@@ -68,6 +68,10 @@
       return $(b(this).previous())
     },
 
+    parent: function() {
+      return $(uniq(b(this).parent()))
+    },
+
     appendTo: function (t) {
       return b(this.selector).appendTo(t, this)
     },
