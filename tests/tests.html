@@ -250,7 +250,7 @@
           catch(e) { ex = true } 
           finally { 
             ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
-            ok($('#html-p').html() == fixture3, 'block-level element actually got appended to &lt;p&gt;') 
+            ok($('#html-p').html().toLowerCase() == fixture3, 'block-level element actually got appended to &lt;p&gt;') 
           }
 
           var ex = false
@@ -258,7 +258,7 @@
           catch(e) { ex = true } 
           finally { 
             ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception');
-            ok($('#html-p').html() == fixture4, 'inline element actually got appended to &lt;p&gt;');
+            ok($('#html-p').html().toLowerCase() == fixture4, 'inline element actually got appended to &lt;p&gt;');
           }
 
           var ex = false
