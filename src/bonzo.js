@@ -435,7 +435,8 @@
       }
 
     , focus: function () {
-        return this.length > 0 ? this[0].focus() : null
+        this.length && this[0].focus()
+        return this
       }
 
     , blur: function () {
@@ -516,6 +517,7 @@
       }
 
     , dim: function () {
+        if (!this.length) return { height: 0, width: 0 }
         var el = this[0]
           , orig = !el.offsetWidth && !el.offsetHeight ?
              // el isn't visible, can't be measured properly, so fix that
@@ -551,7 +553,7 @@
           return this
         }
         return typeof v == 'undefined' ?
-          specialAttributes.test(k) ?
+          !el ? null : specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
                 el[getAttribute](k, 2) : el[getAttribute](k) :
@@ -561,7 +563,7 @@
       }
 
     , val: function (s) {
-        return (typeof s == 'string') ? this.attr('value', s) : this[0].value
+        return (typeof s == 'string') ? this.attr('value', s) : this.length ? this[0].value : null
       }
 
     , removeAttr: function (k) {
@@ -573,6 +575,7 @@
     , data: function (k, v) {
         var el = this[0], uid, o, m
         if (typeof v === 'undefined') {
+          if (!el) return null
           o = data(el)
           if (typeof k === 'undefined') {
             each(el.attributes, function(a) {
@@ -635,6 +638,7 @@
 
   function scroll(x, y, type) {
     var el = this[0]
+    if (!el) return this
     if (x == null && y == null) {
       return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type]
     }
