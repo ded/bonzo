@@ -46,45 +46,49 @@
         }
       }
       return $(uniq(r))
-    },
+    }
 
-    closest: function (selector) {
+  , parent: function() {
+      return $(uniq(b(this).parent()))
+    }
+
+  , closest: function (selector) {
       return this.parents(selector, true)
-    },
+    }
 
-    first: function () {
+  , first: function () {
       return $(this.length ? this[0] : this)
-    },
+    }
 
-    last: function () {
+  , last: function () {
       return $(this.length ? this[this.length - 1] : [])
-    },
+    }
 
-    next: function () {
+  , next: function () {
       return $(b(this).next())
-    },
+    }
 
-    previous: function () {
+  , previous: function () {
       return $(b(this).previous())
-    },
+    }
 
-    appendTo: function (t) {
+  , appendTo: function (t) {
       return b(this.selector).appendTo(t, this)
-    },
+    }
 
-    prependTo: function (t) {
+  , prependTo: function (t) {
       return b(this.selector).prependTo(t, this)
-    },
+    }
 
-    insertAfter: function (t) {
+  , insertAfter: function (t) {
       return b(this.selector).insertAfter(t, this)
-    },
+    }
 
-    insertBefore: function (t) {
+  , insertBefore: function (t) {
       return b(this.selector).insertBefore(t, this)
-    },
+    }
 
-    siblings: function () {
+  , siblings: function () {
       var i, l, p, r = []
       for (i = 0, l = this.length; i < l; i++) {
         p = this[i]
@@ -93,9 +97,9 @@
         while (p = p.nextSibling) p.nodeType == 1 && r.push(p)
       }
       return $(r)
-    },
+    }
 
-    children: function () {
+  , children: function () {
       var i, el, r = []
       for (i = 0, l = this.length; i < l; i++) {
         if (!(el = b.firstChild(this[i]))) continue;
@@ -103,13 +107,13 @@
         while (el = el.nextSibling) el.nodeType == 1 && r.push(el)
       }
       return $(uniq(r))
-    },
+    }
 
-    height: function (v) {
+  , height: function (v) {
       return dimension(v, this, 'height')
-    },
+    }
 
-    width: function (v) {
+  , width: function (v) {
       return dimension(v, this, 'width')
     }
   }, true)

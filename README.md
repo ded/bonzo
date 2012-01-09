@@ -70,10 +70,11 @@ Bonzo Full API
   * hide()
   * first()
   * last()
-  * next()
   * focus()
   * blur()
+  * next()
   * previous()
+  * parent()
   * append(html || node)
   * appendTo(target || selector)
   * prepend(html || node)
@@ -188,4 +189,5 @@ Contributors
 -----
 
   * [Dustin Diaz](https://github.com/ded/bonzo/commits/master?author=ded)
+  * [Rod Vagg](https://github.com/ded/bonzo/commits/master?author=rvagg)
   * [Jacob Thornton](https://github.com/ded/bonzo/commits/master?author=fat)

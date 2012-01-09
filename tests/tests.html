@@ -31,18 +31,18 @@
     <script src="../node_modules/bowser/bowser.js"></script>
     <script type="text/javascript">
       function bonzo() {
-        return 'success';
+        return 'success'
       }
     </script>
     <script src="../src/bonzo.js"></script>
     <script type="text/javascript">
-      var dom = bonzo.noConflict();
-      var Q = qwery.noConflict();
-      dom.setQueryEngine(Q);
+      var dom = bonzo
+      var Q = qwery.noConflict()
+      dom.setQueryEngine(Q)
       function $(s) {
-        return dom(Q(s));
+        return dom(Q(s))
       }
-      dom.aug(dom, $);
+      dom.aug(dom, $)
     </script>
   </head>
   <body>
@@ -127,6 +127,9 @@
           <li class="nextr">five</li>
         </ul>
       </div>
+      <div id="parent-test-wrapper">
+        <div id="parent-test"></div>
+      </div>
       <div id="checkboxes-bug">
         <input type="checkbox" checked="checked">
         <input type="checkbox" checked="checked">
@@ -146,10 +149,6 @@
 
     <script>
       sink('Bonzo', function(test, ok, before, after) {
-        test('should contain a noConflict() method', 2, function() {
-          ok(bonzo() == 'success', 'bonzo() is B()');
-          ok(typeof dom().each == 'function', 'B() is the library');
-        });
 
         test('add/remove/has classes', 6, function () {
           var el = Q('#class-test');
@@ -238,17 +237,17 @@
           ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
 
           var ex = false
-          try { $('#html-p').html(fixture3); } 
-          catch(e) { ex = true } 
-          finally { 
+          try { $('#html-p').html(fixture3); }
+          catch(e) { ex = true }
+          finally {
             ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
-            ok($('#html-p').html() == fixture3, 'block-level element actually got appended to &lt;p&gt;') 
+            ok($('#html-p').html() == fixture3, 'block-level element actually got appended to &lt;p&gt;')
           }
 
           var ex = false
-          try { $('#html-p').html(fixture4); } 
-          catch(e) { ex = true } 
-          finally { 
+          try { $('#html-p').html(fixture4); }
+          catch(e) { ex = true }
+          finally {
             ok(!ex, 'setting inline fixture inside paragraph element doesn\'t throw exception');
             ok($('#html-p').html() == fixture4, 'inline element actually got appended to &lt;p&gt;');
           }
@@ -462,6 +461,10 @@
 
         test('previous', 1, function () {
           ok($('#sibling-tests li.nextr').previous().length == 3, 'els.previous().length == 3');
+        })
+
+        test('parent', 1, function () {
+          ok($('#parent-test').parent()[0].id == 'parent-test-wrapper', 'parent() is parent-test-wrapper')
         })
 
         test('scrollTop && scrollLeft', 2, function () {

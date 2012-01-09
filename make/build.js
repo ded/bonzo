@@ -1,4 +1,4 @@
-require('smoosh').config({
+{
   "JAVASCRIPT": {
       "DIST_DIR": "./"
     , "bonzo": [
@@ -24,4 +24,4 @@ require('smoosh').config({
     , "eqeqeq": false
     , "eqnull": true
   }
-}).run().build().analyze()
+}
