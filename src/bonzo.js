@@ -440,6 +440,10 @@
         })
       }
 
+    , select: function () {
+        return this[0].select()
+      }
+
     , css: function (o, v, p) {
         // is this a request for just getting a style?
         if (v === undefined && typeof o == 'string') {
