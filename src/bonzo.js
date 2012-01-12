@@ -112,6 +112,10 @@
     return node && node.nodeName && node.nodeType == 1
   }
 
+  function isArray(obj) {
+      return Object.prototype.toString.call(obj) === '[object Array]'
+  }
+
   function some(ar, fn, scope, i) {
     for (i = 0, j = ar.length; i < j; ++i) if (fn.call(scope, ar[i], i, ar)) return true
     return false
@@ -700,8 +704,8 @@
 
   bonzo.create = function (node) {
     // hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
-    return typeof node == 'string' && node !== '' ?
-      function () {
+    if (typeof node == 'string' && node !== '')
+      return function () {
         var tag = /^\s*<([^\s>]+)/.exec(node)
           , el = doc.createElement('div')
           , els = []
@@ -723,8 +727,15 @@
         // `dep` > 1 can also cause problems with the insert() check (must do this last)
         each(els, function(el) { el[pn] && el[pn].removeChild(el) })
         return els
-
-      }() : isNode(node) ? [node.cloneNode(true)] : []
+      }();
+    if (isNode(node))
+        return [node.cloneNode(true)];
+    if (isArray(node) || node instanceof Bonzo) {
+        var els = [];
+        each(node, function(i) { els.push(bonzo.create(i)[0]); });
+        return els;
+    }
+    return [];
   }
 
   bonzo.doc = function () {
