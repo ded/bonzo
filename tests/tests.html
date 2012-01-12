@@ -61,6 +61,10 @@
         <div class="after-examples"></div>
         <div class="after-examples"></div>
       </div>
+      <div id="after-created">
+        <div class="after-created-examples"></div>
+        <div class="after-created-examples"></div>
+      </div>
       <div id="before">
         <div class="before-examples"></div>
         <div class="before-examples"></div>
@@ -177,29 +181,69 @@
 
         })
 
-        test('should append nodes', 1, function () {
-          $('#append div').append('<p>hello</p><p>world <a href="#">hunger</a></p>');
-          ok(Q('#append p').length == 4, 'appended two {p} nodes on all elements');
+        test('should append nodes', 3, function () {
+          var markup = '<p>hello</p><p>world <a href="#">hunger</a></p>';
+          var p1 = document.createElement('p');
+          p1.innerHTML = 'hello';
+          var p2 = document.createElement('p');
+          p2.innerHTML = 'world <a href="#">hunger</a>';
+
+          var inputs = [markup, [p1, p2], $.create(markup)];
+
+          for (var i = 0; i < inputs.length; i++) {
+            $('#append div').append(inputs[i]);
+            ok(Q('#append p').length == 4, 'appended two {p} nodes on all elements');
+            $('#append p').remove();
+          }
         });
 
-        test('should prepend nodes', 2, function () {
-          $('#prepend').prepend('<p>hello</p><p>world <a href="#">hunger</a></p>');
-          ok(Q('#prepend p')[0] == Q('#prepend')[0].firstChild, 'prepend two {p} nodes on all elements');
-          ok(Q('#prepend p').length == 2, 'prepended 2 {p} nodes');
+        test('should prepend nodes', 6, function () {
+          var markup = '<p>hello</p><p>world <a href="#">hunger</a></p>';
+          var p1 = document.createElement('p');
+          p1.innerHTML = 'hello';
+          var p2 = document.createElement('p');
+          p2.innerHTML = 'world <a href="#">hunger</a>';
+
+          var inputs = [markup, [p1, p2], $.create(markup)];
+
+          for (var i = 0; i < inputs.length; i++) {
+            $('#prepend').prepend(inputs[i]);
+            ok(Q('#prepend p')[0] == Q('#prepend')[0].firstChild, 'prepend two {p} nodes on all elements');
+            ok(Q('#prepend p').length == 2, 'prepended 2 {p} nodes');
+            $('#prepend p').remove();
+          }
         });
 
-        test('should insert nodes before target', 2, function () {
-          var el = document.createElement('span');
-          el.innerHTML = '<b>some <em>shiza</em></b>';
-          $('.before-examples').before(el);
-          ok(Q('#before span').length == 2, 'inserted all nodes');
-          ok(Q('#before span')[0] == Q('.before-examples')[0].previousSibling, 'target node inserted before collection');
+        test('should insert nodes before target', 6, function () {
+          var markup = '<span><b>some <em>shiza</em></b></span>';
+          var domElem = document.createElement('span');
+          domElem.innerHTML = '<b>some <em>shiza</em></b>';
+
+          var inputs = [markup, domElem, $.create(markup)];
+
+          for (var i = 0; i < inputs.length; i++) {
+            $('.before-examples').before(inputs[i]);
+            ok(Q('#before span').length == 2, 'inserted all nodes');
+            ok(Q('#before span')[0] == Q('.before-examples')[0].previousSibling, 'target node inserted before collection');
+
+            $('#before span').remove(); // cleanup
+          }
         });
 
-        test('should insert nodes after target', 2, function () {
-          $('.after-examples').after('<span>some <em>shiza</em></span>');
-          ok(Q('#after em').length == 2, 'inserted all nodes');
-          ok(Q('#after span')[0] == Q('.after-examples')[0].nextSibling, 'inserted node after target');
+        test('should insert nodes after target', 6, function () {
+          var markup = '<span>some <em>shiza</em></span>';
+          var domElem = document.createElement('span');
+          domElem.innerHTML = 'some <em>shiza</em></span>';
+
+          var inputs = [markup, domElem, $.create(markup)];
+
+          for (var i = 0; i < inputs.length; i++) {
+            $('.after-examples').after(inputs[i]);
+            ok(Q('#after em').length == 2, 'inserted all nodes');
+            ok(Q('#after span')[0] == Q('.after-examples')[0].nextSibling, 'inserted node after target');
+
+            $('#after span').remove(); // cleanup
+          }
         });
 
         test('should insert target before nodes', 1, function () {
