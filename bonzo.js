@@ -171,10 +171,22 @@
         var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
           function () {
             var c = el.cloneNode(true)
+              , cloneElems
+              , elElems;
+
             // check for existence of an event cloner
             // preferably https://github.com/fat/bean
             // otherwise Bonzo won't do this for you
-            self.$ && self.cloneEvents && self.$(c).cloneEvents(el)
+            if (self.$ && self.cloneEvents) {
+              self.$(c).cloneEvents(el);
+
+              // clone events from every child node
+              cloneElems = self.$(c).find('*');
+              elElems = self.$(el).find('*');
+
+              for (var i = 0; i < elElems.length; i++)
+                self.$(cloneElems[i]).cloneEvents(elElems[i]);
+            }
             return c
           }() : el
         fn(t, n)

@@ -66,6 +66,10 @@
         <div class="after-examples"></div>
         <div class="after-examples"></div>
       </div>
+      <div id="after-created">
+        <div class="after-created-examples"></div>
+        <div class="after-created-examples"></div>
+      </div>
       <div id="before">
         <div class="before-examples"></div>
         <div class="before-examples"></div>
@@ -205,6 +209,13 @@
           $('.after-examples').after('<span>some <em>shiza</em></span>');
           ok(Q('#after em').length == 2, 'inserted all nodes');
           ok(Q('#after span')[0] == Q('.after-examples')[0].nextSibling, 'inserted node after target');
+        });
+
+        test('should insert created nodes after target', 2, function () {
+          var created = $.create('<span>some <em>shiza</em></span>')
+          $('.after-created-examples').after(created);
+          ok(Q('#after-created em').length == 2, 'inserted all nodes');
+          ok(Q('#after-created span')[0] == Q('.after-created-examples')[0].nextSibling, 'inserted node after target');
         });
 
         test('should insert target before nodes', 1, function () {
