@@ -1,9 +1,12 @@
 {
     "name": "bonzo"
   , "description": "Library agnostic, extensible DOM utility"
-  , "version": "0.8.1"
+  , "version": "0.9.0"
   , "homepage": "https://github.com/ded/bonzo"
   , "author": "Dustin Diaz <dustin@dustindiaz.com> (http://dustindiaz.com)"
+  , "contributors": [
+      "Rod Vagg <> (https://github.com/rvagg)"
+    ]
   , "keywords": ["ender", "dom", "nodes", "jquery", "iteration", "css"]
   , "main": "./bonzo.js"
   , "ender": "./src/ender.js"
@@ -15,6 +18,5 @@
       "qwery": "*"
     , "bowser": "*"
     , "sink-test": "*"
-    , "smoosh": "*"
   }
 }
