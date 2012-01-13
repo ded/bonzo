@@ -447,8 +447,8 @@
       }
 
     , parent: function() {
-      return this.related('parentNode')
-    }
+        return this.related(parentNode)
+      }
 
     , related: function (method) {
         return this.map(
@@ -603,7 +603,9 @@
       }
 
     , val: function (s) {
-        return (typeof s == 'string') ? this.attr('value', s) : this[0].value
+        return (typeof s == 'string') ?
+          this.attr('value', s) :
+          this.length ? this[0].value : null
       }
 
       // use with care and knowledge. this data() method uses data attributes on the DOM nodes

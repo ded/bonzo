@@ -767,10 +767,11 @@
           //  FUNCTION NAME         ARGUMENT SIGNATURE        ARGUMENTS ARRAY            EXPECTED RESULT MATCHER
               first:         { str: '',                 args: [],                expect: isEmptyContainer }
             , last:          { str: '',                 args: [],                expect: isEmptyContainer }
+            , parent:        { str: '',                 args: [],                expect: isEmptyArray }
             , next:          { str: '',                 args: [],                expect: isEmptyArray }
             , previous:      { str: '',                 args: [],                expect: isEmptyArray }
             , dim:           { str: '',                 args: [],                expect: function(r) { return r.height === 0 && r.width === 0 } }
-            , get:           { str: 'index',            args: [0],               expect: isUndefined }
+            , get:           { str: 'index',            args: [0],               expect: isNull }
             , detach:        { str: '',                 args: [],                expect: isEmptyArray }
             , each: [        { str: 'fn',               args: [K],               expect: isSameContainer }
                            , { str: 'fn, scope',        args: [K, K],            expect: isSameContainer }
