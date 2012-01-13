@@ -285,18 +285,18 @@
             'textContent' :
           'innerHTML', m;
         function append(el) {
-          each(normalize(h), function (node) {
-            el.appendChild(node)
-          })
+          if (!text && (typeof h === 'object')) {
+            each(normalize(h), function (node) {
+              el.appendChild(node)
+            })
+          } else {
+            try { (el[method] = h) }
+            catch(e) { append(el) }
+          }
         }
         return typeof h !== 'undefined' ?
             this.empty().each(function (el) {
-              !text && (m = el.tagName.match(specialTags)) ?
-                append(el, m[0]) :
-                !function() {
-                  try { (el[method] = h) }
-                  catch(e) { append(el) }
-                }();
+              append(el)
             }) :
           this[0] ? this[0][method] : ''
       }
