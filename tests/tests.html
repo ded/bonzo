@@ -217,7 +217,7 @@
           ok(Q('.after-last-target')[0].nextSibling && Q('.after-last-target')[0].nextSibling.tagName.toLowerCase() == 'p', 'created element was inserted after the target (target is last child)');
         });
 
-        test('get and set html', 9, function () {
+        test('get and set html', 10, function () {
           var fixture = '<p>oh yeeeeeah!</p>'
             , fixture2 = '&lt;oh yeeeeeah&gt;'
             , fixture3 = '<div>oh yeeeeeah!</div>'
@@ -252,6 +252,13 @@
           catch(e) { ex = true }
           finally {
             ok(el && el.innerHTML.toLowerCase().indexOf(fixture) != -1, 'got a &lt;p&gt; into a &lt;p&gt;');
+          }
+
+          var ex = false
+          try { var el = $($.create(fixture)).html($.create(fixture4))[0]; }
+          catch(e) { ex = true }
+          finally {
+            ok(el && el.innerHTML.toLowerCase().indexOf(fixture4) != -1, 'HTMLElements can be appended');
           }
         });
 
