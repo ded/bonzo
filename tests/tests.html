@@ -37,7 +37,7 @@
     <script src="../src/bonzo.js"></script>
     <script type="text/javascript">
       var dom = bonzo
-      var Q = qwery.noConflict()
+      var Q = qwery
       dom.setQueryEngine(Q)
       function $(s) {
         return dom(Q(s))
