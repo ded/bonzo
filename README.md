@@ -144,7 +144,7 @@ For the insertion methods you can set a query selector host (like [qwery](https:
 
 ``` js
 bonzo.setQueryEngine(qwery)
-bonzo(bonzo.create('div')).insertAfter('.boosh a')
+bonzo(bonzo.create('<div>')).insertAfter('.boosh a')
 ```
 
 The name Bonzo
