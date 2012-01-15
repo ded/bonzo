@@ -112,9 +112,6 @@
           <input type="text" value="eyo">
           <input type="checkbox" checked>
         </form>
-        <script type="text/javascript">
-          document.forms[0].reset() // IE sometimes caches the value we set on the input between reloads
-        </script>
       </div>
       <div id="first-last">
         <div id="first"></div>
@@ -249,7 +246,7 @@
           catch(e) { ex = true }
           finally {
             ok(!ex, 'setting block-level fixture inside paragraph element doesn\'t throw exception');
-            ok($('#html-p').html() == fixture3, 'block-level element actually got appended to &lt;p&gt;')
+            ok($('#html-p').html().toLowerCase() == fixture3, 'block-level element actually got appended to &lt;p&gt;')
           }
 
           var ex = false
@@ -426,6 +423,9 @@
           ok($('a#hrefname').attr('href') == '#name', 'retrieves plain #name "href" attribute from anchor');
           ok($('img#srcabs').attr('src') == 'http://a2.twimg.com/a/1317419607/phoenix/img/twitter_logo_right.png', 'retrieves "src" attribute from image');
           ok($('img#srcrel').attr('src') == '/relative', 'retrieves relative "src" attribute from image');
+          $('#resetme')[0].reset() // old IE does a funny cache-restore thing on docready, after this script is loaded but before sink is
+                                   // run so multiple runs can restore the value set by the next batch of sets on the input element
+                                   // so reset() right before we test to make sure we're in the original state and we get no failures
           var input = $('#attrs input[type="text"]');
           ok(input.val() == 'eyo', 'retrieves "value" attribute from {input} element');
           ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true');
@@ -612,98 +612,50 @@
           ok(fake.nodeUid === uid && fake.foo === undefined, 'new data object is wiped clean')
         })
 
-        function testCreate(node) {
-           var e, ex
-           try { e = $.create('<' + node + '>') } catch (e) {}
-           ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
-           ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
-           delete e;
-        }
-
-        // omitted from this list: ABBR, AREA, BASE, FRAME, FRAMESET, HEAD, HTML, ISINDEX, LINK, MAP, OBJECT, PARAM, STYLE, TITLE
-        var html4Nodes = [
-          'A',
-          'ACRONYM',
-          'ADDRESS',
-          'B',
-          'BDO',
-          'BIG',
-          'BLOCKQUOTE',
-          'BR',
-          'BUTTON',
-          'CAPTION',
-          'CENTER',
-          'CITE',
-          'CODE',
-          'COL',
-          'COLGROUP',
-          'DD',
-          'DEL',
-          'DFN',
-          'DIV',
-          'DL',
-          'DT',
-          'EM',
-          'FIELDSET',
-          'FONT',
-          'FORM',
-          'H1',
-          'H2',
-          'H3',
-          'H4',
-          'H5',
-          'H6',
-          'HR',
-          'I',
-          'IFRAME',
-          'IMG',
-          'INPUT',
-          'INS',
-          'KBD',
-          'LABEL',
-          'LEGEND',
-          'LI',
-          'OL',
-          'OPTGROUP',
-          'OPTION',
-          'P',
-          'PRE',
-          'Q',
-          'S',
-          'SAMP',
-          'SELECT',
-          'SMALL',
-          'SPAN',
-          'STRIKE',
-          'STRONG',
-          'SUB',
-          'SUP',
-          'TABLE',
-          'TBODY',
-          'TD',
-          'TEXTAREA',
-          'TFOOT',
-          'TH',
-          'THEAD',
-          'TR',
-          'TT',
-          'U',
-          'UL',
-          'VAR'
-        ];
-
-        test('`create` special cases', 4 + html4Nodes.length * 2, function() {
+        test('`create` with whitespace', 4, function() {
           var e = $.create('  <p>something in here</p>  <div/>\t')
           ok(e && e.length == 2, 'create() 2 elements with extra whitespace')
           ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].tagName.toLowerCase() == 'p', 'first element of create() called with additional whitespace')
           ok(e && e.length == 2 && e[0].nodeType == 1 && e[0].innerHTML == 'something in here', 'content of first element of create() called with additional whitespace')
           ok(e && e.length == 2 && e[1].nodeType == 1 && e[1].tagName.toLowerCase() == 'div', 'second element of create() called with additional whitespace')
-
-          for (var i = 0; i < html4Nodes.length; i++) testCreate(html4Nodes[i])
         })
-      });
 
+        function testCreate(node, createFn) {
+          var e, ex
+          try {
+            e = createFn ? createFn() : $.create('<' + node + '>')
+          } catch (e) {}
+          ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
+          ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
+          delete e
+        }
 
+        // omitted from these lists, can't be reliably created across browsers: FRAME FRAMESET HEAD HTML ISINDEX TITLE
+        // ABBR omitted because IE6 doesn't know about it but should work in all other browsers
+        // AREA omitted because FF3.6 and below can't create it with innerHTML, works in all other browsers
+        var html4Tags = 'A ACRONYM ADDRESS B BDO BIG BLOCKQUOTE BR BUTTON CAPTION CENTER CITE CODE COL COLGROUP DD DEL DFN DIV DL DT EM FIELDSET FONT FORM H1 H2 H3 H4 H5 H6 HR I IFRAME IMG INPUT INS KBD LABEL LEGEND LI MAP OBJECT OL OPTGROUP OPTION P PRE Q S SAMP SELECT SMALL SPAN STRIKE STRONG SUB SUP TABLE TBODY TD TEXTAREA TFOOT TH THEAD TR TT U UL VAR'.split(' ')
+        var html4NoScopeTags = 'BASE LINK PARAM SCRIPT STYLE'.split(' ')
+
+        test('`create` for HTML4 tags', html4Tags.length * 2, function() {
+          for (var i = 0; i < html4Tags.length; i++)
+            testCreate(html4Tags[i])
+        })
+
+        test('`create` for HTML4 NoScope tags', html4NoScopeTags.length * 2, function() {
+          for (var i = 0; i < html4NoScopeTags.length; i++)
+            testCreate(html4NoScopeTags[i])
+        })
+
+        test('`create` IE-NoScope SCRIPT &amp; STYLE with contents', 4, function() {
+          // not expecting the contents do do anything here, just trying to insert with contents
+          testCreate('SCRIPT', function() {
+            return scr = $.create('<script type="text/javascript">var foo = bar;</' + 'script>') // need '</' + 'script>' or else it'll close our main <script> body
+          })
+          testCreate('STYLE', function() {
+            return scr = $.create('<style type="text/css">.foo { color: red; }</style>') // need '</' + 'script>' or else it'll close our main <script> body
+          })
+        })
+      })
 
       sink('Selector engine', function (test, ok) {
 

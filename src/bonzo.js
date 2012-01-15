@@ -9,21 +9,23 @@
     , html = doc.documentElement
     , parentNode = 'parentNode'
     , query = null
-    , specialAttributes = /^checked|value|selected$/
-    , specialTags = /select|fieldset|table|tbody|tfoot|td|tr|colgroup/i
+    , specialAttributes = /^(checked|value|selected)$/i
+    , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
     , table = [ '<table>', '</table>', 1 ]
     , td = [ '<table><tbody><tr>', '</tr></tbody></table>', 3 ]
     , option = [ '<select>', '</select>', 1 ]
-    , tagMap = {
-        thead: table, tbody: table, tfoot: table, colgroup: table, caption: table
+    , noscope = [ '_', '', 0, 1 ]
+    , tagMap = { // tags that we have trouble *inserting*
+          thead: table, tbody: table, tfoot: table, colgroup: table, caption: table
         , tr: [ '<table><tbody>', '</tbody></table>', 2 ]
         , th: td , td: td
         , col: [ '<table><colgroup>', '</colgroup></table>', 2 ]
         , fieldset: [ '<form>', '</form>', 1 ]
         , legend: [ '<form><fieldset>', '</fieldset></form>', 2 ]
-        , option: option
-        , optgroup: option }
-    , stateAttributes = /^checked|selected$/
+        , option: option, optgroup: option
+        , script: noscope, style: noscope, link: noscope, param: noscope, base: noscope
+      }
+    , stateAttributes = /^(checked|selected)$/
     , ie = /msie/i.test(navigator.userAgent)
     , hasClass, addClass, removeClass
     , uidMap = {}
@@ -295,8 +297,8 @@
         }
         return typeof h !== 'undefined' ?
             this.empty().each(function (el) {
-              !text && (m = el.tagName.match(specialTags)) ?
-                append(el, m[0]) :
+              !text && specialTags.test(el.tagName) ?
+                append(el) :
                 !function() {
                   try { (el[method] = h) }
                   catch(e) { append(el) }
@@ -717,11 +719,14 @@
           , els = []
           , p = tag ? tagMap[tag[1].toLowerCase()] : null
           , dep = p ? p[2] + 1 : 1
+          , ns = p && p[3]
           , pn = parentNode
           , tb = features.autoTbody && p && p[0] == '<table>' && !(/<tbody/i).test(node)
 
         el.innerHTML = p ? (p[0] + node + p[1]) : node
         while (dep--) el = el.firstChild
+        // for IE NoScope, we may insert cruft at the begining just to get it to work
+        if (ns && el && el.nodeType !== 1) el = el.nextSibling
         do {
           // tbody special case for IE<8, creates tbody on any empty table
           // we don't want it if we're just after a <thead>, <caption>, etc.
