@@ -289,7 +289,7 @@
           html.textContent === undefined ?
             'innerText' :
             'textContent' :
-          'innerHTML', m;
+          'innerHTML';
         function append(el) {
           each(normalize(h), function (node) {
             el.appendChild(node)
