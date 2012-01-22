@@ -105,7 +105,7 @@
 
   function dataValue(d, f) {
     try {
-      return d === null || d === undefined ? undefined : 
+      return (d === null || d === undefined) ? undefined : 
         d === 'true' ? true :
           d === 'false' ? false :
             d === 'null' ? null :
@@ -623,8 +623,9 @@
             })
             return o
           } else {
-            if (typeof o[k] === 'undefined') o[k] = dataValue(this.attr('data-' + decamelize(k)))
-            return o[k] || null
+            if (typeof o[k] === 'undefined')
+              o[k] = dataValue(this.attr('data-' + decamelize(k)))
+            return o[k]
           }
         } else {
           return this.each(function (el) { data(el)[k] = v })

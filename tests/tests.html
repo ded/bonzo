@@ -141,7 +141,7 @@
     </div>
     <div id="styles" style="margin-left:5px;"><div style="float: left;"></div></div>
     <div id="callback-styles" data-original="15"></div>
-    <div id="data-test" data-foo="bar" data-hoo-haa="true" data-int="100" data-float="111.11" data-empty="" data-whitespace="   " data-nulltastic="null"></div>
+    <div id="data-test" data-foo="bar" data-hoo-haa="true" data-no-hoo-haa="false" data-int="100" data-float="111.11" data-empty="" data-whitespace="   " data-nulltastic="null"></div>
     <div id="data-temp"></div>
 
     <h1>Bonzo Tests</h1>
@@ -545,7 +545,7 @@
           ok(checkedCount() == 3, 'all checkboxes are checked!')
         })
 
-        test('data read and write', 8, function() {
+        test('data read and write', 18, function() {
           var el = $('#data-test'), data
             , attrCount = function(i, c) {
                 for (i = c = 0; i < el[0].attributes.length; i++) !!el[0].attributes[i].nodeValue && c++;
@@ -570,13 +570,24 @@
             data.disco === 'stu' &&
             data.neverGunna === 'give you up' &&
             data.hooHaa === true &&
+            data.noHooHaa === false &&
             data.int === 100 &&
             data.float === 111.11 &&
             data.empty === '' &&
             data.whitespace === '   ' &&
             data.nulltastic === null
             , 'read all data, as correct type, with data()')
-          ok(el.data('nosuchdata') === null, 'reading non-existant data yields null')
+          ok(el.data('foo') === 'bar', 'data string #1 correct')
+          ok(el.data('disco') === 'stu', 'data string #2 correct')
+          ok(el.data('neverGunna') === 'give you up', 'data string #3 correct')
+          ok(el.data('hooHaa') === true, 'data boolean (true) correct')
+          ok(el.data('noHooHaa') === false, 'data boolean (false) correct')
+          ok(el.data('int') === 100, 'data int correct')
+          ok(el.data('float') === 111.11, 'data float correct')
+          ok(el.data('empty') === '', 'data empty-string correct')
+          ok(el.data('whitespace') === '   ', 'data whitespace correct')
+          ok(el.data('nulltastic') === null, 'data null correct')
+          ok(el.data('nosuchdata') === undefined, 'reading non-existant data yields undefined')
           ok(attrCount() == expectedAttributes
             , 'element still has ' + expectedAttributes + ' attributes after data(k,v),data(k) &amp; data() calls')
 
