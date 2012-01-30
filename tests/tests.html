@@ -162,6 +162,24 @@
           ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
         });
 
+        test('add/remove/has multiple classes', 12, function () {
+          var el = Q('#class-test');
+          ok(!dom(el).hasClass('boosh'), 'element does not start off having class "boosh"');
+          ok(!dom(el).hasClass('foo'), 'element does not start off having class "foo"');
+          ok(!dom(el).hasClass('bar'), 'element does not start off having class "bar"');
+          ok(dom(el).hasClass('existing-class'), 'element has existing class "existing-class"');
+          dom(el).addClass('boosh foo bar');
+          ok(dom(el).hasClass('boosh'), 'element now has class "boosh" after addClass()');
+          ok(dom(el).hasClass('foo'), 'element now has class "foo" after addClass()');
+          ok(dom(el).hasClass('bar'), 'element now has class "bar" after addClass()');
+          ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
+          dom(el).removeClass('foo bar boosh');
+          ok(!dom(el).hasClass('boosh'), 'element no longer has class "boosh" after removeClass()');
+          ok(!dom(el).hasClass('foo'), 'element no longer has class "foo" after removeClass()');
+          ok(!dom(el).hasClass('bar'), 'element no longer has class "bar" after removeClass()');
+          ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
+        });
+
         test('toggleClass', 3, function () {
           ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
           $('#toggle-class').toggleClass('toggle-me');

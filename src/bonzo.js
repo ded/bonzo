@@ -216,21 +216,37 @@
   // so we have to iterate. bullshit
   if (features.classList) {
     hasClass = function (el, c) {
-      return some(c.toString().split(' '), function (c) {
+      return some(c.toString().split(/\s+/), function (c) {
         return el.classList.contains(c)
       })
     }
     addClass = function (el, c) {
-      each(c.toString().split(' '), function (c) {
+      each(c.toString().split(/\s+/), function (c) {
         el.classList.add(c)
       })
     }
-    removeClass = function (el, c) { el.classList.remove(c) }
+    removeClass = function (el, c) {
+      each(c.toString().split(/\s+/), function (c) {
+        el.classList.remove(c)
+      })
+    }
   }
   else {
-    hasClass = function (el, c) { return classReg(c).test(el.className) }
-    addClass = function (el, c) { el.className = trim(el.className + ' ' + c) }
-    removeClass = function (el, c) { el.className = trim(el.className.replace(classReg(c), ' ')) }
+    hasClass = function (el, c) {
+      return some(c.toString().split(/\s+/), function (c) {
+        return classReg(c).test(el.className)
+      })
+    }
+    addClass = function (el, c) {
+      each(c.toString().split(/\s+/), function (c) {
+        el.className = trim(el.className + ' ' + c)
+      })
+    }
+    removeClass = function (el, c) {
+      each(c.toString().split(/\s+/), function (c) {
+        el.className = trim(el.className.replace(classReg(c), ' '))
+      })
+    }
   }
 
 
