@@ -54,6 +54,8 @@
         }
       }()
     , trimReplace = /(^\s*|\s*$)/g
+    , whitespaceRegex = /\s+/
+    , toString = String.prototype.toString
     , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
     , trim = String.prototype.trim ?
         function (s) {
@@ -118,7 +120,7 @@
     return node && node.nodeName && node.nodeType == 1
   }
 
-  function some(ar, fn, scope, i) {
+  function some(ar, fn, scope, i, j) {
     for (i = 0, j = ar.length; i < j; ++i) if (fn.call(scope, ar[i], i, ar)) return true
     return false
   }
@@ -216,36 +218,24 @@
   // so we have to iterate. bullshit
   if (features.classList) {
     hasClass = function (el, c) {
-      return some(c.toString().split(/\s+/), function (c) {
-        return el.classList.contains(c)
-      })
+      return el.classList.contains(c)
     }
     addClass = function (el, c) {
-      each(c.toString().split(/\s+/), function (c) {
-        el.classList.add(c)
-      })
+      el.classList.add(c)
     }
     removeClass = function (el, c) {
-      each(c.toString().split(/\s+/), function (c) {
-        el.classList.remove(c)
-      })
+      el.classList.remove(c)
     }
   }
   else {
     hasClass = function (el, c) {
-      return some(c.toString().split(/\s+/), function (c) {
-        return classReg(c).test(el.className)
-      })
+      return classReg(c).test(el.className)
     }
     addClass = function (el, c) {
-      each(c.toString().split(/\s+/), function (c) {
-        el.className = trim(el.className + ' ' + c)
-      })
+      el.className = trim(el.className + ' ' + c)
     }
     removeClass = function (el, c) {
-      each(c.toString().split(/\s+/), function (c) {
-        el.className = trim(el.className.replace(classReg(c), ' '))
-      })
+      el.className = trim(el.className.replace(classReg(c), ' '))
     }
   }
 
@@ -401,28 +391,45 @@
 
       // class management
     , addClass: function (c) {
+        c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
-          hasClass(el, setter(el, c)) || addClass(el, setter(el, c))
+          each(c, function (c) {
+            if (c && !hasClass(el, setter(el, c)))
+              addClass(el, setter(el, c))
+          })
         })
       }
 
     , removeClass: function (c) {
+        c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
-          hasClass(el, setter(el, c)) && removeClass(el, setter(el, c))
+          each(c, function (c) {
+            if (c && hasClass(el, setter(el, c)))
+              removeClass(el, setter(el, c))
+          })
         })
       }
 
     , hasClass: function (c) {
+        c = toString.call(c).split(whitespaceRegex)
+        console.log(c)
         return some(this, function (el) {
-          return hasClass(el, c)
+          return some(c, function (c) {
+            return c && hasClass(el, c)
+          })
         })
       }
 
     , toggleClass: function (c, condition) {
+        c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
-          typeof condition !== 'undefined' ?
-            condition ? addClass(el, c) : removeClass(el, c) :
-            hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
+          each(c, function (c) {
+            if (c) {
+              typeof condition !== 'undefined' ?
+                condition ? addClass(el, c) : removeClass(el, c) :
+                hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
+            }
+          })
         })
       }
 

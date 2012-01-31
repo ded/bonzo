@@ -162,7 +162,7 @@
           ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
         });
 
-        test('add/remove/has multiple classes', 12, function () {
+        test('add/remove/has multiple classes', 12 + 6 * 4, function () {
           var el = Q('#class-test');
           ok(!dom(el).hasClass('boosh'), 'element does not start off having class "boosh"');
           ok(!dom(el).hasClass('foo'), 'element does not start off having class "foo"');
@@ -177,16 +177,56 @@
           ok(!dom(el).hasClass('boosh'), 'element no longer has class "boosh" after removeClass()');
           ok(!dom(el).hasClass('foo'), 'element no longer has class "foo" after removeClass()');
           ok(!dom(el).hasClass('bar'), 'element no longer has class "bar" after removeClass()');
-          ok(dom(el).hasClass('existing-class'), 'element still has pre-existing class "existing-class"');
+          ok(el[0].className == 'existing-class', 'element is reset to class="existing-class"');
+
+          // whitespace tests
+
+          // 4 ok's each call
+          function testwhitespace(s, expected, existing) {
+            var ps = s.replace(/\t/, '\\t')
+            ok(existing || !dom(el).hasClass(s), 'correctly performed !hasClass for "' + ps + '"')
+            dom(el).addClass(s)
+            ok(el[0].className == 'existing-class ' + expected, 'correctly added class(es) for "' + ps + '"')
+            ok(existing || dom(el).hasClass(s), 'correctly performed hasClass for "' + ps + '"')
+            dom(el).removeClass(s)
+            ok(el[0].className == existing ? '' : 'existing-class', 'correctly removed class(es) for "' + ps + '"')
+            if (existing) // reset
+              el[0].className = 'existing-class'
+          }
+
+          testwhitespace('  foo', 'foo')
+          testwhitespace('foo  ', 'foo')
+          testwhitespace(' \tfoo ', 'foo')
+          testwhitespace(' foo bar\tbaz  ', 'foo bar baz')
+          // special cases of trying to re-add existing classes
+          testwhitespace('existing-class foo', 'foo', true)
+          testwhitespace('foo existing-class', 'foo', true)
+
         });
 
         test('toggleClass', 3, function () {
           ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
           $('#toggle-class').toggleClass('toggle-me');
-          ok(!$('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
+          ok(!$('#toggle-class').hasClass('toggle-me'), 'removed class toggle-me');
           $('#toggle-class').toggleClass('toggle-me');
           ok($('#toggle-class').hasClass('toggle-me'), 'has class toggle-me');
         });
+
+
+        test('toggle multiple classes', 9, function () {
+          var el = Q('#toggle-class')
+          ok(dom(el).hasClass('toggle-me'), 'has class toggle-me')
+          ok(!dom(el).hasClass('foo'), 'doesn\'t have class foo')
+          ok(!dom(el).hasClass('bar'), 'doesn\'t have class bar')
+          dom(el).toggleClass('toggle-me foo bar')
+          ok(!dom(el).hasClass('toggle-me'), 'removed class toggle-me')
+          ok(dom(el).hasClass('foo'), 'has class foo')
+          ok(dom(el).hasClass('bar'), 'has class bar')
+          dom(el).toggleClass('  foo\ttoggle-me  bar   ')
+          ok(dom(el).hasClass('toggle-me'), 'has class toggle-me')
+          ok(!dom(el).hasClass('foo'), 'removed class foo')
+          ok(!dom(el).hasClass('bar'), 'removed class bar')
+        })
 
         test('bonzo.create() should not error with empty string', 1, function () {
           var noError = true
