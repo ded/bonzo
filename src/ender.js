@@ -120,7 +120,7 @@
   }, true)
 
   function dimension(v, self, which) {
-    return v ?
+    return typeof v != 'undefined' ?
       self.css(which, v) :
       function (r) {
         if (!self[0]) return 0
