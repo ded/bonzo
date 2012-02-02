@@ -412,7 +412,6 @@
 
     , hasClass: function (c) {
         c = toString.call(c).split(whitespaceRegex)
-        console.log(c)
         return some(this, function (el) {
           return some(c, function (c) {
             return c && hasClass(el, c)
