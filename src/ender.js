@@ -111,22 +111,17 @@
     }
 
   , height: function (v) {
-      return dimension(v, this, 'height')
+      return dimension.call(this, 'height', v)
     }
 
   , width: function (v) {
-      return dimension(v, this, 'width')
+      return dimension.call(this, 'width', v)
     }
   }, true)
 
-  function dimension(v, self, which) {
-    return typeof v != 'undefined' ?
-      self.css(which, v) :
-      function (r) {
-        if (!self[0]) return 0
-        r = parseInt(self.css(which), 10);
-        return isNaN(r) ? self[0]['offset' + which.replace(/^\w/, function (m) {return m.toUpperCase()})] : r
-      }()
+  function dimension(type, v) {
+    return typeof v == 'undefined'
+      ? b(this).dim()[type]
+      : this.css(type, v)
   }
-
 }(ender);
