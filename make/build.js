@@ -23,5 +23,6 @@
     , "laxbreak": true
     , "eqeqeq": false
     , "eqnull": true
+    , "laxcomma": true
   }
 }
