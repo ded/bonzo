@@ -58,15 +58,22 @@ sink('Ender', function(test, ok, before, after) {
     ok(li[2].innerHTML = '<em style="color: purple; "> asdf </em><b style="color: orange; "> asdf </b>', 'third li has correct elems');
   });
 
-  test('cloning', 1, function() {
-    var div = $('<div>i have a click handler</div>')
+  test('cloning', 2, function() {
+    var outer = $('<div>i have a click handler<div>i have focus handler</div></div>')
       .css('cursor', 'pointer')
-      .bind('click', function () {
-        ok(true);
-      })
-      .appendTo('#fixtures');
+      .bind('click', function() {
+        ok(true, 'click handler fired');
+      });
 
-    div.trigger('click');
+    var inner = outer.find('div').bind('focus', function() {
+        ok(true, 'focus handler fired');
+      });
+
+    // Using 'after' because it clones
+    $('#fixtures').children().last().after(outer);
+
+    outer.trigger('click');
+    inner.trigger('focus');
   });
 
   test('transfer', 3, function() {
