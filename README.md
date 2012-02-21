@@ -155,7 +155,7 @@ Building
 --------
 
     $ cd bonzo
-    $ npm install --dev
+    $ npm install --d
     $ make
 
 Tests

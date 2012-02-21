@@ -1,7 +1,7 @@
 {
     "name": "bonzo"
   , "description": "Library agnostic, extensible DOM utility"
-  , "version": "0.9.0"
+  , "version": "1.0.0"
   , "homepage": "https://github.com/ded/bonzo"
   , "author": "Dustin Diaz <dustin@dustindiaz.com> (http://dustindiaz.com)"
   , "contributors": [
@@ -18,5 +18,6 @@
       "qwery": "*"
     , "bowser": "*"
     , "sink-test": "*"
+    , "smoosh": "*"
   }
 }

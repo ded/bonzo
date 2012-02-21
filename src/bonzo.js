@@ -107,7 +107,7 @@
 
   function dataValue(d, f) {
     try {
-      return (d === null || d === undefined) ? undefined : 
+      return (d === null || d === undefined) ? undefined :
         d === 'true' ? true :
           d === 'false' ? false :
             d === 'null' ? null :
@@ -214,8 +214,8 @@
   }
 
   // classList support for class management
-  // altho to be fair, the api sucks because it won't accept multiple classes at once,
-  // so we have to iterate. bullshit
+  // altho to be fair, the api sucks because it won't accept multiple classes at once
+  // so we iterate down below
   if (features.classList) {
     hasClass = function (el, c) {
       return el.classList.contains(c)
@@ -258,15 +258,13 @@
           elements :
           [elements]
       this.length = elements.length
-      for (var i = 0; i < elements.length; i++) {
-        this[i] = elements[i]
-      }
+      for (var i = 0; i < elements.length; i++) this[i] = elements[i]
     }
   }
 
   Bonzo.prototype = {
 
-      // indexr method, because jQueriers want this method
+      // indexr method, because jQueriers want this method. Jerks
       get: function (index) {
         return this[index] || null
       }
@@ -393,6 +391,7 @@
     , addClass: function (c) {
         c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
+          // we `each` here so you can do $el.addClass('foo bar')
           each(c, function (c) {
             if (c && !hasClass(el, setter(el, c)))
               addClass(el, setter(el, c))
@@ -641,7 +640,7 @@
           o = data(el)
           if (typeof k === 'undefined') {
             each(el.attributes, function(a) {
-              (m = (''+a.name).match(dattr)) && (o[camelize(m[1])] = dataValue(a.value))
+              (m = ('' + a.name).match(dattr)) && (o[camelize(m[1])] = dataValue(a.value))
             })
             return o
           } else {
@@ -804,4 +803,4 @@
     }
 
   return bonzo
-})
+}); // the only line we care about using a semi-colon. placed here for concatenation tools
