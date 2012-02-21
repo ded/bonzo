@@ -154,8 +154,7 @@ Bonzo Madrid was a malicious battle school commander of whom eventually is kille
 Building
 --------
 
-    $ cd bonzo
-    $ npm install --d
+    $ npm install -d
     $ make
 
 Tests
