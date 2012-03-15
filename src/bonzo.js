@@ -56,7 +56,7 @@
     , trimReplace = /(^\s*|\s*$)/g
     , whitespaceRegex = /\s+/
     , toString = String.prototype.toString
-    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
+    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1, boxFlex: 1, WebkitBoxFlex: 1, MozBoxFlex: 1 }
     , trim = String.prototype.trim ?
         function (s) {
           return s.trim()
