@@ -1,8 +1,8 @@
-!function (name, definition) {
+(function (name, definition) {
   if (typeof module != 'undefined') module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
   else this[name] = definition()
-}('bonzo', function() {
+})('bonzo', function() {
   var context = this
     , win = window
     , doc = win.document
@@ -315,10 +315,10 @@
             this.empty().each(function (el) {
               !text && specialTags.test(el.tagName) ?
                 append(el) :
-                !function() {
+                (function () {
                   try { (el[method] = h) }
                   catch(e) { append(el) }
-                }();
+                }())
             }) :
           this[0] ? this[0][method] : ''
       }

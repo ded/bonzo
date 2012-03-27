@@ -3,11 +3,11 @@
   * https://github.com/ded/bonzo
   * License MIT
   */
-!function (name, definition) {
+(function (name, definition) {
   if (typeof module != 'undefined') module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(name, definition)
   else this[name] = definition()
-}('bonzo', function() {
+})('bonzo', function() {
   var context = this
     , win = window
     , doc = win.document
@@ -61,7 +61,7 @@
     , trimReplace = /(^\s*|\s*$)/g
     , whitespaceRegex = /\s+/
     , toString = String.prototype.toString
-    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1 }
+    , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1, boxFlex: 1, WebkitBoxFlex: 1, MozBoxFlex: 1 }
     , trim = String.prototype.trim ?
         function (s) {
           return s.trim()
@@ -320,10 +320,10 @@
             this.empty().each(function (el) {
               !text && specialTags.test(el.tagName) ?
                 append(el) :
-                !function() {
+                (function () {
                   try { (el[method] = h) }
                   catch(e) { append(el) }
-                }();
+                }())
             }) :
           this[0] ? this[0][method] : ''
       }

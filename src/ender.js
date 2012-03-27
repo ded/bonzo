@@ -1,4 +1,4 @@
-!function ($) {
+(function ($) {
 
   var b = require('bonzo')
   b.setQueryEngine($)
@@ -124,4 +124,4 @@
       ? b(this).dim()[type]
       : this.css(type, v)
   }
-}(ender);
+}(ender));
