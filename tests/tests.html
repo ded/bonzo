@@ -398,6 +398,30 @@
           ok($el.offset().left == 0, 'setting "0" doesnt become falsy')
         })
 
+        test('offset + scroll', 2, function () {
+          var $el = $(dom.create('<div/>')).css({
+                width: '100px',
+                height: '100px',
+                'max-height': '100px',
+                overflow: 'scroll',
+                position: 'relative'
+              }).appendTo(document.body)
+
+            , $el2 = $(dom.create('<div/>')).css({
+                position: 'absolute',
+                width: '200px',
+                height: '200px',
+                top: '50px',
+                left: '50px'
+              }).appendTo($el)
+
+          $el[0].scrollTop = 50
+          $el[0].scrollLeft = 50
+
+          ok($el2.offset().top == $el.offset().top, 'account for scrollTop')
+          ok($el2.offset().left == $el.offset().left, 'account for scrollLeft')
+        })
+
         test('offset() returns 0s when element not found', 4, function () {
           var nullSet = $('div.this-element-dont-exist').offset()
           ok(!nullSet.left, 'no offset().left')
