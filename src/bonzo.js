@@ -574,6 +574,11 @@
         while (el = el.offsetParent) {
           top = top + el.offsetTop
           left = left + el.offsetLeft
+
+          if (el != document.body) {
+            top -= el.scrollTop
+            left -= el.scrollLeft
+          }
         }
 
         return {
