@@ -101,7 +101,7 @@
     }
 
   , children: function () {
-      var i, el, r = []
+      var i, l, el, r = []
       for (i = 0, l = this.length; i < l; i++) {
         if (!(el = b.firstChild(this[i]))) continue;
         r.push(el)
