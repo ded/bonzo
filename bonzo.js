@@ -3,10 +3,10 @@
   * https://github.com/ded/bonzo
   * License MIT
   */
-(function (name, definition) {
-  if (typeof module != 'undefined') module.exports = definition()
-  else if (typeof define == 'function' && define.amd) define(name, definition)
-  else this[name] = definition()
+(function (name, definition, context) {
+  if (typeof context['module'] !== 'undefined' && context['module']['exports']) context['module']['exports'] = definition()
+  else if (typeof context['define'] !== 'undefined' && typeof context['define'] == 'function' && context['define']['amd']) context['define'](name, definition)
+  else context[name] = definition()
 })('bonzo', function() {
   var context = this
     , win = window
@@ -16,17 +16,17 @@
     , query = null
     , specialAttributes = /^(checked|value|selected)$/i
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
-    , table = [ '<table>', '</table>', 1 ]
-    , td = [ '<table><tbody><tr>', '</tr></tbody></table>', 3 ]
-    , option = [ '<select>', '</select>', 1 ]
-    , noscope = [ '_', '', 0, 1 ]
+    , table = ['<table>', '</table>', 1]
+    , td = ['<table><tbody><tr>', '</tr></tbody></table>', 3]
+    , option = ['<select>', '</select>', 1]
+    , noscope = ['_', '', 0, 1]
     , tagMap = { // tags that we have trouble *inserting*
           thead: table, tbody: table, tfoot: table, colgroup: table, caption: table
-        , tr: [ '<table><tbody>', '</tbody></table>', 2 ]
+        , tr: ['<table><tbody>', '</tbody></table>', 2]
         , th: td , td: td
-        , col: [ '<table><colgroup>', '</colgroup></table>', 2 ]
-        , fieldset: [ '<form>', '</form>', 1 ]
-        , legend: [ '<form><fieldset>', '</fieldset></form>', 2 ]
+        , col: ['<table><colgroup>', '</colgroup></table>', 2]
+        , fieldset: ['<form>', '</form>', 1]
+        , legend: ['<form><fieldset>', '</fieldset></form>', 2]
         , option: option, optgroup: option
         , script: noscope, style: noscope, link: noscope, param: noscope, base: noscope
       }
@@ -101,13 +101,13 @@
 
   function data(el) {
     el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
-    uid = el[getAttribute]('data-node-uid')
+    var uid = el[getAttribute]('data-node-uid')
     return uidMap[uid] || (uidMap[uid] = {})
   }
 
   function clearData(el) {
-    uid = el[getAttribute]('data-node-uid')
-    uid && (delete uidMap[uid])
+    var uid = el[getAttribute]('data-node-uid')
+    if (uid) delete uidMap[uid]
   }
 
   function dataValue(d, f) {
@@ -579,6 +579,11 @@
         while (el = el.offsetParent) {
           top = top + el.offsetTop
           left = left + el.offsetLeft
+
+          if (el != document.body) {
+            top -= el.scrollTop
+            left -= el.scrollLeft
+          }
         }
 
         return {
@@ -820,4 +825,4 @@
     }
 
   return bonzo
-}); // the only line we care about using a semi-colon. placed here for concatenation tools
+}, this); // the only line we care about using a semi-colon. placed here for concatenation tools
