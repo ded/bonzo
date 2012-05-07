@@ -690,8 +690,8 @@
       }
 
     , detach: function () {
-        return this.map(function (el) {
-          return el[parentNode].removeChild(el)
+        return this.each(function (el) {
+          el[parentNode].removeChild(el)
         })
       }
 
