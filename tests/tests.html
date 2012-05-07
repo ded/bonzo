@@ -842,7 +842,7 @@
             , previous:      { str: '',                 args: [],                expect: isEmptyArray }
             , dim:           { str: '',                 args: [],                expect: function(r) { return r.height === 0 && r.width === 0 } }
             , get:           { str: 'index',            args: [0],               expect: isNull }
-            , detach:        { str: '',                 args: [],                expect: isEmptyArray }
+            , detach:        { str: '',                 args: [],                expect: isSameContainer }
             , each: [        { str: 'fn',               args: [K],               expect: isSameContainer }
                            , { str: 'fn, scope',        args: [K, K],            expect: isSameContainer }
               ]
