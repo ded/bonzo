@@ -122,7 +122,7 @@
   }
 
   function isNode(node) {
-    return node && node.nodeName && node.nodeType == 1
+    return node && node.nodeName && (node.nodeType == 1 || node.nodeType == 11)
   }
 
   function some(ar, fn, scope, i, j) {
