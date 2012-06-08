@@ -119,9 +119,14 @@
     }
   }, true)
 
-  function dimension(type, v) {
-    return typeof v == 'undefined'
+  /**
+   * @param {string} type either width or height
+   * @param {number=} opt_v becomes a setter instead of a getter
+   * @return {number|$}
+   */
+  function dimension(type, opt_v) {
+    return typeof opt_v == 'undefined'
       ? b(this).dim()[type]
-      : this.css(type, v)
+      : this.css(type, opt_v)
   }
 }(ender));

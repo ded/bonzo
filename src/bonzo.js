@@ -69,16 +69,30 @@
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)")
   }
 
-  function each(ar, fn, scope) {
-    for (var i = 0, l = ar.length; i < l; i++) fn.call(scope || ar[i], ar[i], i, ar)
+
+  /**
+   * @param {Array|Bonzo} ar
+   * @param {function(Object, number, Array)} fn
+   * @param {Object=} opt_scope
+   * @return {Array}
+   */
+  function each(ar, fn, opt_scope) {
+    for (var i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
     return ar
   }
 
-  function deepEach(ar, fn, scope) {
+
+  /**
+   * @param {Array} ar
+   * @param {function(Object, number, Array)} fn
+   * @param {Object=} opt_scope
+   * @return {Array}
+   */
+  function deepEach(ar, fn, opt_scope) {
     for (var i = 0, l = ar.length; i < l; i++) {
       if (isNode(ar[i])) {
-        deepEach(ar[i].childNodes, fn, scope)
-        fn.call(scope || ar[i], ar[i], i, ar)
+        deepEach(ar[i].childNodes, fn, opt_scope)
+        fn.call(opt_scope || ar[i], ar[i], i, ar)
       }
     }
     return ar
@@ -105,7 +119,8 @@
     if (uid) delete uidMap[uid]
   }
 
-  function dataValue(d, f) {
+  function dataValue(d) {
+    var f
     try {
       return (d === null || d === undefined) ? undefined :
         d === 'true' ? true :
@@ -120,8 +135,15 @@
     return node && node.nodeName && (node.nodeType == 1 || node.nodeType == 11)
   }
 
-  function some(ar, fn, scope, i, j) {
-    for (i = 0, j = ar.length; i < j; ++i) if (fn.call(scope, ar[i], i, ar)) return true
+
+  /**
+   * @param {Array} ar
+   * @param {function(Object, number, Array)} fn
+   * @param {Object=} opt_scope
+   * @return {boolean} whether `some`thing was found
+   */
+  function some(ar, fn, opt_scope) {
+    for (var i = 0, j = ar.length; i < j; ++i) if (fn.call(opt_scope || null, ar[i], i, ar)) return true
     return false
   }
 
@@ -282,26 +304,48 @@
       }
 
       // itetators
-    , each: function (fn, scope) {
-        return each(this, fn, scope)
+      /**
+       * @param {Function} fn
+       * @param {Object=} opt_scope
+       * @return {Bonzo}
+       */
+    , each: function (fn, opt_scope) {
+        return each(this, fn, opt_scope)
       }
 
-    , deepEach: function (fn, scope) {
-        return deepEach(this, fn, scope)
+      /**
+       * @param {Function} fn
+       * @param {Object=} opt_scope
+       * @return {Bonzo}
+       */
+    , deepEach: function (fn, opt_scope) {
+        return deepEach(this, fn, opt_scope)
       }
 
-    , map: function (fn, reject) {
+
+      /**
+       * @param {Function} fn
+       * @param {Function=} opt_reject
+       * @return {Array}
+       */
+    , map: function (fn, opt_reject) {
         var m = [], n, i
         for (i = 0; i < this.length; i++) {
           n = fn.call(this, this[i], i)
-          reject ? (reject(n) && m.push(n)) : m.push(n)
+          opt_reject ? (opt_reject(n) && m.push(n)) : m.push(n)
         }
         return m
       }
 
     // text and html inserters!
-    , html: function (h, text) {
-        var method = text ?
+
+    /**
+     * @param {string} h the HTML to insert
+     * @param {boolean=} opt_text whether to set or get text content
+     * @return {Bonzo|string}
+     */
+    , html: function (h, opt_text) {
+        var method = opt_text ?
           html.textContent === undefined ?
             'innerText' :
             'textContent' :
@@ -313,7 +357,7 @@
         }
         return typeof h !== 'undefined' ?
             this.empty().each(function (el) {
-              !text && specialTags.test(el.tagName) ?
+              !opt_text && specialTags.test(el.tagName) ?
                 append(el) :
                 (function () {
                   try { (el[method] = h) }
@@ -323,8 +367,12 @@
           this[0] ? this[0][method] : ''
       }
 
-    , text: function (text) {
-        return this.html(text, 1)
+      /**
+       * @param {string=} opt_text the text to set, otherwise this is a getter
+       * @return {string|Bonzo}
+       */
+    , text: function (opt_text) {
+        return this.html(opt_text, true)
       }
 
       // more related insertion methods
@@ -345,12 +393,24 @@
         })
       }
 
-    , appendTo: function (target, host) {
-        return insert.call(this, target, host, function (t, el) {
+
+      /**
+       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
+       * @return {Bonzo}
+       */
+    , appendTo: function (target, opt_host) {
+        return insert.call(this, target, opt_host, function (t, el) {
           t.appendChild(el)
         })
       }
 
+
+      /**
+       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
+       * @return {Bonzo}
+       */
     , prependTo: function (target, host) {
         return insert.call(this, target, host, function (t, el) {
           t.insertBefore(el, t.firstChild)
@@ -373,25 +433,34 @@
         })
       }
 
+
+      /**
+       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
+       * @return {Bonzo}
+       */
     , insertBefore: function (target, host) {
         return insert.call(this, target, host, function (t, el) {
           t[parentNode].insertBefore(el, t)
         })
       }
 
+
+      /**
+       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
+       * @return {Bonzo}
+       */
     , insertAfter: function (target, host) {
         return insert.call(this, target, host, function (t, el) {
           var sibling = t.nextSibling
-          if (sibling) {
-            t[parentNode].insertBefore(el, sibling);
-          }
-          else {
+          sibling ?
+            t[parentNode].insertBefore(el, sibling) :
             t[parentNode].appendChild(el)
-          }
         })
       }
 
-    , replaceWith: function(html) {
+    , replaceWith: function (html) {
         this.deepEach(clearData)
 
         return this.each(function (el) {
@@ -430,13 +499,19 @@
         })
       }
 
-    , toggleClass: function (c, condition) {
+
+      /**
+       * @param {string} c classname to toggle
+       * @param {boolean=} opt_condition whether to add or remove the class straight away
+       * @return {Bonzo}
+       */
+    , toggleClass: function (c, opt_condition) {
         c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
           each(c, function (c) {
             if (c) {
-              typeof condition !== 'undefined' ?
-                condition ? addClass(el, c) : removeClass(el, c) :
+              typeof opt_condition !== 'undefined' ?
+                opt_condition ? addClass(el, c) : removeClass(el, c) :
                 hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
             }
           })
@@ -444,9 +519,14 @@
       }
 
       // display togglers
-    , show: function (type) {
+
+      /**
+       * @param {string=} opt_type useful to set back to anything other than an empty string
+       * @return {Bonzo}
+       */
+    , show: function (opt_type) {
         return this.each(function (el) {
-          el.style.display = type || ''
+          el.style.display = opt_type || ''
         })
       }
 
@@ -456,11 +536,17 @@
         })
       }
 
-    , toggle: function (callback, type) {
+
+      /**
+       * @param {Function=} opt_callback
+       * @param {string=} opt_type
+       * @return {Bonzo}
+       */
+    , toggle: function (opt_callback, opt_type) {
         this.each(function (el) {
-          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : type || ''
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : opt_type || ''
         })
-        callback && callback()
+        if (opt_callback) opt_callback()
         return this
       }
 
@@ -507,30 +593,34 @@
       }
 
     , blur: function () {
-        return this.each(function (el) {
-          el.blur()
-        })
+        this.length && this[0].blur()
+        return this
       }
 
       // style getter setter & related methods
-    , css: function (o, v, p) {
+
+      /**
+       * @param {Object|string} o
+       * @param {string=} opt_v
+       * @return {string|Bonzo}
+       */
+    , css: function (o, opt_v) {
+        var p
         // is this a request for just getting a style?
-        if (v === undefined && typeof o == 'string') {
+        if (opt_v === undefined && typeof o == 'string') {
           // repurpose 'v'
-          v = this[0]
-          if (!v) {
-            return null
-          }
-          if (v === doc || v === win) {
-            p = (v === doc) ? bonzo.doc() : bonzo.viewport()
+          opt_v = this[0]
+          if (!opt_v) return null
+          if (opt_v === doc || opt_v === win) {
+            p = (opt_v === doc) ? bonzo.doc() : bonzo.viewport()
             return o == 'width' ? p.width : o == 'height' ? p.height : ''
           }
-          return (o = styleProperty(o)) ? getStyle(v, o) : null
+          return (o = styleProperty(o)) ? getStyle(opt_v, o) : null
         }
         var iter = o
         if (typeof o == 'string') {
           iter = {}
-          iter[o] = v
+          iter[o] = opt_v
         }
 
         if (ie && iter.opacity) {
@@ -554,10 +644,16 @@
         return this.each(fn)
       }
 
-    , offset: function (x, y) {
-        if (typeof x == 'number' || typeof y == 'number') {
+
+      /**
+       * @param {number=} opt_x
+       * @param {number=} opt_y
+       * @return {number|Bonzo}
+       */
+    , offset: function (opt_x, opt_y) {
+        if (typeof opt_x == 'number' || typeof opt_y == 'number') {
           return this.each(function (el) {
-            xy(el, x, y)
+            xy(el, opt_x, opt_y)
           })
         }
         if (!this[0]) return {
@@ -575,7 +671,7 @@
           top = top + el.offsetTop
           left = left + el.offsetLeft
 
-          if (el != document.body) {
+          if (el != doc.body) {
             top -= el.scrollTop
             left -= el.scrollLeft
           }
@@ -594,19 +690,19 @@
         var el = this[0]
           , orig = !el.offsetWidth && !el.offsetHeight ?
              // el isn't visible, can't be measured properly, so fix that
-             function (t, s) {
-                s = {
-                    position: el.style.position || ''
-                  , visibility: el.style.visibility || ''
-                  , display: el.style.display || ''
-                }
-                t.first().css({
-                    position: 'absolute'
-                  , visibility: 'hidden'
-                  , display: 'block'
-                })
-                return s
-              }(this) : null
+             function (t) {
+               var s = {
+                   position: el.style.position || ''
+                 , visibility: el.style.visibility || ''
+                 , display: el.style.display || ''
+               }
+               t.first().css({
+                   position: 'absolute'
+                 , visibility: 'hidden'
+                 , display: 'block'
+               })
+               return s
+            }(this) : null
           , width = el.offsetWidth
           , height = el.offsetHeight
 
@@ -618,7 +714,13 @@
       }
 
       // attributes are hard. go shopping
-    , attr: function (k, v) {
+
+      /**
+       * @param {string} k an attribute to get or set
+       * @param {string=} opt_v the value to set
+       * @return {string|Bonzo}
+       */
+    , attr: function (k, opt_v) {
         var el = this[0]
         if (typeof k != 'string' && !(k instanceof String)) {
           for (var n in k) {
@@ -626,13 +728,13 @@
           }
           return this
         }
-        return typeof v == 'undefined' ?
+        return typeof opt_v == 'undefined' ?
           !el ? null : specialAttributes.test(k) ?
             stateAttributes.test(k) && typeof el[k] == 'string' ?
               true : el[k] : (k == 'href' || k =='src') && features.hrefExtended ?
                 el[getAttribute](k, 2) : el[getAttribute](k) :
           this.each(function (el) {
-            specialAttributes.test(k) ? (el[k] = setter(el, v)) : el[setAttribute](k, setter(el, v))
+            specialAttributes.test(k) ? (el[k] = setter(el, opt_v)) : el[setAttribute](k, setter(el, opt_v))
           })
       }
 
@@ -642,6 +744,10 @@
         })
       }
 
+      /**
+       * @param {string=} opt_s
+       * @return {string|Bonzo}
+       */
     , val: function (s) {
         return (typeof s == 'string') ?
           this.attr('value', s) :
@@ -650,23 +756,28 @@
 
       // use with care and knowledge. this data() method uses data attributes on the DOM nodes
       // to do this differently costs a lot more code. c'est la vie
-    , data: function (k, v) {
+      /**
+       * @param {string|Object=} opt_k the key for which to get or set data
+       * @param {Object=} opt_v
+       * @return {Object|Bonzo}
+       */
+    , data: function (opt_k, opt_v) {
         var el = this[0], uid, o, m
-        if (typeof v === 'undefined') {
+        if (typeof opt_v === 'undefined') {
           if (!el) return null
           o = data(el)
-          if (typeof k === 'undefined') {
-            each(el.attributes, function(a) {
+          if (typeof opt_k === 'undefined') {
+            each(el.attributes, function (a) {
               (m = ('' + a.name).match(dattr)) && (o[camelize(m[1])] = dataValue(a.value))
             })
             return o
           } else {
-            if (typeof o[k] === 'undefined')
-              o[k] = dataValue(this.attr('data-' + decamelize(k)))
-            return o[k]
+            if (typeof o[opt_k] === 'undefined')
+              o[opt_k] = dataValue(this.attr('data-' + decamelize(opt_k)))
+            return o[opt_k]
           }
         } else {
-          return this.each(function (el) { data(el)[k] = v })
+          return this.each(function (el) { data(el)[opt_k] = opt_v })
         }
       }
 
@@ -733,8 +844,13 @@
     return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
   }
 
-  function bonzo(els, host) {
-    return new Bonzo(els, host)
+  /**
+   * @param {Array.<Element>|Element|Node|string} els
+   * @param {Object=} opt_scopeHost
+   * @return {Bonzo}
+   */
+  function bonzo(els, opt_scopeHost) {
+    return new Bonzo(els, opt_scopeHost)
   }
 
   bonzo.setQueryEngine = function (q) {
