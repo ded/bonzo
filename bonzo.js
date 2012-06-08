@@ -77,9 +77,9 @@
 
   /**
    * @param {Array|Bonzo} ar
-   * @param {function(Object, number, Array)} fn
+   * @param {function(Object, number, (Array|Bonzo))} fn
    * @param {Object=} opt_scope
-   * @return {Array}
+   * @return {Array|Bonzo}
    */
   function each(ar, fn, opt_scope) {
     for (var i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
@@ -88,10 +88,10 @@
 
 
   /**
-   * @param {Array} ar
-   * @param {function(Object, number, Array)} fn
+   * @param {Array|Bonzo} ar
+   * @param {function(Object, number, (Array|Bonzo))} fn
    * @param {Object=} opt_scope
-   * @return {Array}
+   * @return {Array|Bonzo}
    */
   function deepEach(ar, fn, opt_scope) {
     for (var i = 0, l = ar.length; i < l; i++) {
@@ -142,8 +142,8 @@
 
 
   /**
-   * @param {Array} ar
-   * @param {function(Object, number, Array)} fn
+   * @param {Array|Bonzo} ar
+   * @param {function(Object, number, (Array|Bonzo))} fn
    * @param {Object=} opt_scope
    * @return {boolean} whether `some`thing was found
    */
@@ -288,6 +288,10 @@
     return typeof v == 'function' ? v(el) : v
   }
 
+  /**
+   * @constructor
+   * @param {Element|Array.<Element>|string} elements
+   */
   function Bonzo(elements) {
     this.length = 0
     if (elements) {
@@ -851,11 +855,10 @@
 
   /**
    * @param {Array.<Element>|Element|Node|string} els
-   * @param {Object=} opt_scopeHost
    * @return {Bonzo}
    */
-  function bonzo(els, opt_scopeHost) {
-    return new Bonzo(els, opt_scopeHost)
+  function bonzo(els) {
+    return new Bonzo(els)
   }
 
   bonzo.setQueryEngine = function (q) {

@@ -122,7 +122,7 @@
   /**
    * @param {string} type either width or height
    * @param {number=} opt_v becomes a setter instead of a getter
-   * @return {number|$}
+   * @return {number}
    */
   function dimension(type, opt_v) {
     return typeof opt_v == 'undefined'
