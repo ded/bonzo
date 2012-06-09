@@ -169,14 +169,19 @@
 
     (ie && html.currentStyle) ?
 
+    /**
+     * @param {Element} el
+     * @param {string} property
+     * @return {string|number}
+     */
     function (el, property) {
       if (property == 'opacity') {
         var val = 100
         try {
-          val = el.filters['DXImageTransform.Microsoft.Alpha'].opacity
+          val = el['filters']['DXImageTransform.Microsoft.Alpha'].opacity
         } catch (e1) {
           try {
-            val = el.filters('alpha').opacity
+            val = el['filters']('alpha').opacity
           } catch (e2) {}
         }
         return val / 100
@@ -290,7 +295,7 @@
 
   /**
    * @constructor
-   * @param {Element|Array.<Element>|string} elements
+   * @param {Array.<Element>|Element|Node|string} elements
    */
   function Bonzo(elements) {
     this.length = 0
