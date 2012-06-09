@@ -212,7 +212,7 @@
             // check for existence of an event cloner
             // preferably https://github.com/fat/bean
             // otherwise Bonzo won't do this for you
-            if (self.$ && self.cloneEvents) {
+            if (self.$ && typeof self.cloneEvents == 'function') {
               self.$(c).cloneEvents(el)
 
               // clone events from every child node
