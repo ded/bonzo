@@ -13,7 +13,7 @@
     , doc = win.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
-    , query = null
+    , query = null // used for setting a selector engine host
     , specialAttributes = /^(checked|value|selected)$/i
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
     , table = ['<table>', '</table>', 1]
@@ -56,6 +56,9 @@
             }
           }()
         , classList: 'classList' in e
+        , opasity: function () {
+            return typeof doc.createElement('a').style.opacity !== 'undefined'
+          }()
         }
       }()
     , trimReplace = /(^\s*|\s*$)/g
@@ -70,16 +73,21 @@
           return s.replace(trimReplace, '')
         }
 
+
+  /**
+   * @param {string} c a class name to test
+   * @return {boolean}
+   */
   function classReg(c) {
     return new RegExp("(^|\\s+)" + c + "(\\s+|$)")
   }
 
 
   /**
-   * @param {Array|Bonzo} ar
-   * @param {function(Object, number, (Array|Bonzo))} fn
+   * @param {Bonzo|Array} ar
+   * @param {function(Object, number, (Bonzo|Array))} fn
    * @param {Object=} opt_scope
-   * @return {Array|Bonzo}
+   * @return {Bonzo|Array}
    */
   function each(ar, fn, opt_scope) {
     for (var i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
@@ -88,10 +96,10 @@
 
 
   /**
-   * @param {Array|Bonzo} ar
-   * @param {function(Object, number, (Array|Bonzo))} fn
+   * @param {Bonzo|Array} ar
+   * @param {function(Object, number, (Bonzo|Array))} fn
    * @param {Object=} opt_scope
-   * @return {Array|Bonzo}
+   * @return {Bonzo|Array}
    */
   function deepEach(ar, fn, opt_scope) {
     for (var i = 0, l = ar.length; i < l; i++) {
@@ -103,26 +111,47 @@
     return ar
   }
 
+
+  /**
+   * @param {string} s
+   * @return {string}
+   */
   function camelize(s) {
     return s.replace(/-(.)/g, function (m, m1) {
       return m1.toUpperCase()
     })
   }
 
+
+  /**
+   * @param {string} s
+   * @return {string}
+   */
   function decamelize(s) {
     return s ? s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : s
   }
 
+
+  /**
+   * @param {Element} el
+   * @return {*}
+   */
   function data(el) {
     el[getAttribute]('data-node-uid') || el[setAttribute]('data-node-uid', ++uuids)
     var uid = el[getAttribute]('data-node-uid')
     return uidMap[uid] || (uidMap[uid] = {})
   }
 
+
+  /**
+   * removes the data associated with an element
+   * @param {Element} el
+   */
   function clearData(el) {
     var uid = el[getAttribute]('data-node-uid')
     if (uid) delete uidMap[uid]
   }
+
 
   function dataValue(d) {
     var f
@@ -142,8 +171,8 @@
 
 
   /**
-   * @param {Array|Bonzo} ar
-   * @param {function(Object, number, (Array|Bonzo))} fn
+   * @param {Bonzo|Array} ar
+   * @param {function(Object, number, (Bonzo|Array))} fn
    * @param {Object=} opt_scope
    * @return {boolean} whether `some`thing was found
    */
@@ -152,6 +181,15 @@
     return false
   }
 
+
+  /**
+   * this could be a giant enum of CSS properties
+   * but in favor of file size sans-closure deadcode optimizations
+   * we're just asking for any ol string
+   * then it gets transformed into the appropriate style property for JS access
+   * @param {string} p
+   * @return {string}
+   */
   function styleProperty(p) {
       (p == 'transform' && (p = features.transform)) ||
         (/^transform-?[Oo]rigin$/.test(p) && (p = features.transform + "Origin")) ||
@@ -175,7 +213,7 @@
      * @return {string|number}
      */
     function (el, property) {
-      if (property == 'opacity') {
+      if (property == 'opacity' && !features.opasity) {
         var val = 100
         try {
           val = el['filters']['DXImageTransform.Microsoft.Alpha'].opacity
@@ -236,6 +274,13 @@
     return self
   }
 
+
+  /**
+   * sets an element to an explicit x/y position on the page
+   * @param {Element} el
+   * @param {?number} x
+   * @param {?number} y
+   */
   function xy(el, x, y) {
     var $el = bonzo(el)
       , style = $el.css('position')
@@ -259,7 +304,6 @@
 
   // classList support for class management
   // altho to be fair, the api sucks because it won't accept multiple classes at once
-  // so we iterate down below
   if (features.classList) {
     hasClass = function (el, c) {
       return el.classList.contains(c)
@@ -284,11 +328,18 @@
   }
 
 
-  // this allows method calling for setting values
-  // example:
-  // bonzo(elements).css('color', function (el) {
-  //   return el.getAttribute('data-original-color')
-  // })
+  /**
+   * this allows method calling for setting values
+   *
+   * @example
+   * bonzo(elements).css('color', function (el) {
+   *   return el.getAttribute('data-original-color')
+   * })
+   *
+   * @param {Element} el
+   * @param {function (Element)|string}
+   * @return {string}
+   */
   function setter(el, v) {
     return typeof v == 'function' ? v(el) : v
   }
@@ -312,14 +363,17 @@
 
   Bonzo.prototype = {
 
-      // indexr method, because jQueriers want this method. Jerks
+      /**
+       * @param {number} index
+       * @return {Element|Node}
+       */
       get: function (index) {
         return this[index] || null
       }
 
       // itetators
       /**
-       * @param {Function} fn
+       * @param {function(Element|Node)} fn
        * @param {Object=} opt_scope
        * @return {Bonzo}
        */
@@ -383,13 +437,18 @@
 
       /**
        * @param {string=} opt_text the text to set, otherwise this is a getter
-       * @return {string|Bonzo}
+       * @return {Bonzo|string}
        */
     , text: function (opt_text) {
         return this.html(opt_text, true)
       }
 
       // more related insertion methods
+
+      /**
+       * @param {Element|Node} node
+       * @return {Bonzo}
+       */
     , append: function (node) {
         return this.each(function (el) {
           each(normalize(node), function (i) {
@@ -398,6 +457,11 @@
         })
       }
 
+
+      /**
+       * @param {Element|Node} node
+       * @return {Bonzo}
+       */
     , prepend: function (node) {
         return this.each(function (el) {
           var first = el.firstChild
@@ -409,7 +473,7 @@
 
 
       /**
-       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -421,7 +485,7 @@
 
 
       /**
-       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -431,6 +495,11 @@
         })
       }
 
+
+      /**
+       * @param {Element|Node} node
+       * @return {Bonzo}
+       */
     , before: function (node) {
         return this.each(function (el) {
           each(bonzo.create(node), function (i) {
@@ -439,6 +508,11 @@
         })
       }
 
+
+      /**
+       * @param {Element|Node} node
+       * @return {Bonzo}
+       */
     , after: function (node) {
         return this.each(function (el) {
           each(bonzo.create(node), function (i) {
@@ -474,6 +548,11 @@
         })
       }
 
+
+      /**
+       * @param {string} html
+       * @return {Bonzo}
+       */
     , replaceWith: function (html) {
         this.deepEach(clearData)
 
@@ -483,6 +562,11 @@
       }
 
       // class management
+
+      /**
+       * @param {string} c
+       * @return {Bonzo}
+       */
     , addClass: function (c) {
         c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
@@ -494,6 +578,11 @@
         })
       }
 
+
+      /**
+       * @param {string} c
+       * @return {Bonzo}
+       */
     , removeClass: function (c) {
         c = toString.call(c).split(whitespaceRegex)
         return this.each(function (el) {
@@ -504,6 +593,11 @@
         })
       }
 
+
+      /**
+       * @param {string} c
+       * @return {boolean}
+       */
     , hasClass: function (c) {
         c = toString.call(c).split(whitespaceRegex)
         return some(this, function (el) {
@@ -544,6 +638,10 @@
         })
       }
 
+
+      /**
+       * @return {Bonzo}
+       */
     , hide: function () {
         return this.each(function (el) {
           el.style.display = 'none'
@@ -564,27 +662,54 @@
         return this
       }
 
+
       // DOM Walkers & getters
+
+      /**
+       * @return {Element|Node}
+       */
     , first: function () {
         return bonzo(this.length ? this[0] : [])
       }
 
+
+      /**
+       * @return {Element|Node}
+       */
     , last: function () {
         return bonzo(this.length ? this[this.length - 1] : [])
       }
 
+
+      /**
+       * @return {Element|Node}
+       */
     , next: function () {
         return this.related('nextSibling')
       }
 
+
+      /**
+       * @return {Element|Node}
+       */
     , previous: function () {
         return this.related('previousSibling')
       }
 
+
+      /**
+       * @return {Element|Node}
+       */
     , parent: function() {
         return this.related(parentNode)
       }
 
+
+      /**
+       * @private
+       * @param {string} method the directional DOM method
+       * @return {Element|Node}
+       */
     , related: function (method) {
         return this.map(
           function (el) {
@@ -600,12 +725,19 @@
         )
       }
 
-      // meh. use with care. the ones in Bean are better
+
+      /**
+       * @return {Bonzo}
+       */
     , focus: function () {
         this.length && this[0].focus()
         return this
       }
 
+
+      /**
+       * @return {Bonzo}
+       */
     , blur: function () {
         this.length && this[0].blur()
         return this
@@ -616,7 +748,7 @@
       /**
        * @param {Object|string} o
        * @param {string=} opt_v
-       * @return {string|Bonzo}
+       * @return {Bonzo|string}
        */
     , css: function (o, opt_v) {
         var p
@@ -662,7 +794,7 @@
       /**
        * @param {number=} opt_x
        * @param {number=} opt_y
-       * @return {number|Bonzo}
+       * @return {Bonzo|number}
        */
     , offset: function (opt_x, opt_y) {
         if (typeof opt_x == 'number' || typeof opt_y == 'number') {
@@ -699,6 +831,10 @@
         }
       }
 
+
+      /**
+       * @return {number}
+       */
     , dim: function () {
         if (!this.length) return { height: 0, width: 0 }
         var el = this[0]
@@ -732,7 +868,7 @@
       /**
        * @param {string} k an attribute to get or set
        * @param {string=} opt_v the value to set
-       * @return {string|Bonzo}
+       * @return {Bonzo|string}
        */
     , attr: function (k, opt_v) {
         var el = this[0]
@@ -752,15 +888,21 @@
           })
       }
 
+
+      /**
+       * @param {string} k
+       * @return {Bonzo}
+       */
     , removeAttr: function (k) {
         return this.each(function (el) {
           stateAttributes.test(k) ? (el[k] = false) : el.removeAttribute(k)
         })
       }
 
+
       /**
        * @param {string=} opt_s
-       * @return {string|Bonzo}
+       * @return {Bonzo|string}
        */
     , val: function (s) {
         return (typeof s == 'string') ?
@@ -773,7 +915,7 @@
       /**
        * @param {string|Object=} opt_k the key for which to get or set data
        * @param {Object=} opt_v
-       * @return {Object|Bonzo}
+       * @return {Bonzo|Object}
        */
     , data: function (opt_k, opt_v) {
         var el = this[0], uid, o, m
@@ -796,6 +938,10 @@
       }
 
       // DOM detachment & related
+
+      /**
+       * @return {Bonzo}
+       */
     , remove: function () {
         this.deepEach(clearData)
 
@@ -804,6 +950,10 @@
         })
       }
 
+
+      /**
+       * @return {Bonzo}
+       */
     , empty: function () {
         return this.each(function (el) {
           deepEach(el.childNodes, clearData)
@@ -814,6 +964,10 @@
         })
       }
 
+
+      /**
+       * @return {Bonzo}
+       */
     , detach: function () {
         return this.each(function (el) {
           el[parentNode].removeChild(el)
@@ -821,10 +975,18 @@
       }
 
       // who uses a mouse anyway? oh right.
+
+      /**
+       * @param {number} y
+       */
     , scrollTop: function (y) {
         return scroll.call(this, null, y, 'y')
       }
 
+
+      /**
+       * @param {number} x
+       */
     , scrollLeft: function (x) {
         return scroll.call(this, x, null, 'x')
       }
