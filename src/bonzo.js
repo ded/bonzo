@@ -81,10 +81,16 @@
    * @param {Bonzo|Array} ar
    * @param {function(Object, number, (Bonzo|Array))} fn
    * @param {Object=} opt_scope
+   * @param {boolean=} opt_rev
    * @return {Bonzo|Array}
    */
-  function each(ar, fn, opt_scope) {
-    for (var i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
+  function each(ar, fn, opt_scope, opt_rev) {
+    var i, l
+    if (opt_rev) {
+      for (i = ar.length - 1; i >= 0; i--) fn.call(opt_scope || ar[i], ar[i], i, ar)
+    } else {
+      for (i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
+    }
     return ar
   }
 
@@ -227,7 +233,7 @@
     }
 
   // this insert method is intense
-  function insert(target, host, fn) {
+  function insert(target, host, fn, rev) {
     var i = 0, self = host || this, r = []
       // target nodes could be a css selector if it's a string and a selector engine is present
       // otherwise, just use target
@@ -235,31 +241,11 @@
     // normalize each node in case it's still a string and we need to create nodes on the fly
     each(normalize(nodes), function (t) {
       each(self, function (el) {
-        var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ?
-          function () {
-            var c = el.cloneNode(true)
-              , cloneElems
-              , elElems
-
-            // check for existence of an event cloner
-            // preferably https://github.com/fat/bean
-            // otherwise Bonzo won't do this for you
-            if (self.$ && typeof self.cloneEvents == 'function') {
-              self.$(c).cloneEvents(el)
-
-              // clone events from every child node
-              cloneElems = self.$(c).find('*')
-              elElems = self.$(el).find('*')
-
-              for (var i = 0; i < elElems.length; i++)
-                self.$(cloneElems[i]).cloneEvents(elElems[i])
-            }
-            return c
-          }() : el
+        var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ? cloneNode(self, el) : el
         fn(t, n)
         r[i] = n
         i++
-      })
+      }, null, rev)
     }, this)
     each(r, function (e, i) {
       self[i] = e
@@ -444,8 +430,9 @@
        * @return {Bonzo}
        */
     , append: function (node) {
-        return this.each(function (el) {
-          each(normalize(node), function (i) {
+        var that = this
+        return this.each(function (el, i) {
+          each(normalize(node, that, 1), function (i) {
             el.appendChild(i)
           })
         })
@@ -457,9 +444,10 @@
        * @return {Bonzo}
        */
     , prepend: function (node) {
+        var that = this
         return this.each(function (el) {
           var first = el.firstChild
-          each(normalize(node), function (i) {
+          each(normalize(node, that, 1), function (i) {
             el.insertBefore(i, first)
           })
         })
@@ -483,10 +471,10 @@
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
-    , prependTo: function (target, host) {
-        return insert.call(this, target, host, function (t, el) {
+    , prependTo: function (target, opt_host) {
+        return insert.call(this, target, opt_host, function (t, el) {
           t.insertBefore(el, t.firstChild)
-        })
+        }, 1)
       }
 
 
@@ -495,8 +483,9 @@
        * @return {Bonzo}
        */
     , before: function (node) {
+        var that = this
         return this.each(function (el) {
-          each(bonzo.create(node), function (i) {
+          each(normalize(node, that, 1), function (i) {
             el[parentNode].insertBefore(i, el)
           })
         })
@@ -508,10 +497,11 @@
        * @return {Bonzo}
        */
     , after: function (node) {
+        var that = this
         return this.each(function (el) {
-          each(bonzo.create(node), function (i) {
+          each(normalize(node, that, 1), function (i) {
             el[parentNode].insertBefore(i, el.nextSibling)
-          })
+          }, null, 1)
         })
       }
 
@@ -521,8 +511,8 @@
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
-    , insertBefore: function (target, host) {
-        return insert.call(this, target, host, function (t, el) {
+    , insertBefore: function (target, opt_host) {
+        return insert.call(this, target, opt_host, function (t, el) {
           t[parentNode].insertBefore(el, t)
         })
       }
@@ -533,13 +523,13 @@
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
-    , insertAfter: function (target, host) {
-        return insert.call(this, target, host, function (t, el) {
+    , insertAfter: function (target, opt_host) {
+        return insert.call(this, target, opt_host, function (t, el) {
           var sibling = t.nextSibling
           sibling ?
             t[parentNode].insertBefore(el, sibling) :
             t[parentNode].appendChild(el)
-        })
+        }, 1)
       }
 
 
@@ -987,8 +977,35 @@
 
   }
 
-  function normalize(node) {
-    return typeof node == 'string' ? bonzo.create(node) : isNode(node) ? [node] : node // assume [nodes]
+  function normalize(node, host, clone) {
+    var i, l
+    if (typeof node == 'string') return bonzo.create(node)
+    if (isNode(node)) node = [ node ]
+    if (clone) {
+      for (i = 0, l = node.length; i < l; i++) node[i] = cloneNode(host, node[i])
+    }
+    return node
+  }
+
+  function cloneNode(host, el) {
+    var c = el.cloneNode(true)
+      , cloneElems
+      , elElems
+
+    // check for existence of an event cloner
+    // preferably https://github.com/fat/bean
+    // otherwise Bonzo won't do this for you
+    if (host.$ && typeof host.cloneEvents == 'function') {
+      host.$(c).cloneEvents(el)
+
+      // clone events from every child node
+      cloneElems = host.$(c).find('*')
+      elElems = host.$(el).find('*')
+
+      for (var i = 0; i < elElems.length; i++)
+        host.$(cloneElems[i]).cloneEvents(elElems[i])
+    }
+    return c
   }
 
   function scroll(x, y, type) {
