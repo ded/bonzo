@@ -1,6 +1,6 @@
 /*global sink:true start:true Q:true dom:true $:true bowser:true ender:true*/
 
-sink('DOM Manipulation', function(test, ok, before, after) {
+sink('DOM Manipulation', function(test, ok, before, after, assert) {
   test('bonzo.create() should not error with empty string', 1, function () {
     var noError = true
     try {
@@ -104,8 +104,8 @@ sink('DOM Manipulation', function(test, ok, before, after) {
   })
 
   test('prependTo', 3, function () {
-    var node = $.create('<p>world</p>')[0]
-      , node2 = $.create('<p>hello</p>')[0]
+    var node = $.create('<p>hello</p>')[0]
+      , node2 = $.create('<p>world</p>')[0]
       , prepend = Q('#prepend-to')[0]
       // whazzis? , prependWithNoFirstChild = Q('#prepend-first-child')[0]
     $([node, node2]).prependTo(prepend)
