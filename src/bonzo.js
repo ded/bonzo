@@ -85,11 +85,10 @@
    * @return {Bonzo|Array}
    */
   function each(ar, fn, opt_scope, opt_rev) {
-    var i, l
-    if (opt_rev) {
-      for (i = ar.length - 1; i >= 0; i--) fn.call(opt_scope || ar[i], ar[i], i, ar)
-    } else {
-      for (i = 0, l = ar.length; i < l; i++) fn.call(opt_scope || ar[i], ar[i], i, ar)
+    var ind, i = 0, l = ar.length
+    for (; i < l; i++) {
+      ind = opt_rev ? ar.length - i - 1 : i
+      fn.call(opt_scope || ar[ind], ar[ind], ind, ar)
     }
     return ar
   }
