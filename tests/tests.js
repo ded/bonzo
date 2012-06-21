@@ -1,3 +1,5 @@
+/*global sink:true start:true Q:true dom:true $:true bowser:true ender:true*/
+
 sink('Bonzo', function(test, ok, before, after) {
 
   test('add/remove/has classes', 6, function () {
@@ -131,7 +133,8 @@ sink('Bonzo', function(test, ok, before, after) {
   });
 
   test('get and set html', 9, function () {
-    var fixture = '<p>oh yeeeeeah!</p>'
+    var el, ex
+      , fixture = '<p>oh yeeeeeah!</p>'
       , fixture2 = '&lt;oh yeeeeeah&gt;'
       , fixture3 = '<div>oh yeeeeeah!</div>'
       , fixture4 = '<span>oh yeeeeeah!</span>'
@@ -144,7 +147,7 @@ sink('Bonzo', function(test, ok, before, after) {
     ok(Q('#html')[0].innerHTML == fixture2, 'sets appropriate tag-less fixture html');
     ok($('#html').html() == fixture2, 'gets appropriate tag-less fixture html');
 
-    var ex = false
+    ex = false
     try { $('#html-p').html(fixture3); }
     catch(e) { ex = true }
     finally {
@@ -152,7 +155,7 @@ sink('Bonzo', function(test, ok, before, after) {
       ok($('#html-p').html().toLowerCase() == fixture3, 'block-level element actually got appended to &lt;p&gt;')
     }
 
-    var ex = false
+    ex = false
     try { $('#html-p').html(fixture4); }
     catch(e) { ex = true }
     finally {
@@ -160,8 +163,8 @@ sink('Bonzo', function(test, ok, before, after) {
       ok($('#html-p').html().toLowerCase() == fixture4, 'inline element actually got appended to &lt;p&gt;');
     }
 
-    var ex = false
-    try { var el = $($.create(fixture)).html(fixture)[0]; }
+    ex = false
+    try { el = $($.create(fixture)).html(fixture)[0]; }
     catch(e) { ex = true }
     finally {
       ok(el && el.innerHTML.toLowerCase().indexOf(fixture) != -1, 'got a &lt;p&gt; into a &lt;p&gt;');
@@ -203,11 +206,11 @@ sink('Bonzo', function(test, ok, before, after) {
   test('show and hide', 6, function () {
     ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
     $('#show-hide').hide();
-    ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
+    ok(Q('#show-hide')[0].offsetWidth === 0, 'element has no flow');
     $('#show-hide').show();
     ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
     $('#show-hide').hide();
-    ok(Q('#show-hide')[0].offsetWidth == 0, 'element has no flow');
+    ok(Q('#show-hide')[0].offsetWidth === 0, 'element has no flow');
     $('#show-hide').attr('class','show-hide-css');
     $('#show-hide').show('block');
     ok(Q('#show-hide')[0].offsetWidth > 0, 'element has flow');
@@ -221,7 +224,7 @@ sink('Bonzo', function(test, ok, before, after) {
     $('#toggle').toggle(function () {
       ok(true, 'callback in toggle gets called')
     })
-    ok($('#toggle').offset().width == 0, 'element has no flow')
+    ok($('#toggle').offset().width === 0, 'element has no flow')
     $('#toggle').toggle()
     ok($('#toggle').offset().width > 0, 'element has flow after toggling again')
     $('#toggle').toggle()
@@ -244,8 +247,8 @@ sink('Bonzo', function(test, ok, before, after) {
     ok($el.offset().top == -100, 'after offset(null, -100), top == -100');
 
     $el.offset(0, 0);
-    ok($el.offset().top == 0, 'setting "0" doesnt become falsy')
-    ok($el.offset().left == 0, 'setting "0" doesnt become falsy')
+    ok($el.offset().top === 0, 'setting "0" doesnt become falsy')
+    ok($el.offset().left === 0, 'setting "0" doesnt become falsy')
   })
 
   test('offset + scroll', 2, function () {
@@ -333,13 +336,13 @@ sink('Bonzo', function(test, ok, before, after) {
   test('should empty a node without removing node', 2, function () {
     ok(Q('#empty p').length == 3, 'target has 3 {p} elements');
     $('#empty').empty();
-    ok(Q('#empty p').length == 0, 'target has 0 {p} elements');
+    ok(Q('#empty p').length === 0, 'target has 0 {p} elements');
   });
 
   test('should detach and return node list', 4, function () {
     ok(Q('#detach div').length == 2, 'target originally has 2 nodes');
     var orphans = $('#detach div').detach();
-    ok(Q('#detach div').length == 0, 'target has detached 2 nodes');
+    ok(Q('#detach div').length === 0, 'target has detached 2 nodes');
     ok(orphans.length == 2, '2 orphans were returned');
     ok(!$.isAncestor(document.body, orphans[0]), 'orphans do not exist in document');
   });
@@ -384,7 +387,7 @@ sink('Bonzo', function(test, ok, before, after) {
     var node = $.create('<p>world</p>')[0]
       , node2 = $.create('<p>hello</p>')[0]
       , prepend = Q('#prepend-to')[0]
-      , prependWithNoFirstChild = Q('#prepend-first-child')[0]
+      // whazzis? , prependWithNoFirstChild = Q('#prepend-first-child')[0]
     $([node, node2]).prependTo(prepend);
     ok($('#prepend-to p').length == 2, '$("#prepend-to p").length == 2 - prepended to target node');
     ok($('#prepend-to p').first().html() == 'hello', 'first node is "hello"');
@@ -466,13 +469,13 @@ sink('Bonzo', function(test, ok, before, after) {
     }
     ok(checkedCount() == 3, '3 checkboxes are checked')
     $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
-    ok(checkedCount() == 0, 'no checkboxes are checked')
+    ok(checkedCount() === 0, 'no checkboxes are checked')
     $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
     ok(checkedCount() == 3, '3 checkboxes are checked again')
     $("#checkboxes-bug input[type='checkbox']").first().get(0).click()
     ok(checkedCount() == 2, '2 checkboxes are checked')
     $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
-    ok(checkedCount() == 0, 'no checkboxes are checked again')
+    ok(checkedCount() === 0, 'no checkboxes are checked again')
     $("#checkboxes-bug input[type='checkbox']").attr('checked', 'checked')
     ok(checkedCount() == 3, 'all checkboxes are checked!')
   })
@@ -565,7 +568,6 @@ sink('Bonzo', function(test, ok, before, after) {
     } catch (e) {}
     ok(e && e.length == 1 && e[0].tagName.toUpperCase() == node, 'created &lt;' + node + '&gt; element')
     ok(!ex, 'no exception while creating &lt;' + node + '&gt; element')
-    delete e
   }
 
   // omitted from these lists, can't be reliably created across browsers: FRAME FRAMESET HEAD HTML ISINDEX TITLE
@@ -587,10 +589,10 @@ sink('Bonzo', function(test, ok, before, after) {
   test('`create` IE-NoScope SCRIPT &amp; STYLE with contents', 4, function() {
     // not expecting the contents do do anything here, just trying to insert with contents
     testCreate('SCRIPT', function() {
-      return scr = $.create('<script type="text/javascript">var foo = bar;</' + 'script>') // need '</' + 'script>' or else it'll close our main <script> body
+      return $.create('<script type="text/javascript">var foo = bar;</' + 'script>') // need '</' + 'script>' or else it'll close our main <script> body
     })
     testCreate('STYLE', function() {
-      return scr = $.create('<style type="text/css">.foo { color: red; }</style>') // need '</' + 'script>' or else it'll close our main <script> body
+      return $.create('<style type="text/css">.foo { color: red; }</style>') // need '</' + 'script>' or else it'll close our main <script> body
     })
   })
 })
@@ -606,7 +608,7 @@ sink('Selector engine', function (test, ok) {
 
   test('run insert with existing nodes', 2, function () {
     $('.prepend-with-engine p').prependTo('.prepend-with-engine-move');
-    ok($('.prepend-with-engine p').length == 0, 'prepend now has no elements')
+    ok($('.prepend-with-engine p').length === 0, 'prepend now has no elements')
     ok($('.prepend-with-engine-move p').length == 4, 'elements were moved to target selector')
   });
 
@@ -665,7 +667,7 @@ sink('Empty-collection safety', function (test, ok) {
       , isEmptyArray = function (o) {
           return !!o && o.length === 0 && Object.prototype.toString.call(o) === '[object Array]'
         }
-      , isUndefined = function (o) { return o === undefined }
+      //, isUndefined = function (o) { return o === undefined }
       , isNull = function (o) { return o === null }
       , isFalse = function (o) { return o === false }
         // an empty function
