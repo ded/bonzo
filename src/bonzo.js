@@ -3,8 +3,7 @@
   else if (typeof context['define'] == 'function' && context['define']['amd']) define(name, definition)
   else context[name] = definition()
 })('bonzo', function() {
-  var context = this
-    , win = window
+  var win = window
     , doc = win.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
@@ -746,7 +745,7 @@
        * @return {Bonzo|string}
        */
     , css: function (o, opt_v) {
-        var p
+        var p, iter = o
         // is this a request for just getting a style?
         if (opt_v === undefined && typeof o == 'string') {
           // repurpose 'v'
@@ -758,7 +757,7 @@
           }
           return (o = styleProperty(o)) ? getStyle(opt_v, o) : null
         }
-        var iter = o
+
         if (typeof o == 'string') {
           iter = {}
           iter[o] = opt_v
@@ -913,7 +912,7 @@
        * @return {Bonzo|Object}
        */
     , data: function (opt_k, opt_v) {
-        var el = this[0], uid, o, m
+        var el = this[0], o, m
         if (typeof opt_v === 'undefined') {
           if (!el) return null
           o = data(el)

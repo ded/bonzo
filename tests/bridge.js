@@ -5,6 +5,7 @@ sink('Ender bridge', function (test, ok) {
     var $el = ender(dom.create('<div/>')).css({
             height: '50px'
           , width: '200px'
+          , lineHeight: 0 // old IE
         }).appendTo(document.body)
 
     ok($el.height() == 50, 'initial height() is 50')
@@ -19,11 +20,9 @@ sink('Ender bridge', function (test, ok) {
     ok($el.height() == 100, 'after width(20), height() reports 100')
 
     $el.height(0)
-    alert($el.height())
     ok($el.height() === 0, 'after height(0), height() reports 0')
 
     $el.width(0)
-    alert($el.width())
     ok($el.width() === 0, 'after width(0), width() reports 0')
 
     $el.remove()

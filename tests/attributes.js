@@ -185,7 +185,6 @@ sink('Element attributes', function (test, ok) {
       for (i = 0; i < cb.length; i++) cb[i].checked && c++
       return c
     }
-    console.log('checkedCount',checkedCount())
     ok(checkedCount() == 3, '3 checkboxes are checked')
     $("#checkboxes-bug input[type='checkbox']").removeAttr('checked')
     ok(checkedCount() === 0, 'no checkboxes are checked')
