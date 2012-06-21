@@ -432,7 +432,7 @@
     , append: function (node) {
         var that = this
         return this.each(function (el, i) {
-          each(normalize(node, that, 1), function (i) {
+          each(normalize(node, that, i), function (i) {
             el.appendChild(i)
           })
         })
@@ -445,9 +445,9 @@
        */
     , prepend: function (node) {
         var that = this
-        return this.each(function (el) {
+        return this.each(function (el, i) {
           var first = el.firstChild
-          each(normalize(node, that, 1), function (i) {
+          each(normalize(node, that, i), function (i) {
             el.insertBefore(i, first)
           })
         })
@@ -484,8 +484,8 @@
        */
     , before: function (node) {
         var that = this
-        return this.each(function (el) {
-          each(normalize(node, that, 1), function (i) {
+        return this.each(function (el, i) {
+          each(normalize(node, that, i), function (i) {
             el[parentNode].insertBefore(i, el)
           })
         })
@@ -498,8 +498,8 @@
        */
     , after: function (node) {
         var that = this
-        return this.each(function (el) {
-          each(normalize(node, that, 1), function (i) {
+        return this.each(function (el, i) {
+          each(normalize(node, that, i), function (i) {
             el[parentNode].insertBefore(i, el.nextSibling)
           }, null, 1)
         })
@@ -1079,7 +1079,6 @@
         // `dep` > 1 can also cause problems with the insert() check (must do this last)
         each(els, function(el) { el[pn] && el[pn].removeChild(el) })
         return els
-
       }() : isNode(node) ? [node.cloneNode(true)] : []
   }
 
