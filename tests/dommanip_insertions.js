@@ -29,11 +29,13 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
   function insertionTest (options) {
     test(options.testName, function (complete) {
       var root = document.getElementById('insertiontastic'), actualTree
+        , ctx = {}
       root.innerHTML = options.fixtureHTML
-      options.execute()
+      options.execute.apply(ctx)
       actualTree = simpleNodeSerialize(root)
       actualTree = actualTree.child || actualTree.children
       assert.equal(actualTree, options.expectedTree)
+      if (options.verify) options.verify.call(ctx, root)
       root.innerHTML = ''
       complete()
     })
@@ -55,15 +57,25 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
          { clazz: 'bam' }
        , { id: 'insertiontasticFoo' }
       ]
+      // verify that the node appended is the *same* element we created, not a clone
+    , verifySingleToSingleAppended = function (root) {
+        var single = this.single[0] || this.single
+        ok(root.childNodes[1] === single, 'element not cloned')
+      }
+    , verifySingleToSinglePrepended = function (root) {
+        var single = this.single[0] || this.single
+        ok(root.childNodes[0] === single, 'element not cloned')
+      }
 
   // append()
   insertionTest({
       testName     : 'single element $.create append'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').append(createSingle())
+                       $('#insertiontastic').append(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // prepend()
@@ -71,9 +83,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create prepend'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').prepend(createSingle())
+                       $('#insertiontastic').prepend(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // before()
@@ -81,9 +94,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create before'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').before(createSingle())
+                       $('#insertiontasticFoo').before(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // after()
@@ -91,9 +105,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create after'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').after(createSingle())
+                       $('#insertiontasticFoo').after(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // appendTo()
@@ -101,9 +116,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create appendTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createSingle()).appendTo($('#insertiontastic'))
+                       $(this.single = createSingle()).appendTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // prependTo()
@@ -111,9 +127,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create prependTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createSingle()).prependTo($('#insertiontastic'))
+                       $(this.single = createSingle()).prependTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertBefore()
@@ -121,9 +138,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create insertBefore'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createSingle()).insertBefore($('#insertiontasticFoo'))
+                       $(this.single = createSingle()).insertBefore($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertAfter()
@@ -131,9 +149,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create insertAfter'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createSingle()).insertAfter($('#insertiontasticFoo'))
+                       $(this.single = createSingle()).insertAfter($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   /*********************************
@@ -151,9 +170,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement append'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').append(createElementSingle())
+                       $('#insertiontastic').append(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // prepend()
@@ -161,9 +181,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement prepend'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').prepend(createElementSingle())
+                       $('#insertiontastic').prepend(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // before()
@@ -171,9 +192,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement before'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').before(createElementSingle())
+                       $('#insertiontasticFoo').before(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // after()
@@ -181,9 +203,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement after'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').after(createElementSingle())
+                       $('#insertiontasticFoo').after(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // appendTo()
@@ -191,9 +214,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement appendTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementSingle()).appendTo($('#insertiontastic'))
+                       $(this.single = createElementSingle()).appendTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // prependTo()
@@ -201,9 +225,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement prependTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementSingle()).prependTo($('#insertiontastic'))
+                       $(this.single = createElementSingle()).prependTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertBefore()
@@ -211,9 +236,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement insertBefore'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementSingle()).insertBefore($('#insertiontasticFoo'))
+                       $(this.single = createElementSingle()).insertBefore($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertAfter()
@@ -221,9 +247,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement insertAfter'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementSingle()).insertAfter($('#insertiontasticFoo'))
+                       $(this.single = createElementSingle()).insertAfter($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   /*********************************
@@ -304,9 +331,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create append'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').append(createMulti())
+                       $('#insertiontastic').append(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+      // we can use SingleToSingle here because just checking that the *first* element isn't a clone should be enough
+    , verify       : verifySingleToSingleAppended
   })
 
   // prepend()
@@ -314,9 +343,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create prepend'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').prepend(createMulti())
+                       $('#insertiontastic').prepend(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // before()
@@ -324,9 +354,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create before'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').before(createMulti())
+                       $('#insertiontasticFoo').before(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // after()
@@ -334,9 +365,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create after'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').after(createMulti())
+                       $('#insertiontasticFoo').after(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // appendTo()
@@ -344,19 +376,21 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create appendTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createMulti()).appendTo($('#insertiontastic'))
+                       $(this.single = createMulti()).appendTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
-  // ()
+  // prependTo()
   insertionTest({
       testName     : 'multiple elements $.create prependTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createMulti()).prependTo($('#insertiontastic'))
+                       $(this.single = createMulti()).prependTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertBefore()
@@ -364,9 +398,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create insertBefore'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createMulti()).insertBefore($('#insertiontasticFoo'))
+                       $(this.single = createMulti()).insertBefore($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertAfter()
@@ -374,9 +409,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create insertAfter'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createMulti()).insertAfter($('#insertiontasticFoo'))
+                       $(this.single = createMulti()).insertAfter($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   /*********************************
@@ -401,9 +437,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement append'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').append(createElementMulti())
+                       $('#insertiontastic').append(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+      // we can use SingleToSingle here because just checking that the *first* element isn't a clone should be enough
+    , verify       : verifySingleToSingleAppended
   })
 
   // prepend()
@@ -411,9 +449,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement prepend'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontastic').prepend(createElementMulti())
+                       $('#insertiontastic').prepend(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // before()
@@ -421,9 +460,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement before'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').before(createElementMulti())
+                       $('#insertiontasticFoo').before(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // after()
@@ -431,9 +471,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement after'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $('#insertiontasticFoo').after(createElementMulti())
+                       $('#insertiontasticFoo').after(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // appendTo()
@@ -441,9 +482,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement appendTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementMulti()).appendTo($('#insertiontastic'))
+                       $(this.single = createElementMulti()).appendTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   // prependTo()
@@ -451,9 +493,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement prependTo'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementMulti()).prependTo($('#insertiontastic'))
+                       $(this.single = createElementMulti()).prependTo($('#insertiontastic'))
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertBefore()
@@ -461,9 +504,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement insertBefore'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementMulti()).insertBefore($('#insertiontasticFoo'))
+                       $(this.single = createElementMulti()).insertBefore($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : verifySingleToSinglePrepended
   })
 
   // insertAfter()
@@ -471,9 +515,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement insertAfter'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
-                       $(createElementMulti()).insertAfter($('#insertiontasticFoo'))
+                       $(this.single = createElementMulti()).insertAfter($('#insertiontasticFoo'))
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
   })
 
   /*********************************
@@ -573,16 +618,24 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
            ]
         }
       ]
-
+    , verifySingleToMultiAppended = function (root) {
+        var single = this.single[0] || this.single
+        ok(root.childNodes[0].childNodes[1] === single, 'element not cloned')
+      }
+    , verifySingleToMultiPrepended = function (root) {
+        var single = this.single[0] || this.single
+        ok(root.childNodes[0].childNodes[0] === single, 'element not cloned')
+      }
 
   // append()
   insertionTest({
       testName     : 'single element $.create append to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').append(createSingle())
+                       $('#insertiontastic > p').append(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prepend()
@@ -590,9 +643,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create prepend to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').prepend(createSingle())
+                       $('#insertiontastic > p').prepend(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // before()
@@ -600,9 +654,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create before to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').before(createSingle())
+                       $('#insertiontastic > p > span').before(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // after()
@@ -610,9 +665,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create after to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').after(createSingle())
+                       $('#insertiontastic > p > span').after(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // appendTo()
@@ -620,7 +676,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create appendTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).appendTo($('#insertiontastic > p'))
+                       $(this.single = createSingle()).appendTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
   })
@@ -630,9 +686,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create prependTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).prependTo($('#insertiontastic > p'))
+                       $(this.single = createSingle()).prependTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertBefore()
@@ -640,9 +697,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create insertBefore to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).insertBefore($('#insertiontastic > p > span'))
+                       $(this.single = createSingle()).insertBefore($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertAfter()
@@ -650,9 +708,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create insertAfter to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).insertAfter($('#insertiontastic > p > span'))
+                       $(this.single = createSingle()).insertAfter($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   /*********************************
@@ -664,9 +723,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() append to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').append(createSingle())
+                       $('#insertiontastic > p').append(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prepend()
@@ -674,9 +734,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() prepend to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').prepend(createSingle())
+                       $('#insertiontastic > p').prepend(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // before()
@@ -684,9 +745,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() before to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').before(createSingle())
+                       $('#insertiontastic > p > span').before(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // after()
@@ -694,9 +756,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() after to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').after(createSingle())
+                       $('#insertiontastic > p > span').after(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // appendTo()
@@ -704,9 +767,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() appendTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).appendTo($('#insertiontastic > p'))
+                       $(this.single = createElementSingle()).appendTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prependTo()
@@ -714,9 +778,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() prependTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).prependTo($('#insertiontastic > p'))
+                       $(this.single = createElementSingle()).prependTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertBefore()
@@ -724,9 +789,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() insertBefore to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).insertBefore($('#insertiontastic > p > span'))
+                       $(this.single = createElementSingle()).insertBefore($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertAfter()
@@ -734,9 +800,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() insertAfter to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createSingle()).insertAfter($('#insertiontastic > p > span'))
+                       $(this.single = createElementSingle()).insertAfter($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
 
@@ -785,7 +852,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
   })
 
   /*********************************
-   * Miltiple HTML elements from $.create() to multiple targets
+   * Multiple HTML elements from $.create() to multiple targets
    */
 
   var expectedTreeMultiToMultiAppended = [
@@ -870,9 +937,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create append to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').append(createMulti())
+                       $('#insertiontastic > p').append(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+      // we can use SingleToMulti here because just checking that the *first* element isn't a clone should be enough
+    , verify       : verifySingleToMultiAppended
   })
 
   // prepend()
@@ -880,9 +949,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create prepend to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').prepend(createMulti())
+                       $('#insertiontastic > p').prepend(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // before()
@@ -890,9 +960,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create before to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').before(createMulti())
+                       $('#insertiontastic > p > span').before(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // after()
@@ -900,9 +971,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create after to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').after(createMulti())
+                       $('#insertiontastic > p > span').after(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // appendTo()
@@ -910,9 +982,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create appendTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createMulti()).appendTo($('#insertiontastic > p'))
+                       $(this.single = createMulti()).appendTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prependTo()
@@ -920,9 +993,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create prependTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createMulti()).prependTo($('#insertiontastic > p'))
+                       $(this.single = createMulti()).prependTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertBefore()
@@ -930,9 +1004,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements $.create insertBefore to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createMulti()).insertBefore($('#insertiontastic > p > span'))
+                       $(this.single = createMulti()).insertBefore($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertAfter()
@@ -940,13 +1015,14 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi element $.create insertAfter to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createMulti()).insertAfter($('#insertiontastic > p > span'))
+                       $(this.single = createMulti()).insertAfter($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   /*********************************
-   * Miltiple HTML elements from document.createElement() to multiple targets
+   * Multiple HTML elements from document.createElement() to multiple targets
    */
 
   // append()
@@ -954,9 +1030,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() append to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').append(createElementMulti())
+                       $('#insertiontastic > p').append(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prepend()
@@ -964,9 +1041,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() prepend to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p').prepend(createElementMulti())
+                       $('#insertiontastic > p').prepend(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // before()
@@ -974,9 +1052,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() before to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').before(createElementMulti())
+                       $('#insertiontastic > p > span').before(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // after()
@@ -984,9 +1063,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() after to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $('#insertiontastic > p > span').after(createElementMulti())
+                       $('#insertiontastic > p > span').after(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // appendTo()
@@ -994,9 +1074,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() appendTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createElementMulti()).appendTo($('#insertiontastic > p'))
+                       $(this.single = createElementMulti()).appendTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   // prependTo()
@@ -1004,9 +1085,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() prependTo to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createElementMulti()).prependTo($('#insertiontastic > p'))
+                       $(this.single = createElementMulti()).prependTo($('#insertiontastic > p'))
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertBefore()
@@ -1014,9 +1096,10 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi elements createElement() insertBefore to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createElementMulti()).insertBefore($('#insertiontastic > p > span'))
+                       $(this.single = createElementMulti()).insertBefore($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : verifySingleToMultiPrepended
   })
 
   // insertAfter()
@@ -1024,13 +1107,14 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multi element createElement() insertAfter to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
-                       $(createElementMulti()).insertAfter($('#insertiontastic > p > span'))
+                       $(this.single = createElementMulti()).insertAfter($('#insertiontastic > p > span'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : verifySingleToMultiAppended
   })
 
   /*********************************
-   * Miltiple HTML elements from html string to multiple targets
+   * Multiple HTML elements from html string to multiple targets
    */
 
   // append()

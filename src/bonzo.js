@@ -238,12 +238,9 @@
       // otherwise, just use target
       , nodes = query && typeof target == 'string' && target.charAt(0) != '<' ? query(target) : target
     // normalize each node in case it's still a string and we need to create nodes on the fly
-    each(normalize(nodes), function (t) {
+    each(normalize(nodes), function (t, j) {
       each(self, function (el) {
-        var n = !el[parentNode] || (el[parentNode] && !el[parentNode][parentNode]) ? cloneNode(self, el) : el
-        fn(t, n)
-        r[i] = n
-        i++
+        fn(t, r[i++] = j > 0 ? cloneNode(self, el) : el)
       }, null, rev)
     }, this)
     each(r, function (e, i) {
@@ -977,11 +974,13 @@
   }
 
   function normalize(node, host, clone) {
-    var i, l
+    var i, l, ret
     if (typeof node == 'string') return bonzo.create(node)
     if (isNode(node)) node = [ node ]
     if (clone) {
-      for (i = 0, l = node.length; i < l; i++) node[i] = cloneNode(host, node[i])
+      ret = [] // don't change original array
+      for (i = 0, l = node.length; i < l; i++) ret[i] = cloneNode(host, node[i])
+      return ret
     }
     return node
   }
