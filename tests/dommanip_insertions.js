@@ -1683,7 +1683,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
 
   // append()
   insertionTest({
-      testName     : 'multiple existing elementss append to multiple targets'
+      testName     : 'multiple existing elements append to multiple targets'
     , fixtureHTML  : multiTargetFixtureHTML
     , setup        : setupMultiExistingElements
     , execute      : function () {
