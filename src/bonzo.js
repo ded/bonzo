@@ -242,11 +242,11 @@
       each(self, function (el) {
         fn(t, r[i++] = j > 0 ? cloneNode(self, el) : el)
       }, null, rev)
-    }, this)
-    each(r, function (e, i) {
-      self[i] = e
-    })
+    }, this, rev)
     self.length = i
+    each(r, function (e) {
+      self[--i] = e
+    }, null, !rev)
     return self
   }
 
