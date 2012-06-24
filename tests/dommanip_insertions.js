@@ -1,15 +1,20 @@
 /*global sink:true start:true Q:true dom:true $:true bowser:true ender:true*/
 
+/* Tests for append(), prepend(), before(), after(), appendTo(), prependTo(),
+   insertAfter(), insertBefore() and replaceWith(). We're checking cloning,
+   ordering, return types, etc.
+ */
+
 sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) {
 
-  /* Return an tree/object representing the node and its children.
-   * both 'id' and 'clazz' (className) properties will be set where they are
-   * present on the node and a 'children' array will be set up recursively for
-   * any child nodes.
-   * For doing a simple assert.equal(actual, expected) to make sure that what
-   * we have in the DOM is what we expect without making the tests too hard to
-   * read and too complex.
-   */
+      /* Return an tree/object representing the node and its children.
+       * both 'id' and 'clazz' (className) properties will be set where they are
+       * present on the node and a 'children' array will be set up recursively for
+       * any child nodes.
+       * For doing a simple assert.equal(actual, expected) to make sure that what
+       * we have in the DOM is what we expect without making the tests too hard to
+       * read and too complex.
+       */
   var simpleNodeSerialize = function (node) {
         var i = 0, res = {}
         if (node.className) res.clazz = node.className
@@ -26,23 +31,34 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
         return res
       }
 
+      /* Make an insertion test given an options object. Tests focus on the
+       * #insertiontastic element where we set it up with a fixture and run our
+       * tests on it.
+       */
     , insertionTest = function (options) {
         test(options.testName, function (complete) {
           var root = document.getElementById('insertiontastic'), actualTree
             , ctx = {}, i
 
+          // set up fixture html
           root.innerHTML = options.fixtureHTML
+          // any setup function to run?
           if (options.setup) options.setup.call(ctx, root)
+          // execute the test code
           options.execute.apply(ctx)
+          // serialize what we have in our element now into a simple tree (see above)
           actualTree = simpleNodeSerialize(root)
           actualTree = actualTree.child || actualTree.children
+          // compare the actual tree to what was expected
           assert.equal(actualTree, options.expectedTree)
+          // any additional assertions can be fed in with `verify`
           if (options.verify) {
             if (Object.prototype.toString.call(options.verify) != '[object Array]')
               options.verify = [ options.verify ]
             for (i = 0; i < options.verify.length; i++)
               options.verify[i].call(ctx, root)
           }
+          // reset
           root.innerHTML = ''
           complete()
         })
