@@ -163,6 +163,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToSingleAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'single element $.create replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = createSingle())
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
+  })
+
   /*********************************
    * Single HTML element from document.createElement
    */
@@ -261,6 +272,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToSingleAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'single createElement replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = createElementSingle())
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : verifySingleToSingleAppended
+  })
+
   /*********************************
    * Single HTML element as a string
    */
@@ -269,7 +291,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
 
   // append()
   insertionTest({
-      testName     : 'single html string append'
+      testName     : 'single element html string append'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
                        $('#insertiontastic').append(htmlSingleStr)
@@ -279,7 +301,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
 
   // prepend()
   insertionTest({
-      testName     : 'single html string prepend'
+      testName     : 'single element html string prepend'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
                        $('#insertiontastic').prepend(htmlSingleStr)
@@ -289,7 +311,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
 
   // before()
   insertionTest({
-      testName     : 'single html string before'
+      testName     : 'single element html string before'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
                        $('#insertiontasticFoo').before(htmlSingleStr)
@@ -299,10 +321,20 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
 
   // after()
   insertionTest({
-      testName     : 'single html string after'
+      testName     : 'single element html string after'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
                        $('#insertiontasticFoo').after(htmlSingleStr)
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'single element html string replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(htmlSingleStr)
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
   })
@@ -410,6 +442,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , setup        : setupSingleExistingElement
     , execute      : function () {
                        $(this.single = $('#insertiontasticSource > span')).insertAfter($('#insertiontasticFoo'))
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended ]
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'single existing element replaceWith'
+    , setup        : setupSingleExistingElement
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = $('#insertiontasticSource > span'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended ]
@@ -531,6 +575,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToSingleAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple elements $.create replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = createMulti())
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
+  })
+
   /*********************************
    * Multiple HTML elements from document.createElement()
    */
@@ -637,6 +692,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToSingleAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple elements createElement replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = createElementMulti())
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : verifySingleToSingleAppended
+  })
+
   /*********************************
    * Multiple HTML elements from string
    */
@@ -679,6 +745,16 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : '<p id="insertiontasticFoo"></p>'
     , execute      : function () {
                        $('#insertiontasticFoo').after(htmlMultiStr)
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple elements html string replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(htmlMultiStr)
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
   })
@@ -788,11 +864,24 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended ]
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple existing elements replaceWith'
+    , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
+    , setup        : setupMultiExistingElements
+    , execute      : function () {
+                       $('#insertiontasticReplace').replaceWith(this.single = $('#insertiontasticSource > *'))
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended ]
+  })
+
   /*********************************
    * Single HTML element from $.create() to multiple targets
    */
 
-  var multiTargetFixtureHTML = '<p class="insFoo1"><span class="inner1"></span></p><p class="insFoo2"><span class="inner2"></span></p><p class="insFoo3"><span class="inner3"></span></p>'
+  var multiTargetFixtureHTML            = '<p class="insFoo1"><span class="inner1"></span></p><p class="insFoo2"><span class="inner2"></span></p><p class="insFoo3"><span class="inner3"></span></p>'
+    , multiTargetReplaceWithFixtureHTML = '<p class="insFoo1"><span class="inner1"></span><a class="replacable"></a></p><p class="insFoo2"><span class="inner2"></span><a class="replacable"></a></p><p class="insFoo3"><span class="inner3"></span><a class="replacable"></a></p>'
     , expectedTreeSingleToMultiAppended = [
          {
              clazz: 'insFoo1'
@@ -935,6 +1024,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToMultiAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'single element $.create replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = createSingle())
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
+  })
+
   /*********************************
    * Single element from document.createElement() to multiple targets
    */
@@ -1027,6 +1127,16 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToMultiAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'single element createElement() replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = createElementSingle())
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : verifySingleToMultiAppended
+  })
 
   /*********************************
    * Single HTML element from string to multiple targets
@@ -1068,6 +1178,16 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
                        $('#insertiontastic > p > span').after(htmlSingleStr)
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'single element html string replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(htmlSingleStr)
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
   })
@@ -1168,6 +1288,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , setup        : setupSingleExistingElement
     , execute      : function () {
                        $(this.single = $('#insertiontasticSource > span')).insertAfter($('#insertiontastic > p > span'))
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'single existing element replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , setup        : setupSingleExistingElement
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = $('#insertiontasticSource > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]
@@ -1343,6 +1475,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToMultiAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple element $.create replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = createMulti())
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]
+  })
+
   /*********************************
    * Multiple HTML elements from document.createElement() to multiple targets
    */
@@ -1435,6 +1578,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : verifySingleToMultiAppended
   })
 
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple element createElement() replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = createElementMulti())
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]
+  })
+
   /*********************************
    * Multiple HTML elements from html string to multiple targets
    */
@@ -1475,6 +1629,16 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : multiTargetFixtureHTML
     , execute      : function () {
                        $('#insertiontastic > p > span').after(htmlMultiStr)
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple elements html string replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(htmlMultiStr)
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
   })
@@ -1575,6 +1739,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , setup        : setupMultiExistingElements
     , execute      : function () {
                        $(this.single = $('#insertiontasticSource > *')).insertAfter($('#insertiontastic > p > span'))
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]
+  })
+
+  // replaceWith()
+  insertionTest({
+      testName     : 'multiple existing elements replaceWith to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , setup        : setupMultiExistingElements
+    , execute      : function () {
+                       $('#insertiontastic > p > a').replaceWith(this.single = $('#insertiontasticSource > *'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended ]

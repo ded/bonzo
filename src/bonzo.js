@@ -422,7 +422,7 @@
       // more related insertion methods
 
       /**
-       * @param {Element|Node} node
+       * @param {Bonzo|string|Element|Array} node
        * @return {Bonzo}
        */
     , append: function (node) {
@@ -436,7 +436,7 @@
 
 
       /**
-       * @param {Element|Node} node
+       * @param {Bonzo|string|Element|Array} node
        * @return {Bonzo}
        */
     , prepend: function (node) {
@@ -451,7 +451,7 @@
 
 
       /**
-       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -463,7 +463,7 @@
 
 
       /**
-       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -475,7 +475,7 @@
 
 
       /**
-       * @param {Element|Node} node
+       * @param {Bonzo|string|Element|Array} node
        * @return {Bonzo}
        */
     , before: function (node) {
@@ -489,7 +489,7 @@
 
 
       /**
-       * @param {Element|Node} node
+       * @param {Bonzo|string|Element|Array} node
        * @return {Bonzo}
        */
     , after: function (node) {
@@ -503,7 +503,7 @@
 
 
       /**
-       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -515,7 +515,7 @@
 
 
       /**
-       * @param {string|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -530,15 +530,13 @@
 
 
       /**
-       * @param {string} html
+       * @param {Bonzo|string|Element|Array} node
        * @return {Bonzo}
        */
-    , replaceWith: function (html) {
-        this.deepEach(clearData)
-
-        return this.each(function (el) {
-          el.parentNode.replaceChild(bonzo.create(html)[0], el)
-        })
+    , replaceWith: function (node) {
+        var ret = bonzo(normalize(node)).insertAfter(this)
+        this.remove()
+        return ret
       }
 
       // class management
