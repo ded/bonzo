@@ -10,53 +10,52 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
    * we have in the DOM is what we expect without making the tests too hard to
    * read and too complex.
    */
-  function simpleNodeSerialize (node) {
-    var i = 0, res = {}
-    if (node.className) res.clazz = node.className
-    if (node.id) res.id = node.id
-    if (node.childNodes.length) {
-      res.children = []
-      for (; i < node.childNodes.length; i++)
-        res.children.push(simpleNodeSerialize(node.childNodes[i]))
-      if (res.children.length == 1) {
-        res.child = res.children[0]
-        ;delete res.children
+  var simpleNodeSerialize = function (node) {
+        var i = 0, res = {}
+        if (node.className) res.clazz = node.className
+        if (node.id) res.id = node.id
+        if (node.childNodes.length) {
+          res.children = []
+          for (; i < node.childNodes.length; i++)
+            res.children.push(simpleNodeSerialize(node.childNodes[i]))
+          if (res.children.length == 1) {
+            res.child = res.children[0]
+            ;delete res.children
+          }
+        }
+        return res
       }
-    }
-    return res
-  }
 
-  function insertionTest (options) {
-    test(options.testName, function (complete) {
-      var root = document.getElementById('insertiontastic'), actualTree
-        , ctx = {}, i
+    , insertionTest = function (options) {
+        test(options.testName, function (complete) {
+          var root = document.getElementById('insertiontastic'), actualTree
+            , ctx = {}, i
 
-      root.innerHTML = options.fixtureHTML
-      if (options.setup) options.setup.call(ctx, root)
-      options.execute.apply(ctx)
-      actualTree = simpleNodeSerialize(root)
-      actualTree = actualTree.child || actualTree.children
-      assert.equal(actualTree, options.expectedTree)
-      if (options.verify) {
-        if (Object.prototype.toString.call(options.verify) != '[object Array]')
-          options.verify = [ options.verify ]
-        for (i = 0; i < options.verify.length; i++)
-          options.verify[i].call(ctx, root)
+          root.innerHTML = options.fixtureHTML
+          if (options.setup) options.setup.call(ctx, root)
+          options.execute.apply(ctx)
+          actualTree = simpleNodeSerialize(root)
+          actualTree = actualTree.child || actualTree.children
+          assert.equal(actualTree, options.expectedTree)
+          if (options.verify) {
+            if (Object.prototype.toString.call(options.verify) != '[object Array]')
+              options.verify = [ options.verify ]
+            for (i = 0; i < options.verify.length; i++)
+              options.verify[i].call(ctx, root)
+          }
+          root.innerHTML = ''
+          complete()
+        })
       }
-      root.innerHTML = ''
-      complete()
-    })
-  }
 
   /*********************************
    * Single HTML element from $.create()
    */
 
-  function createSingle () {
-    return $.create('<span class="bam"/>')
-  }
-
-  var expectedTreeSingleToSingleAppended = [
+  var createSingle = function () {
+        return $.create('<span class="bam"/>')
+      }
+    , expectedTreeSingleToSingleAppended = [
          { id: 'insertiontasticFoo' }
        , { clazz: 'bam' }
       ]
@@ -168,11 +167,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
    * Single HTML element from document.createElement
    */
 
-  function createElementSingle () {
-    var span = document.createElement('span')
-    span.className = 'bam'
-    return span
-  }
+  var createElementSingle = function () {
+        var span = document.createElement('span')
+        span.className = 'bam'
+        return span
+      }
 
   // append()
   insertionTest({
@@ -420,9 +419,9 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
    * Multiple HTML elements from $.create()
    */
 
-  function createMulti () {
-    return $.create('<span class="bam"></span><p class="bang"><span class="whoa"></span></p><a class="pow"></a>')
-  }
+  var createMulti = function () {
+        return $.create('<span class="bam"></span><p class="bang"><span class="whoa"></span></p><a class="pow"></a>')
+      }
 
   var expectedTreeMultiToSingleAppended = [
          { id: 'insertiontasticFoo' }
@@ -536,18 +535,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
    * Multiple HTML elements from document.createElement()
    */
 
-  function createElementMulti () {
-    var ret = []
-    ret.push(document.createElement('span'))
-    ret[0].className = 'bam'
-    ret.push(document.createElement('p'))
-    ret[1].className = 'bang'
-    ret[1].appendChild(document.createElement('span'))
-    ret[1].childNodes[0].className = 'whoa'
-    ret.push(document.createElement('a'))
-    ret[2].className = 'pow'
-    return ret
-  }
+  var createElementMulti = function () {
+        var ret = []
+        ret.push(document.createElement('span'))
+        ret[0].className = 'bam'
+        ret.push(document.createElement('p'))
+        ret[1].className = 'bang'
+        ret[1].appendChild(document.createElement('span'))
+        ret[1].childNodes[0].className = 'whoa'
+        ret.push(document.createElement('a'))
+        ret[2].className = 'pow'
+        return ret
+      }
 
   // append()
   insertionTest({
