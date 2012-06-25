@@ -451,7 +451,7 @@
 
 
       /**
-       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -463,7 +463,7 @@
 
 
       /**
-       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -503,7 +503,7 @@
 
 
       /**
-       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
@@ -515,7 +515,7 @@
 
 
       /**
-       * @param {Bonzo|Element|Array} target the location for which you'll insert your new content
+       * @param {Bonzo|string|Element|Array} target the location for which you'll insert your new content
        * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
