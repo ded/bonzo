@@ -7,22 +7,30 @@
       ]
   }
   , "JSHINT_OPTS": {
-      "boss": true
-    , "forin": false
-    , "curly": false
-    , "debug": false
-    , "devel": false
-    , "evil": false
-    , "regexp": false
-    , "undef": false
-    , "sub": true
-    , "white": false
-    , "indent": 2
-    , "whitespace": true
-    , "asi": true
-    , "laxbreak": true
-    , "eqeqeq": false
-    , "eqnull": true
-    , "laxcomma": true
-  }
+        "predef": [ "assert", "refute", "define", "self" ]
+      , "boss": true
+      , "shadow": true
+      , "trailing": true
+      , "latedef": true
+      , "forin": false
+      , "curly": false
+      , "debug": true
+      , "devel": false
+      , "evil": true
+      , "regexp": false
+      , "undef": true
+      , "sub": true
+      , "white": false
+      , "indent": 2
+      , "asi": true
+      , "laxbreak": true
+      , "eqnull": true
+      , "browser": true
+      , "node": true
+      , "laxcomma": true
+      , "proto": true
+      , "expr": true
+      , "es5": true
+      , "strict": false
+    }
 }
