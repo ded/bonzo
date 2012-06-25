@@ -1,8 +1,8 @@
 /*global sink:true start:true Q:true dom:true $:true bowser:true ender:true*/
 
 /* Tests for append(), prepend(), before(), after(), appendTo(), prependTo(),
-   insertAfter(), insertBefore() and replaceWith(). We're checking cloning,
-   ordering, return types, etc.
+   insertAfter(), insertBefore() and replaceWith() & html(). We're checking
+   cloning, ordering, return types, etc.
  */
 
 sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) {
@@ -199,6 +199,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single element $.create html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(this.single = $.create('<p id="insertiontasticFoo"></p>'))
+                     }
+    , expectedTree : { id: 'insertiontasticFoo' }
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
+  })
+
   /*********************************
    * Single HTML element from document.createElement
    */
@@ -308,6 +320,19 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single element createElement html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.single = document.createElement('p')
+                       this.single.id = 'insertiontasticFoo'
+                       this.ret = $('#insertiontastic').html(this.single)
+                     }
+    , expectedTree : { id: 'insertiontasticFoo' }
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
+  })
+
   /*********************************
    * Single HTML element as a string
    */
@@ -367,6 +392,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
     , verify       : verifyReturnType('#insertiontastic > span.bam')
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'single element createElement html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html('<p id="insertiontasticFoo"></p>')
+                     }
+    , expectedTree : { id: 'insertiontasticFoo' }
+    , verify       : verifyReturnType('#insertiontastic')
   })
 
   /*********************************
@@ -489,6 +525,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single existing element html'
+    , setup        : setupSingleExistingElement
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(this.single = $('#insertiontasticSource > span'))
+                     }
+    , expectedTree : { clazz: 'bam' }
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
+  })
+
   /*********************************
    * Multiple HTML elements from $.create()
    */
@@ -517,6 +565,15 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
          }
        , { clazz: 'pow' }
        , { id: 'insertiontasticFoo' }
+      ]
+      // for html()
+    , expectedTreeMultiToSingleHtml = [
+         { clazz: 'bam' }
+       , {
+             clazz: 'bang'
+           , child: { clazz: 'whoa' }
+         }
+       , { clazz: 'pow' }
       ]
 
   // append()
@@ -617,6 +674,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
     , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple elements $.create html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(this.single = createMulti())
+                     }
+    , expectedTree : expectedTreeMultiToSingleHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
   })
 
   /*********************************
@@ -739,6 +808,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'multiple elements createElement html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(this.single = createElementMulti())
+                     }
+    , expectedTree : expectedTreeMultiToSingleHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
+  })
+
   /*********************************
    * Multiple HTML elements from string
    */
@@ -796,6 +877,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
     , verify       : verifyReturnType(multiSelector)
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple elements html string html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(htmlMultiStr)
+                     }
+    , expectedTree : expectedTreeMultiToSingleHtml
+    , verify       : verifyReturnType('#insertiontastic')
   })
 
   /*********************************
@@ -915,6 +1007,19 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'multiple existing elements html'
+    , fixtureHTML  : '<p id="insertiontasticReplace"></p>'
+    , setup        : setupMultiExistingElements
+    , execute      : function () {
+                       this.ret = $('#insertiontastic').html(this.single = $('#insertiontasticSource > *'))
+                     }
+    , expectedTree : expectedTreeMultiToSingleHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSinglePrepended, verifyReturnType('#insertiontastic') ]
+  })
+
   /*********************************
    * Single HTML element from $.create() to multiple targets
    */
@@ -965,6 +1070,21 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                { clazz: 'bam' }
              , { clazz: 'inner3' }
            ]
+        }
+      ]
+      // for the html() case
+    , expectedTreeSingleToMultiHtml = [
+        {
+           clazz: 'insFoo1'
+         , child: { clazz: 'bam' }
+        }
+        , {
+           clazz: 'insFoo2'
+         , child: { clazz: 'bam' }
+        }
+        , {
+           clazz: 'insFoo3'
+         , child: { clazz: 'bam' }
         }
       ]
     , verifySingleToMultiAppended = function (root) {
@@ -1075,6 +1195,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single element $.create html to multiple targets'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = createSingle())
+                     }
+    , expectedTree : expectedTreeSingleToMultiHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
+  })
+
   /*********************************
    * Single element from document.createElement() to multiple targets
    */
@@ -1178,6 +1310,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single element createElement html to multiple targets'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = createElementSingle())
+                     }
+    , expectedTree : expectedTreeSingleToMultiHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
+  })
+
   /*********************************
    * Single HTML element from string to multiple targets
    */
@@ -1235,6 +1379,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
     , verify       : verifyReturnType('#insertiontastic > p > .bam')
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'single element html string html to multiple targets'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(htmlSingleStr)
+                     }
+    , expectedTree : expectedTreeSingleToMultiHtml
+    , verify       : verifyReturnType('#insertiontastic > p')
   })
 
   /*********************************
@@ -1350,6 +1505,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
   })
 
+  // html()
+  insertionTest({
+      testName     : 'single existing element html to multiple targets'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , setup        : setupSingleExistingElement
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = $('#insertiontasticSource > span'))
+                     }
+    , expectedTree : expectedTreeSingleToMultiHtml
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
+  })
+
   /*********************************
    * Multiple HTML elements from $.create() to multiple targets
    */
@@ -1427,6 +1594,42 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                    }
                  , { clazz: 'pow' }
                  , { clazz: 'inner3' }
+               ]
+           }
+       ]
+      // for the html() case
+    , expectedTreeMultiToMultiHtml = [
+           {
+               clazz: 'insFoo1'
+             , children: [
+                   { clazz: 'bam' }
+                 , {
+                       clazz: 'bang'
+                     , child: { clazz: 'whoa' }
+                   }
+                 , { clazz: 'pow' }
+               ]
+           }
+         , {
+               clazz: 'insFoo2'
+             , children: [
+                   { clazz: 'bam' }
+                 , {
+                       clazz: 'bang'
+                     , child: { clazz: 'whoa' }
+                   }
+                 , { clazz: 'pow' }
+               ]
+           }
+         , {
+               clazz: 'insFoo3'
+             , children: [
+                   { clazz: 'bam' }
+                 , {
+                       clazz: 'bang'
+                     , child: { clazz: 'whoa' }
+                   }
+                 , { clazz: 'pow' }
                ]
            }
        ]
@@ -1528,7 +1731,19 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple element $.create html to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = createMulti())
+                     }
+    , expectedTree : expectedTreeMultiToMultiHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
   })
 
   /*********************************
@@ -1631,7 +1846,19 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple element createElement html to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = createElementMulti())
+                     }
+    , expectedTree : expectedTreeMultiToMultiHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
   })
 
   /*********************************
@@ -1691,6 +1918,17 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
     , verify       : verifyReturnType(multiSelector)
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple element html string html to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(htmlMultiStr)
+                     }
+    , expectedTree : expectedTreeMultiToMultiHtml
+    , verify       : verifyReturnType('#insertiontastic > p')
   })
 
   /*********************************
@@ -1804,6 +2042,19 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // html()
+  insertionTest({
+      testName     : 'multiple existing elements html to multiple targets'
+    , fixtureHTML  : multiTargetReplaceWithFixtureHTML
+    , setup        : setupMultiExistingElements
+    , execute      : function () {
+                       this.ret = $('#insertiontastic > p').html(this.single = $('#insertiontasticSource > *'))
+                     }
+    , expectedTree : expectedTreeMultiToMultiHtml
+                       // we can use the prepended verify cause it checks the first child, which in this case is the only child
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
   })
 
 })

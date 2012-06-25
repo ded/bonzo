@@ -389,26 +389,26 @@
      * @return {Bonzo|string}
      */
     , html: function (h, opt_text) {
-        var method = opt_text ?
-          html.textContent === undefined ?
-            'innerText' :
-            'textContent' :
-          'innerHTML';
-        function append(el) {
-          each(normalize(h), function (node) {
-            el.appendChild(node)
-          })
-        }
-        return typeof h !== 'undefined' ?
-            this.empty().each(function (el) {
-              !opt_text && specialTags.test(el.tagName) ?
-                append(el) :
-                (function () {
-                  try { (el[method] = h) }
-                  catch(e) { append(el) }
-                }())
-            }) :
-          this[0] ? this[0][method] : ''
+        var method = opt_text
+              ? html.textContent === undefined ? 'innerText' : 'textContent'
+              : 'innerHTML'
+          , that = this
+          , append = function (el, i) {
+              each(normalize(h, that, i), function (node) {
+                el.appendChild(node)
+              })
+            }
+          , updateElement = function (el, i) {
+              try {
+                if (opt_text || (typeof h == 'string' && !specialTags.test(el.tagName))) {
+                  return el[method] = h
+                }
+              } catch (e) {}
+              append(el, i)
+            }
+        return typeof h != 'undefined'
+          ? this.empty().each(updateElement)
+          : this[0] ? this[0][method] : ''
       }
 
       /**
