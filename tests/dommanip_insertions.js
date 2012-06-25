@@ -406,6 +406,54 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
   })
 
   /*********************************
+   * Single element inserted to selector
+   */
+
+  // appendTo()
+  insertionTest({
+      testName     : 'single element appendTo selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).appendTo('#insertiontastic')
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
+  })
+
+  // prependTo()
+  insertionTest({
+      testName     : 'single element prependTo selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).prependTo('#insertiontastic')
+                     }
+    , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic > span.bam') ]
+  })
+
+  // insertBefore()
+  insertionTest({
+      testName     : 'single element insertBefore selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).insertBefore('#insertiontasticFoo')
+                     }
+    , expectedTree : expectedTreeSingleToSinglePrepended
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType('#insertiontastic > span.bam') ]
+  })
+
+  // insertAfter()
+  insertionTest({
+      testName     : 'single element insertAfter selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).insertAfter('#insertiontasticFoo')
+                     }
+    , expectedTree : expectedTreeSingleToSingleAppended
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
+  })
+
+  /*********************************
    * Single element already in the DOM
    */
 
@@ -888,6 +936,54 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToSingleHtml
     , verify       : verifyReturnType('#insertiontastic')
+  })
+
+  /*********************************
+   * Multiple elements inserted to selector
+   */
+
+  // appendTo()
+  insertionTest({
+      testName     : 'multiple elements appendTo selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).appendTo('#insertiontastic')
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // prependTo()
+  insertionTest({
+      testName     : 'multiple elements prependTo selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).prependTo('#insertiontastic')
+                     }
+    , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType(multiSelector) ]
+  })
+
+  // insertBefore()
+  insertionTest({
+      testName     : 'multiple elements insertBefore selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).insertBefore('#insertiontasticFoo')
+                     }
+    , expectedTree : expectedTreeMultiToSinglePrepended
+    , verify       : [ verifySingleToSinglePrepended, verifyReturnType(multiSelector) ]
+  })
+
+  // insertAfter()
+  insertionTest({
+      testName     : 'multiple elements insertAfter selector'
+    , fixtureHTML  : basicFooFixture
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).insertAfter('#insertiontasticFoo')
+                     }
+    , expectedTree : expectedTreeMultiToSingleAppended
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
   })
 
   /*********************************
@@ -1390,6 +1486,54 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeSingleToMultiHtml
     , verify       : verifyReturnType('#insertiontastic > p')
+  })
+
+  /*********************************
+   * Single element inserted to multiple targets via selector
+   */
+
+  // appendTo()
+  insertionTest({
+      testName     : 'single element appendTo to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).appendTo('#insertiontastic > p')
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
+  })
+
+  // prependTo()
+  insertionTest({
+      testName     : 'single element prependTo to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).prependTo('#insertiontastic > p')
+                     }
+    , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p > .bam') ]
+  })
+
+  // insertBefore()
+  insertionTest({
+      testName     : 'single element insertBefore to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).insertBefore('#insertiontastic > p > span')
+                     }
+    , expectedTree : expectedTreeSingleToMultiPrepended
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p > .bam') ]
+  })
+
+  // insertAfter()
+  insertionTest({
+      testName     : 'single element insertAfter to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementSingle()).insertAfter('#insertiontastic > p > span')
+                     }
+    , expectedTree : expectedTreeSingleToMultiAppended
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
   })
 
   /*********************************
@@ -1929,6 +2073,54 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
                      }
     , expectedTree : expectedTreeMultiToMultiHtml
     , verify       : verifyReturnType('#insertiontastic > p')
+  })
+
+  /*********************************
+   * Multiple elements inserted to multiple targets via selector
+   */
+
+  // appendTo()
+  insertionTest({
+      testName     : 'multiple elements appendTo to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).appendTo('#insertiontastic > p')
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+  })
+
+  // prependTo()
+  insertionTest({
+      testName     : 'multiple elements prependTo to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).prependTo('#insertiontastic > p')
+                     }
+    , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType(multiSelector) ]
+  })
+
+  // insertBefore()
+  insertionTest({
+      testName     : 'multiple elements insertBefore to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).insertBefore('#insertiontastic > p > span')
+                     }
+    , expectedTree : expectedTreeMultiToMultiPrepended
+    , verify       : [ verifySingleToMultiPrepended, verifyReturnType(multiSelector) ]
+  })
+
+  // insertAfter()
+  insertionTest({
+      testName     : 'multiple element insertAfter to multiple targets via selector'
+    , fixtureHTML  : multiTargetFixtureHTML
+    , execute      : function () {
+                       this.ret = $(this.single = createElementMulti()).insertAfter('#insertiontastic > p > span')
+                     }
+    , expectedTree : expectedTreeMultiToMultiAppended
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
   })
 
   /*********************************
