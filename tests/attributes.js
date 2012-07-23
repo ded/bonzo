@@ -108,7 +108,7 @@ sink('Element attributes', function (test, ok) {
     ok($('#toggle')[0].style.display == 'inline', 'toggle accepts type override')
   })
 
-  test('setting & getting attributes', 9, function () {
+  test('setting & getting attributes', 10, function () {
     ok($('a#twitter').attr('href') == 'http://twitter.com/', 'retrieves "href" attribute from anchor')
     ok($('a#hrefrel').attr('href') == '/relative', 'retrieves relative "href" attribute from anchor')
     ok($('a#hrefname').attr('href') == '#name', 'retrieves plain #name "href" attribute from anchor')
@@ -120,6 +120,7 @@ sink('Element attributes', function (test, ok) {
     var input = $('#attrs input[type="text"]')
     ok(input.val() == 'eyo', 'retrieves "value" attribute from {input} element')
     ok($('#attrs input[type="checkbox"]').attr('checked'), 'retrieves "checked" attribute without value as true')
+    ok($('#attrs input[type="checkbox"]').attr('disabled'), 'retrieves "disabled" attribute without value as true')
     ok(input.attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input')
     input.val('eyoeyo')
     ok(input.val() == 'eyoeyo', 'val(val) can set value on input')
