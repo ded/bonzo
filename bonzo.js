@@ -768,7 +768,7 @@
               v = iter[k];
               // change "5" to "5px" - unless you're line-height, which is allowed
               (p = styleProperty(k)) && digit.test(v) && !(p in unitless) && (v += px)
-              el.style[p] = setter(el, v)
+              try { el.style[p] = setter(el, v) } catch(e) {}
             }
           }
         }
