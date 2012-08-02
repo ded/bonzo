@@ -95,7 +95,7 @@ sink('Element attributes', function (test, ok) {
     ok($('#show-hide').css('display') == 'inline', 'element has flow')
   })
 
-  test('toggle', 5, function () {
+  test('toggle', 7, function () {
     ok($('#toggle').offset().width > 0, 'element has flow')
     $('#toggle').toggle(function () {
       ok(true, 'callback in toggle gets called')
@@ -106,6 +106,10 @@ sink('Element attributes', function (test, ok) {
     $('#toggle').toggle()
     $('#toggle').toggle(null, 'inline')
     ok($('#toggle')[0].style.display == 'inline', 'toggle accepts type override')
+    var first = true
+    $('#show-hide,#toggle').toggle(function (el) {
+      ok((first && el === $('#show-hode')[0]) || (!first && el === $('#toggle')[0]), 'called callback function for each toggle')
+    })
   })
 
   test('setting & getting attributes', 10, function () {
