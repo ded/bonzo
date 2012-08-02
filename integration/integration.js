@@ -39,7 +39,7 @@ sink('Ender', function(test, ok, before, after) {
     // Style attribute output changes depending on browser. These only work
     // in Chrome. How best to test consistently?
     ok(style.margin == '0px auto', 'has margin 0 auto');
-    ok(style.font == "300 14px/1.5 'helvetica neue'");
+    ok(style.font.replace(/'/g, '') == "300 14px/1.5 helvetica neue", 'has correct font' + style.font);
   });
 
   test('creation', 3, function() {
