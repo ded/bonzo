@@ -8,7 +8,7 @@
     , html = doc.documentElement
     , parentNode = 'parentNode'
     , query = null // used for setting a selector engine host
-    , specialAttributes = /^(checked|value|selected)$/i
+    , specialAttributes = /^(checked|value|selected|disabled)$/i
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
     , table = ['<table>', '</table>', 1]
     , td = ['<table><tbody><tr>', '</tr></tbody></table>', 3]
@@ -24,7 +24,7 @@
         , option: option, optgroup: option
         , script: noscope, style: noscope, link: noscope, param: noscope, base: noscope
       }
-    , stateAttributes = /^(checked|selected)$/
+    , stateAttributes = /^(checked|selected|disabled)$/
     , ie = /msie/i.test(navigator.userAgent)
     , hasClass, addClass, removeClass
     , uidMap = {}
