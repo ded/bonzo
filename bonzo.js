@@ -618,8 +618,9 @@
        * @return {Bonzo}
        */
     , show: function (opt_type) {
+        opt_type = typeof opt_type == 'string' ? opt_type : '' 
         return this.each(function (el) {
-          el.style.display = opt_type || ''
+          el.style.display = opt_type
         })
       }
 
@@ -640,11 +641,11 @@
        * @return {Bonzo}
        */
     , toggle: function (opt_callback, opt_type) {
-        this.each(function (el) {
-          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : opt_type || ''
+        opt_type = typeof opt_type == 'string' ? opt_type : '';
+        return this.each(function (el) {
+          el.style.display = (el.offsetWidth || el.offsetHeight) ? 'none' : opt_type;
+          typeof opt_callback == 'function' && opt_callback.call(el)
         })
-        if (opt_callback) opt_callback()
-        return this
       }
 
 
