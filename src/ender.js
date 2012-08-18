@@ -36,6 +36,7 @@
   $.ender({
     parents: function (selector, closest) {
       if (!this.length) return this
+      ;!selector && (selector = '*')
       var collection = $(selector), j, k, p, r = []
       for (j = 0, k = this.length; j < k; j++) {
         p = this[j]
