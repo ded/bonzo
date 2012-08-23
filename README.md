@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/ded/bonzo.png)](http://travis-ci.org/ded/bonzo)
 Bonzo
 -----
 a library agnostic extensible DOM utility. Nothing else.
