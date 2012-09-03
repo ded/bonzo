@@ -535,10 +535,11 @@
        * @return {Bonzo}
        */
     , replaceWith: function (node, opt_host) {
-        var ret = bonzo(normalize(node)).insertAfter(this, opt_host)
+        var ret = bonzo(this) // return replaced nodes
+          , rep = bonzo(normalize(node)).insertAfter(this, opt_host)
         this.remove()
-        Bonzo.call(opt_host || this, ret)
-        return opt_host || this
+        Bonzo.call(opt_host || this, rep)
+        return ret
       }
 
       // class management
