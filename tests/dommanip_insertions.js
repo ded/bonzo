@@ -93,7 +93,7 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       }
     , verifyReturnType = function (selector) {
         return function () {
-          var el = $(selector), i
+          var el = selector ? $(selector) : this.expectedReturn, i
           assert.equal(this.ret.length, el.length, 'correct number of elements in return value')
           for (i = 0; i < el.length; i++)
             ok(this.ret[i] === el[i], 'correct element #' + i + ' in return value')
@@ -193,10 +193,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
-    , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -314,10 +315,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single createElement replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
-    , verify       : [ verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -388,10 +390,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element html string replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(htmlSingleStr)
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
-    , verify       : verifyReturnType('#insertiontastic > span.bam')
+    , verify       : verifyReturnType()
   })
 
   // html()
@@ -567,10 +570,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , setup        : setupSingleExistingElement
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = $('#insertiontasticSource > span'))
                      }
     , expectedTree : expectedTreeSingleToSingleAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType('#insertiontastic > span.bam') ]
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -718,10 +722,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements $.create replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
-    , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -850,10 +855,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements createElement replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
-    , verify       : [ verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -921,10 +927,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements html string replaceWith'
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(htmlMultiStr)
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
-    , verify       : verifyReturnType(multiSelector)
+    , verify       : verifyReturnType()
   })
 
   // html()
@@ -1097,10 +1104,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : '<p id="insertiontasticFoo"></p><p id="insertiontasticReplace"></p>'
     , setup        : setupMultiExistingElements
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontasticReplace')
                        this.ret = $('#insertiontasticReplace').replaceWith(this.single = $('#insertiontasticSource > *'))
                      }
     , expectedTree : expectedTreeMultiToSingleAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToSingleAppended, verifyReturnType() ]
   })
 
   // html()
@@ -1285,10 +1293,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element $.create replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
-    , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
@@ -1400,10 +1409,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element createElement() replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createElementSingle())
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
-    , verify       : [ verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
@@ -1471,10 +1481,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'single element html string replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(htmlSingleStr)
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
-    , verify       : verifyReturnType('#insertiontastic > p > .bam')
+    , verify       : verifyReturnType()
   })
 
   // html()
@@ -1643,10 +1654,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , setup        : setupSingleExistingElement
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = $('#insertiontasticSource > span'))
                      }
     , expectedTree : expectedTreeSingleToMultiAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType('#insertiontastic > p > .bam') ]
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
@@ -1872,10 +1884,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple element $.create replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
@@ -1987,10 +2000,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple element createElement() replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = createElementMulti())
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : [ verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
@@ -2058,10 +2072,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
       testName     : 'multiple elements html string replaceWith to multiple targets'
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(htmlMultiStr)
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : verifyReturnType(multiSelector)
+    , verify       : verifyReturnType()
   })
 
   // html()
@@ -2230,10 +2245,11 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , fixtureHTML  : multiTargetReplaceWithFixtureHTML
     , setup        : setupMultiExistingElements
     , execute      : function () {
+                       this.expectedReturn = $('#insertiontastic > p > a')
                        this.ret = $('#insertiontastic > p > a').replaceWith(this.single = $('#insertiontasticSource > *'))
                      }
     , expectedTree : expectedTreeMultiToMultiAppended
-    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType(multiSelector) ]
+    , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiAppended, verifyReturnType() ]
   })
 
   // html()
