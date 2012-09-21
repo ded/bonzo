@@ -90,10 +90,6 @@
       return b(this.selector).insertBefore(t, this)
     }
 
-  , replaceWith: function (t) {
-      return b(this.selector).replaceWith(t, this)
-    }
-
   , siblings: function () {
       var i, l, p, r = []
       for (i = 0, l = this.length; i < l; i++) {

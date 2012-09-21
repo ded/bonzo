@@ -531,15 +531,11 @@
 
       /**
        * @param {Bonzo|string|Element|Array} node
-       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
        * @return {Bonzo}
        */
-    , replaceWith: function (node, opt_host) {
-        var ret = bonzo(this) // return replaced nodes
-          , rep = bonzo(normalize(node)).insertAfter(this, opt_host)
-        this.remove()
-        Bonzo.call(opt_host || this, rep)
-        return ret
+    , replaceWith: function (node) {
+        bonzo(normalize(node)).insertAfter(this)
+        return this.remove()
       }
 
       // class management
