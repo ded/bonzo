@@ -79,7 +79,7 @@ sink('Empty-collection safety', function (test, ok) {
       , after:         { str: 'html',              args: ['<a/>'],         expect: isSameContainer }
       , insertBefore:  { str: 'html',              args: ['<a/>'],         expect: isSameContainer }
       , insertAfter:   { str: 'html',              args: ['<a/>'],         expect: isSameContainer }
-      , replaceWith:   { str: 'html',              args: ['<a/>'],         expect: isSameContainer }
+      , replaceWith:   { str: 'html',              args: ['<a/>'],         expect: isEmptyContainer }
       , css: [         { str: 'prop',              args: ['color'],        expect: isNull } // not sure about this one, depending on the browser you might get "" for an empty property on a real element and undefined for an unknown property on a real element
                      , { str: 'prop, val',         args: ['color', 'red'], expect: isSameContainer }
                      , { str: '{prop: val}',       args: [{color: 'red'}], expect: isSameContainer }
