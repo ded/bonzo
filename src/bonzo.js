@@ -44,7 +44,7 @@
         , computedStyle: doc.defaultView && doc.defaultView.getComputedStyle
         , cssFloat: e[byTag]('table')[0].style.styleFloat ? 'styleFloat' : 'cssFloat'
         , transform: function () {
-            var props = ['webkitTransform', 'MozTransform', 'OTransform', 'msTransform', 'Transform'], i
+            var props = ['transform', 'webkitTransform', 'MozTransform', 'OTransform', 'msTransform'], i
             for (i = 0; i < props.length; i++) {
               if (props[i] in e.style) return props[i]
             }
@@ -191,7 +191,7 @@
    */
   function styleProperty(p) {
       (p == 'transform' && (p = features.transform)) ||
-        (/^transform-?[Oo]rigin$/.test(p) && (p = features.transform + "Origin")) ||
+        (/^transform-?[Oo]rigin$/.test(p) && (p = features.transform + 'Origin')) ||
         (p == 'float' && (p = features.cssFloat))
       return p ? camelize(p) : null
   }

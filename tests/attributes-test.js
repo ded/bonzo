@@ -155,7 +155,7 @@ sink('Element attributes', function (test, ok) {
       $('#styles').css({'transform':'rotate(30deg) scale(4)'})
       ok($('#styles').css('transform') == 'rotate(30deg) scale(4)', 'rotate(30deg) scale(4) after setting \'transform\'')
       $('#styles').css({'transform-origin':'40% 60%'})
-      ok($('#styles').css('transform-origin') == '40% 60%', '40% 60% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'))
+      ok(/^40% 60%/.test($('#styles').css('transform-origin')), '40% 60% after setting \'transform-origin\' - ' + $('#styles').css('transform-origin'))
     })
 
   } else {
