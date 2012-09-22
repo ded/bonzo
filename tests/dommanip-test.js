@@ -29,9 +29,7 @@ sink('DOM Manipulation', function(test, ok, before, after, assert) {
     for (var i = 0; i < e.length; i++) h.appendChild(e[i])
     actual = h.innerHTML.toLowerCase().replace(/[\n\r"]/g, '') // normalize acceptable cross-browser differences
 
-    if (actual != fixture)
-      alert('[' + actual + ']\n[' + fixture + ']')
-    assert.equal(actual, fixture) 
+    assert.equal(actual, fixture)
     done()
   })
 
@@ -212,5 +210,80 @@ sink('DOM Manipulation', function(test, ok, before, after, assert) {
     ok(Q('#detach div').length === 0, 'target has detached 2 nodes')
     ok(orphans.length == 2, '2 orphans were returned')
     ok(!$.isAncestor(document.body, orphans[0]), 'orphans do not exist in document')
+  })
+
+  // NOTE: these tests are only doing a single-element create() but these cases need to work
+  // even if the elements are part of a multi-element create() (#lazytests #fixlater)
+
+  test('`create(script)` should produce a working script', function (done) {
+    // create a parallel one with the DOM just for sanity-sake
+    var scrdom = document.createElement('script')
+      , scrbonzo = $.create('<script src="script_create_fixture.js" type="text/javascript"></script>')[0]
+
+    scrdom.src = 'script_create_fixture1.js'
+    scrdom.type = 'text/javascript'
+
+    ok(!!scrbonzo, 'created element')
+    ok(scrbonzo.tagName.toLowerCase() == 'script', 'created <script>')
+
+    document.body.appendChild(scrdom)
+    document.body.appendChild(scrbonzo)
+
+    setTimeout(function () {
+      assert.equal(window.booyah1, 'SUCCESS', 'DOM-created script loaded properly')
+      assert.equal(window.booyah2, 'SUCCESS', 'bonzo-created script loaded properly')
+      done()
+    }, 10)
+  })
+
+  test('`create(link)` should produce a working stylesheet', function (done) {
+    // create a parallel one with the DOM just for sanity-sake
+    var fixture1 = document.getElementById('link-create').childNodes[0]
+      , fixture2 = document.getElementById('link-create').childNodes[1]
+      , fixture1OriginalHeight = fixture1.offsetHeight
+      , fixture2OriginalHeight = fixture2.offsetHeight
+      , scrdom = document.createElement('link')
+      , scrbonzo = $.create('<link rel="stylesheet" href="link_create_fixture2.css" type="text/css"></link>')[0]
+
+    scrdom.rel = 'stylesheet'
+    scrdom.href = 'link_create_fixture1.css'
+    scrdom.type = 'text/css'
+
+    ok(!!scrbonzo, 'created element')
+    ok(scrbonzo.tagName.toLowerCase() == 'link', 'created <link>')
+
+    document.getElementsByTagName('head')[0].appendChild(scrdom)
+    document.getElementsByTagName('head')[0].appendChild(scrbonzo)
+
+    setTimeout(function () {
+      ok(fixture1.offsetHeight > fixture1OriginalHeight, 'Fixture element is larger, i.e. DOM-created stylesheet was inserted (' + fixture1.offsetHeight + ' > ' + fixture1OriginalHeight + ')')
+      ok(fixture2.offsetHeight > fixture2OriginalHeight, 'Fixture element is larger, i.e. Bonzo-created stylesheet was inserted  (' + fixture2.offsetHeight + ' > ' + fixture2OriginalHeight + ')')
+      done()
+    }, 10)
+  })
+
+  test('`create(style)` should produce a working stylesheet', function (done) {
+    // create a parallel one with the DOM just for sanity-sake
+    var fixture1 = document.getElementById('style-create').childNodes[0]
+      , fixture2 = document.getElementById('style-create').childNodes[1]
+      , fixture1OriginalHeight = fixture1.offsetHeight
+      , fixture2OriginalHeight = fixture2.offsetHeight
+      , scrdom = document.createElement('style')
+      , scrbonzo = $.create('<style type="text/css">#style-create .second { font-size: 100pt; }</style>')[0]
+
+    scrdom.type = 'text/css'
+    scrdom.innerHTML = '#style-create .first { font-size: 100pt; }'
+
+    ok(!!scrbonzo, 'created element')
+    ok(scrbonzo.tagName.toLowerCase() == 'style', 'created <style>')
+
+    document.getElementsByTagName('head')[0].appendChild(scrdom)
+    document.getElementsByTagName('head')[0].appendChild(scrbonzo)
+
+    setTimeout(function () {
+      ok(fixture1.offsetHeight > fixture1OriginalHeight, 'Fixture element is larger, i.e. DOM-created stylesheet was inserted (' + fixture1.offsetHeight + ' > ' + fixture1OriginalHeight + ')')
+      ok(fixture2.offsetHeight > fixture2OriginalHeight, 'Fixture element is larger, i.e. Bonzo-created stylesheet was inserted  (' + fixture2.offsetHeight + ' > ' + fixture2OriginalHeight + ')')
+      done()
+    }, 10)
   })
 })
