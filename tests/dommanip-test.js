@@ -29,9 +29,7 @@ sink('DOM Manipulation', function(test, ok, before, after, assert) {
     for (var i = 0; i < e.length; i++) h.appendChild(e[i])
     actual = h.innerHTML.toLowerCase().replace(/[\n\r"]/g, '') // normalize acceptable cross-browser differences
 
-    if (actual != fixture)
-      alert('[' + actual + ']\n[' + fixture + ']')
-    assert.equal(actual, fixture) 
+    assert.equal(actual, fixture)
     done()
   })
 
