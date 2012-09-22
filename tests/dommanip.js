@@ -20,6 +20,21 @@ sink('DOM Manipulation', function(test, ok, before, after, assert) {
     ok(e && e.length == 2 && e[1].nodeType == 1 && e[1].tagName.toLowerCase() == 'div', 'second element of create() called with additional whitespace')
   })
 
+  test('`create` with complex, nested html', function (done) {
+    var fixture = '<div class=top><p>text <b><a name=foo>bold</a></b> <span>span <i>italic</i></span></p></div><div class=next><p>text again</p></div>'
+      , e = $.create(fixture)
+      , h = document.createElement('div')
+      , actual
+
+    for (var i = 0; i < e.length; i++) h.appendChild(e[i])
+    actual = h.innerHTML.toLowerCase().replace(/[\n\r"]/g, '') // normalize acceptable cross-browser differences
+
+    if (actual != fixture)
+      alert('[' + actual + ']\n[' + fixture + ']')
+    assert.equal(actual, fixture) 
+    done()
+  })
+
   function testCreate(node, createFn) {
     var e, ex
     try {
