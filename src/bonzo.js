@@ -817,7 +817,8 @@
     , dim: function () {
         if (!this.length) return { height: 0, width: 0 }
         var el = this[0]
-          , orig = !el.offsetWidth && !el.offsetHeight ?
+          , de = el.nodeType == 9 && el.documentElement // document
+          , orig = !de && !!el.style && !el.offsetWidth && !el.offsetHeight ?
              // el isn't visible, can't be measured properly, so fix that
              function (t) {
                var s = {
@@ -832,8 +833,12 @@
                })
                return s
             }(this) : null
-          , width = el.offsetWidth
-          , height = el.offsetHeight
+          , width = de
+              ? Math.max(el.body.scrollWidth, el.body.offsetWidth, de.scrollWidth, de.offsetWidth, de.clientWidth)
+              : el.offsetWidth
+          , height = de
+              ? Math.max(el.body.scrollHeight, el.body.offsetHeight, de.scrollWidth, de.offsetWidth, de.clientHeight)
+              : el.offsetHeight
 
         orig && this.first().css(orig)
         return {

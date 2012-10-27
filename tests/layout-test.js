@@ -52,7 +52,7 @@ sink('Layout', function (test, ok) {
     ok(!nullSet.height, 'no offset().height')
   })
 
-  test('dimensions', 5, function () {
+  test('dimensions', 7, function () {
     var $el = $(dom.create('<div/>')).css({
             position: 'absolute'
           , left: '50px'
@@ -73,6 +73,9 @@ sink('Layout', function (test, ok) {
     ok($hidden.dim().height > 0 && $hidden.dim().height < 100, 'hidden element dim().height is reasonable non-zero')
     ok($hidden.dim().width > 0 && $hidden.dim().width < 10000, 'hidden element dim().width is reasonable non-zero')
     ok($hidden[0].style.display == 'none', 'hidden element is still hidden after dim() call')
+
+    ok($(document).dim().height > 0, 'document has a height > 0: ' + $(document).dim().height)
+    ok($(document).dim().width > 0, 'document has a width > 0: ' + $(document).dim().width)
   })
 
   test('viewport width & height', 2, function () {
