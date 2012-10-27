@@ -788,19 +788,13 @@
           , width: 0
         }
         var el = this[0]
+          , de = el.ownerDocument.documentElement
+          , bcr = el.getBoundingClientRect()
+          , scroll = getWindowScroll()
           , width = el.offsetWidth
           , height = el.offsetHeight
-          , top = el.offsetTop
-          , left = el.offsetLeft
-        while (el = el.offsetParent) {
-          top = top + el.offsetTop
-          left = left + el.offsetLeft
-
-          if (el != doc.body) {
-            top -= el.scrollTop
-            left -= el.scrollLeft
-          }
-        }
+          , top = bcr.top + scroll.y - Math.max(0, de && de.clientTop, doc.body.clientTop)
+          , left = bcr.left + scroll.x - Math.max(0, de && de.clientLeft, doc.body.clientLeft)
 
         return {
             top: top
