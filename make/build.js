@@ -21,7 +21,6 @@
       , "undef": true
       , "sub": true
       , "white": false
-      , "indent": 2
       , "asi": true
       , "laxbreak": true
       , "eqnull": true
