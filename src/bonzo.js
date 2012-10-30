@@ -776,7 +776,6 @@
        * @return {Bonzo|number}
        */
     , offset: function (opt_x, opt_y) {
-      console.log('offset',arguments)
         if (opt_x && typeof opt_x == 'object' && (typeof opt_x.top == 'number' || typeof opt_x.left == 'number')) {
           return this.each(function (el) {
             xy(el, opt_x.left, opt_x.top)
