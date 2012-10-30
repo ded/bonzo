@@ -1,7 +1,7 @@
 /*global sink:true start:true Q:true dom:true $:true bowser:true ender:true*/
 
 sink('Layout', function (test, ok) {
-  test('offsets', 6, function () {
+  test('offsets', 10, function () {
     var $el = $(dom.create('<div/>')).css({
           position: 'absolute',
           left: '50px',
@@ -18,6 +18,15 @@ sink('Layout', function (test, ok) {
     $el.offset(0, 0)
     ok($el.offset().top === 0, 'setting "0" doesnt become falsy')
     ok($el.offset().left === 0, 'setting "0" doesnt become falsy')
+
+    $el.offset({ left: 100 })
+    $el.offset({ top: -100 })
+    ok($el.offset().left == 100, 'after offset({ left: 100 })')
+    ok($el.offset().top == -100, 'after offset({ top: -100 })')
+
+    $el.offset({ left: -200, top: 200 })
+    ok($el.offset().left == -200, 'after offset({ left: -200, top: 200 })')
+    ok($el.offset().top == 200, 'after offset({ left: -200, top: 200 })')
   })
 
   test('offset + scroll', 2, function () {
