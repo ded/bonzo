@@ -77,6 +77,10 @@ Complete Bonzo API
 ------------------
 
   * <a href="#api-ctor"><code>bonzo()</code></a>
+
+<a name="instance"></a>
+### Instance methods
+
   * <a href="#api-get"><code>bonzo().<b>get()</b></code></a>
   * <a href="#api-each"><code>bonzo().<b>each()</b></code></a>
   * <a href="#api-deepEach"><code>bonzo().<b>deepEach()</b></code></a>
@@ -118,6 +122,10 @@ Complete Bonzo API
   * <a href="#api-detach"><code>bonzo().<b>detach()</b></code></a>
   * <a href="#api-scrollLeft"><code>bonzo().<b>scrollLeft()</b></code></a>
   * <a href="#api-scrollTop"><code>bonzo().<b>scrollTop()</b></code></a>
+
+<a name="static"></a>
+### Static methods
+
   * <a href="#api-aug"><code>bonzo.<b>aug()</b></code></a>
   * <a href="#api-doc"><code>bonzo.<b>doc()</b></code></a>
   * <a href="#api-viewport"><code>bonzo.<b>viewport()</b></code></a>
@@ -138,18 +146,30 @@ Added in the Ender bridge:
 
 ------------------------------------------------
 <a name="api-ctor"></a>
-### bonzo(elements)
-`bonzo()` ...
+### bonzo(DOMElement | ArrayLikeDOMElementCollection)
+Factory function for bonzo objects. Takes in either a single `DOMElement`, or an array-like object or array of them. Returns an array-like `Bonzo` object possessing all of the [instance methods](#instance) documented below.
+```js
+var elem = document.getElementById('foo');
+var $elem = bonzo(elem);
+// $elem now has all the special powers listed below...
+```
 
 ------------------------------------------------
 <a name="api-get"></a>
 ### bonzo().get(index)
-`get()` ...
+Returns the raw `DOMElement` held at `index`. Because Bonzo objects are array-like, this is identical to saying `bonzo()[index]`.
+```js
+var elem = document.getElementById('bar');
+var $elem = bonzo(elem);
+var sameElem = $elem.get(0);
+var sameElemAgain = $elem[0];
+// elem === sameElem && sameElem === sameElemAgain
+```
 
 ------------------------------------------------
 <a name="api-each"></a>
 ### bonzo().each(fn[, scope])
-`each()` ...
+Allows you to iterate over the raw elements contained in `bonzo` collections. `fn` gets called once for each element in the collection, with each element, in turn, as its first argument.  If the optional `scope` argument is supplied, then it is used as the `this` value of the function. Otherwise, the same element that is passed as the first argument is used.  The index of the element is passed as the second argument, and the collection itself is passed as the third.
 
 ------------------------------------------------
 <a name="api-deepEach"></a>
@@ -164,12 +184,19 @@ Added in the Ender bridge:
 ------------------------------------------------
 <a name="api-html"></a>
 ### bonzo().html([content])
-`html()` ...
+If `content` is present, sets the elements' `innerHTML` to `content`. If called without arguments, returns the element's `innerHTML`.
+```js
+bonzo(element).html('<p>foo</p>');
+bonzo(element).html(); // <p>foo</p>
+```
 
 ------------------------------------------------
 <a name="api-text"></a>
 ### bonzo().text([content])
-`text()`
+Same as [`.html`](#api-html), but uses the elements' `textContent` method instead, meaning that `content` will not get parsed as markup.
+```js
+bonzo(bonzo.create('<p>')).text('<p>foo</p>').html(); // &lt;p&gt;foo&lt;/p&gt;
+```
 
 ------------------------------------------------
 <a name="api-addClass"></a>
@@ -194,12 +221,13 @@ Added in the Ender bridge:
 ------------------------------------------------
 <a name="api-show"></a>
 ### bonzo().show([type])
-`show()` ...
+Clears the elements' `display` property, or, if `type` is provided, sets them to `type`.
+
 
 ------------------------------------------------
 <a name="api-hide"></a>
 ### bonzo().hide()
-`hide()` ...
+Sets each of the elements' `display` properties to `none`.
 
 ------------------------------------------------
 <a name="api-toggle"></a>
@@ -289,7 +317,13 @@ Added in the Ender bridge:
 ------------------------------------------------
 <a name="api-css"></a>
 ### bonzo().css(property | hash[, value])
-`css()` ...
+Sets or returns CSS properties of the element. If a single string argument is passed, then the value of that CSS property is returned. If two string arguments are passed, the CSS property specified by the first is set to the value specified by the second. If a single hash argument is passed, then the CSS property corresponding to each property is set to the value designated by the hash property's value.
+```js
+bonzo(elem).css({
+  background: 'blue',
+  color: green;
+}).css('border', '2px solid red').css('color'); // "green"
+```
 
 ------------------------------------------------
 <a name="api-offset"></a>
@@ -304,7 +338,7 @@ Added in the Ender bridge:
 ------------------------------------------------
 <a name="api-attr"></a>
 ### bonzo().attr(key[, value] | hash)
-`attr()` ...
+Sets or returns attributes of the element. If the first argument is a hash, then each property of the hash is read and the corresponding attribute of the element is set to the hash property's value. If the first argument is a string and no second argument is provided, the value of the element's attribute with the same name is returned. If a second argument *is* supplied, then the element's attribute of the same name as the first argument is set to the value of the second argument.
 
 ------------------------------------------------
 <a name="api-removeAttr"></a>
@@ -480,7 +514,7 @@ $ ender build bonzo[ package-b[ package-c ...]]
 ```
 
 or, add it to your existing ender package
-
+https://github.com/rvagg/bonzo/edit/docs-api/README.md#
 ```sh
 $ ender add bonzo
 ```
