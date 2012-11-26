@@ -1,8 +1,8 @@
-(function (name, definition, context) {
+(function (name, context, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof context['define'] == 'function' && context['define']['amd']) define(name, definition)
   else context[name] = definition()
-})('bonzo', function() {
+})('bonzo', this, function() {
   var win = window
     , doc = win.document
     , html = doc.documentElement
@@ -66,6 +66,24 @@
         function (s) {
           return s.replace(trimReplace, '')
         }
+
+
+  function isNode(node) {
+    return node && node.nodeName && (node.nodeType == 1 || node.nodeType == 11)
+  }
+
+
+  function normalize(node, host, clone) {
+    var i, l, ret
+    if (typeof node == 'string') return bonzo.create(node)
+    if (isNode(node)) node = [ node ]
+    if (clone) {
+      ret = [] // don't change original array
+      for (i = 0, l = node.length; i < l; i++) ret[i] = cloneNode(host, node[i])
+      return ret
+    }
+    return node
+  }
 
 
   /**
@@ -162,10 +180,6 @@
               (f = parseFloat(d)) == d ? f : d;
     } catch(e) {}
     return undefined
-  }
-
-  function isNode(node) {
-    return node && node.nodeName && (node.nodeType == 1 || node.nodeType == 11)
   }
 
 
@@ -972,17 +986,6 @@
 
   }
 
-  function normalize(node, host, clone) {
-    var i, l, ret
-    if (typeof node == 'string') return bonzo.create(node)
-    if (isNode(node)) node = [ node ]
-    if (clone) {
-      ret = [] // don't change original array
-      for (i = 0, l = node.length; i < l; i++) ret[i] = cloneNode(host, node[i])
-      return ret
-    }
-    return node
-  }
 
   function cloneNode(host, el) {
     var c = el.cloneNode(true)
@@ -1118,4 +1121,4 @@
     }
 
   return bonzo
-}, this); // the only line we care about using a semi-colon. placed here for concatenation tools
+}); // the only line we care about using a semi-colon. placed here for concatenation tools

@@ -7,7 +7,7 @@
       ]
   }
   , "JSHINT_OPTS": {
-        "predef": [ "assert", "refute", "define", "self" ]
+        "predef": ["assert", "refute", "define", "self"]
       , "boss": true
       , "shadow": true
       , "trailing": true
