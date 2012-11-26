@@ -184,7 +184,13 @@ Allows you to iterate over the raw elements contained in `bonzo` collections. `f
 ------------------------------------------------
 <a name="api-html"></a>
 ### bonzo().html([content])
-If `content` is present, sets the elements' `innerHTML` to `content`. If called without arguments, returns the element's `innerHTML`.
+
+`bonzo.html()` either sets or gets the elements' `innerHTML` to `content`, depending if the optional `content` argument is pased in. If called without the argument, `.html()` returns the element's `innerHTML`.
+
+* `content` is an *optional* argument. If it is passed in, it will **set** the `innerHTML` of a given element and return a `Bonzo` object.
+
+#### Examples
+
 ```js
 bonzo(element).html('<p>foo</p>');
 bonzo(element).html(); // <p>foo</p>
@@ -194,11 +200,13 @@ bonzo(element).html(); // <p>foo</p>
 <a name="api-text"></a>
 ### bonzo().text([content])
 
-`bonzo.text()` is very similar either **gets** or **sets** the text of a given element, depending if the optional *string* argument is passed in.
+`bonzo.text()` is very similar to [`.html`](#api-html), but uses the elements` `textContent` instead of `innerHTML` when setting the `content`. Thus, the `content` will not get parsed as markup.
 
-* `string` is an *optional* argument. If it is passed in, it will **set** the text value of a given element and return a `Bonzo` object.
+This method either **gets** or **sets** the text of a given element, depending if the optional *content* argument is passed in.
 
-If no `string` is specified, the `.text()` method will return the text that makes up that element.
+* `content` is an *optional* argument. If it is passed in, it will **set** the text value of a given element and return a `Bonzo` object.
+
+If no `content` is specified, the `.text()` method will return the text that makes up that element.
 
 If the element has children (i.e. a `ul` containing several `li` children), the children's text is included in the return value.
 
