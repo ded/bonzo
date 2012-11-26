@@ -858,6 +858,8 @@
        * @return {Bonzo|string}
        */
     , attr: function (k, opt_v) {
+        if(opt_v == null || opt_v == '')
+          this.removeAttr(k)
         var el = this[0]
         if (typeof k != 'string' && !(k instanceof String)) {
           for (var n in k) {
