@@ -205,18 +205,18 @@ If the element has children (i.e. a `ul` containing several `li` children), the 
 #### Examples
 
 ``` js
-bonzo("<h1>hello, world</h1>").text();
+bonzo("<h1>hello, world</h1>").text()
   // →  returns "hello, world"
 
-bonzo("<h1>i'm going to change</h1>").text("changed you!");
+bonzo("<h1>i'm going to change</h1>").text("changed you!")
   // the <h1> now says "changed you!"
   // →  returns a Bonzo object
 
-bonzo("<ul><li>one</li><li>two</li></ul>").text();
+bonzo("<ul><li>one</li><li>two</li></ul>").text()
   // →  returns "one
   // two"
 
-bonzo("<ul><li>one</li><li>two</li></ul>").text('hello');
+bonzo("<ul><li>one</li><li>two</li></ul>").text('hello')
   // the html is now <ul>hello</ul>
   // →  returns a Bonzo object
 ```
@@ -235,14 +235,14 @@ space-separated string, a `classList` (i.e. "classOne classTwo").
 #### Examples
 
 ``` js
-bonzo("<h1>hello, world</h1>").addClass('big');
+bonzo("<h1>hello, world</h1>").addClass('big')
   // the html is now <h1 class="big">hello, world</h1>
   // →  returns a Bonzo object
 
-bonzo("<h1>hello, world</h1>").addClass();
+bonzo("<h1>hello, world</h1>").addClass()
   //  throws an error, since the argument is required
 
-bonzo("<p>i want lots of classes</p>").addClass("one two three");
+bonzo("<p>i want lots of classes</p>").addClass("one two three")
   // the html is now <p class="one two three">i want lots of classes</p>
   // →  returns a Bonzo object
 ```
@@ -262,18 +262,18 @@ space-separated string, a `classList` (i.e. "classOne classTwo").
 #### Examples
 
 ``` js
-bonzo("<h1 class='small'>hello, world</h1>").removeClass('small');
+bonzo("<h1 class='small'>hello, world</h1>").removeClass('small')
   // the html is now <h1 class>hello, world</h1>
   // →  returns a Bonzo object
 
-bonzo("<h1 class='removeMe'>hello, world</h1>").removeClass();
+bonzo("<h1 class='removeMe'>hello, world</h1>").removeClass()
   //  throws an error, since the argument is required
 
-bonzo("<p class='one two three'>i have lots of classes</p>").removeClass("one two three");
+bonzo("<p class='one two three'>i have lots of classes</p>").removeClass("one two three")
   // the html is now <p>i have lots of classes</p>
   // →  returns a Bonzo object
 
-bonzo("<h1 class='error'>hello, world</h1>").removeClass('does_not_exist');
+bonzo("<h1 class='error'>hello, world</h1>").removeClass('does_not_exist')
   // →  since the argument does not match a classlist the <h1> has, nothing happens and a Bonzo object is returned
 ```
 
@@ -297,19 +297,19 @@ href="#api-removeClass">removeClass</a>, this method will return
 
 ``` js
 
-bonzo("<p class='alert'>something went wrong</p>").hasClass('alert');
+bonzo("<p class='alert'>something went wrong</p>").hasClass('alert')
   // →  returns true
 
-bonzo("<p class='alert'>something went wrong</p>").hasClass('normal');
+bonzo("<p class='alert'>something went wrong</p>").hasClass('normal')
   // →  returns false
 
-bonzo("<p class='one'>something went wrong</p>").hasClass('one two three');
+bonzo("<p class='one'>something went wrong</p>").hasClass('one two three')
   // →  returns true
 
-bonzo("<p class='one'>something went wrong</p>").hasClass('three two one');
+bonzo("<p class='one'>something went wrong</p>").hasClass('three two one')
   // →  returns true
 
-bonzo("<p class='large'>something went wrong</p>").hasClass('small tiny');
+bonzo("<p class='large'>something went wrong</p>").hasClass('small tiny')
   // →  returns false
 
 ```
@@ -332,19 +332,19 @@ space-separated string, a `classList` (i.e. "classOne classTwo").
 
 ``` js
 
-bonzo("<p class='alert'>something went wrong</p>").toggleClass('alert');
+bonzo("<p class='alert'>something went wrong</p>").toggleClass('alert')
   // the html is now <p class>something went wrong</p>
   // →  returns a Bonzo object
 
-bonzo("<p class='alert'>something went wrong</p>").toggleClass('different');
+bonzo("<p class='alert'>something went wrong</p>").toggleClass('different')
   // the html is now <p class="alert different">something went wrong</p>
   // →  returns a Bonzo object
 
-bonzo("<p class='one'>something went wrong</p>").toggleClass('three two one');
+bonzo("<p class='one'>something went wrong</p>").toggleClass('three two one')
   // the html is now <p class="three two">something went wrong</p>
   // →  returns a Bonzo object
 
-bonzo("<p class='large'>something went wrong</p>").toggleClass('small tiny');
+bonzo("<p class='large'>something went wrong</p>").toggleClass('small tiny')
   // the html is now <p class="small tiny large">something went wrong</p>
   // →  returns a Bonzo object
 
@@ -365,11 +365,11 @@ If you specify an unsupported `type` (i.e. something other than `block`, `compac
 
 ``` js
 
-bonzo("<p style=\"display: none;\">I was hidden</p>").show();
+bonzo("<p style=\"display: none;\">I was hidden</p>").show()
   // html is now <p style>I was hidden</p>
   // →  returns a Bonzo object
 
-bonzo("<p style=\"display: none;\">I was hidden</p>").show('inline-block');
+bonzo("<p style=\"display: none;\">I was hidden</p>").show('inline-block')
   // html is now <p style="display: inline-block;">I was hidden</p>
   // →  returns a Bonzo object
 
@@ -406,12 +406,12 @@ bonzo("<p>Hello, world</p>").hide()
 
 ``` js
 
-var firstItem = bonzo("<ul><li>one</li><li>two</li><li>three</li></ul>").first();
+var firstItem = bonzo("<li>one</li><li>two</li><li>three</li>").first()
 firstItem.text() // "one"
 firstItem.length // 1
   // →  returns a Bonzo object
 
-var el = bonzo("").first();
+var el = bonzo("").first()
 el.text() // ""
 el.length // 0
   // →  returns a Bonzo object
@@ -427,12 +427,12 @@ el.length // 0
 
 ``` js
 
-var lastItem = bonzo("<ul><li>one</li><li>two</li><li>three</li></ul>").last();
+var lastItem = bonzo("<li>one</li><li>two</li><li>three</li>").last()
 lastItem.text() // "three"
 lastItem.length // 1
   // →  returns a Bonzo object
 
-var el = bonzo("").last();
+var el = bonzo("").last()
 el.text() // ""
 el.length // 0
   // →  returns a Bonzo object
