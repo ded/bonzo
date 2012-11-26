@@ -193,41 +193,203 @@ bonzo(element).html(); // <p>foo</p>
 ------------------------------------------------
 <a name="api-text"></a>
 ### bonzo().text([content])
-Same as [`.html`](#api-html), but uses the elements' `textContent` method instead, meaning that `content` will not get parsed as markup.
-```js
-bonzo(bonzo.create('<p>')).text('<p>foo</p>').html(); // &lt;p&gt;foo&lt;/p&gt;
+
+`bonzo.text()` is very similar either **gets** or **sets** the text of a given element, depending if the optional *string* argument is passed in.
+
+* `string` is an *optional* argument. If it is passed in, it will **set** the text value of a given element and return a `Bonzo` object.
+
+If no `string` is specified, the `.text()` method will return the text that makes up that element.
+
+If the element has children (i.e. a `ul` containing several `li` children), the children's text is included in the return value.
+
+#### Examples
+
+``` js
+bonzo("<h1>hello, world</h1>").text();
+  // →  returns "hello, world"
+
+bonzo("<h1>i'm going to change</h1>").text("changed you!");
+  // the <h1> now says "changed you!"
+  // →  returns a Bonzo object
+
+bonzo("<ul><li>one</li><li>two</li></ul>").text();
+  // →  returns "one
+  // two"
+
+bonzo("<ul><li>one</li><li>two</li></ul>").text('hello');
+  // the html is now <ul>hello</ul>
+  // →  returns a Bonzo object
 ```
 
 ------------------------------------------------
 <a name="api-addClass"></a>
 ### bonzo().addClass(class | classList)
-`addClass()` ...
+
+`bonzo.addClass(class | classList)` adds the specified `class` to the given element. It returns a `Bonzo` object.
+
+* `class` is a *required* argument. It is the name of the class you wish to add to the given element.
+
+  * If you'd like to add multiple classes at once, simply use a
+space-separated string, a `classList` (i.e. "classOne classTwo").
+
+#### Examples
+
+``` js
+bonzo("<h1>hello, world</h1>").addClass('big');
+  // the html is now <h1 class="big">hello, world</h1>
+  // →  returns a Bonzo object
+
+bonzo("<h1>hello, world</h1>").addClass();
+  //  throws an error, since the argument is required
+
+bonzo("<p>i want lots of classes</p>").addClass("one two three");
+  // the html is now <p class="one two three">i want lots of classes</p>
+  // →  returns a Bonzo object
+```
+
 
 ------------------------------------------------
 <a name="api-removeClass"></a>
 ### bonzo().removeClass(class | classList)
-`removeClass()` ...
+
+`bonzo.removeClass(class)` removes the specified `class` from the given element. It returns a `Bonzo` object.
+
+* `class` is a *required* argument. It is the name of the class you wish to remove from the given element.
+
+  * If you'd like to remove multiple classes at once, simply use a
+space-separated string, a `classList` (i.e. "classOne classTwo").
+
+#### Examples
+
+``` js
+bonzo("<h1 class='small'>hello, world</h1>").removeClass('small');
+  // the html is now <h1 class>hello, world</h1>
+  // →  returns a Bonzo object
+
+bonzo("<h1 class='removeMe'>hello, world</h1>").removeClass();
+  //  throws an error, since the argument is required
+
+bonzo("<p class='one two three'>i have lots of classes</p>").removeClass("one two three");
+  // the html is now <p>i have lots of classes</p>
+  // →  returns a Bonzo object
+
+bonzo("<h1 class='error'>hello, world</h1>").removeClass('does_not_exist');
+  // →  since the argument does not match a classlist the <h1> has, nothing happens and a Bonzo object is returned
+```
 
 ------------------------------------------------
 <a name="api-hasClass"></a>
 ### bonzo().hasClass(class | classList)
-`hasClass()` ...
+
+`bonzo.hasClass(class)` returns **true** or **false**, based on whether
+or not the specified element has a given *class*. It returns **true** if
+the specified element *does* have the `class`, and returns **false** if
+the specified element **does not** have the `class`.
+
+* `class` is a *required* argument. It is the name of the class you wish to check for in a given element.
+
+  * **NOTE**: if you pass in a space-separated `classList` like you can
+in <a href="#api-addClass">addClass</a> and <a
+href="#api-removeClass">removeClass</a>, this method will return
+**true** if **any** of the space-separated `classList` classes are present in the element.
+
+#### Examples
+
+``` js
+
+bonzo("<p class='alert'>something went wrong</p>").hasClass('alert');
+  // →  returns true
+
+bonzo("<p class='alert'>something went wrong</p>").hasClass('normal');
+  // →  returns false
+
+bonzo("<p class='one'>something went wrong</p>").hasClass('one two three');
+  // →  returns true
+
+bonzo("<p class='one'>something went wrong</p>").hasClass('three two one');
+  // →  returns true
+
+bonzo("<p class='large'>something went wrong</p>").hasClass('small tiny');
+  // →  returns false
+
+```
 
 ------------------------------------------------
 <a name="api-toggleClass"></a>
 ### bonzo().toggleClass(class | classList)
-`toggleClass()` ...
+
+`bonzo.toggleClass(class)` either adds or removes a specified `class` to the given element, depending on whether or not the given element already has a class with that `class` or not.
+
+If the element **does** have a class named `class`, calling `toggleClass()` will **remove** the `class` class from it. If the element **does not** have a class with the specified `class`, calling `toggleClass()` will **add** a class with that `class`.
+
+* `class` is a *required* argument. It is the name of the class you wish to toggle.
+
+  * If you'd like to toggle multiple classes at once, simply use a
+space-separated string, a `classList` (i.e. "classOne classTwo").
+
+
+#### Examples
+
+``` js
+
+bonzo("<p class='alert'>something went wrong</p>").toggleClass('alert');
+  // the html is now <p class>something went wrong</p>
+  // →  returns a Bonzo object
+
+bonzo("<p class='alert'>something went wrong</p>").toggleClass('different');
+  // the html is now <p class="alert different">something went wrong</p>
+  // →  returns a Bonzo object
+
+bonzo("<p class='one'>something went wrong</p>").toggleClass('three two one');
+  // the html is now <p class="three two">something went wrong</p>
+  // →  returns a Bonzo object
+
+bonzo("<p class='large'>something went wrong</p>").toggleClass('small tiny');
+  // the html is now <p class="small tiny large">something went wrong</p>
+  // →  returns a Bonzo object
+
+```
 
 ------------------------------------------------
 <a name="api-show"></a>
 ### bonzo().show([type])
-Clears the elements' `display` property, or, if `type` is provided, sets them to `type`.
 
+`bonzo.show()` sets a given element or set of elements' `display` style property. By passing in an optional `type` argument, you can specify the attribute of the `display` property Bonzo gives the element(s).
+
+* `type` is an *optional* argument. It is the display type you wish to
+utilize.
+
+If you specify an unsupported `type` (i.e. something other than `block`, `compact`, `inline-block`, `inline`, `inline-table`, `list-item`, `run-in`, `table`, `table-caption`, `table-cell`, `table-column`, `table-column-group`, `table-footer-group`, `table-header-group`, `table-row`, or `table-row-group`), Bonzo will ignore the invalid `type`.
+
+#### Examples
+
+``` js
+
+bonzo("<p style=\"display: none;\">I was hidden</p>").show();
+  // html is now <p style>I was hidden</p>
+  // →  returns a Bonzo object
+
+bonzo("<p style=\"display: none;\">I was hidden</p>").show('inline-block');
+  // html is now <p style="display: inline-block;">I was hidden</p>
+  // →  returns a Bonzo object
+
+```
 
 ------------------------------------------------
 <a name="api-hide"></a>
 ### bonzo().hide()
-Sets each of the elements' `display` properties to `none`.
+
+`bonzo.hide()` adds a `display: none;` to the specified element.
+
+#### Examples
+
+``` js
+
+bonzo("<p>Hello, world</p>").hide()
+  // html is now <p style="display: none;">Hello, world</p>
+  // →  returns a Bonzo object
+
+```
 
 ------------------------------------------------
 <a name="api-toggle"></a>
@@ -237,12 +399,44 @@ Sets each of the elements' `display` properties to `none`.
 ------------------------------------------------
 <a name="api-first"></a>
 ### bonzo().first()
-`first()` ...
+
+`bonzo.first()` returns a Bonzo object referencing the first element in a set of elements. If the set is empty, the a Bonzo object will still be returned, but it won't contain any children.
+
+#### Examples
+
+``` js
+
+var firstItem = bonzo("<ul><li>one</li><li>two</li><li>three</li></ul>").first();
+firstItem.text() // "one"
+firstItem.length // 1
+  // →  returns a Bonzo object
+
+var el = bonzo("").first();
+el.text() // ""
+el.length // 0
+  // →  returns a Bonzo object
+```
 
 ------------------------------------------------
 <a name="api-last"></a>
 ### bonzo().last()
-`last()` ...
+
+`bonzo.last()` returns a Bonzo object referencing the last element in a set of elements. If the set is empty, the a Bonzo object will still be returned, but it won't contain any children.
+
+#### Examples
+
+``` js
+
+var lastItem = bonzo("<ul><li>one</li><li>two</li><li>three</li></ul>").last();
+lastItem.text() // "three"
+lastItem.length // 1
+  // →  returns a Bonzo object
+
+var el = bonzo("").last();
+el.text() // ""
+el.length // 0
+  // →  returns a Bonzo object
+```
 
 ------------------------------------------------
 <a name="api-next"></a>
