@@ -1041,7 +1041,7 @@
    * @return {Bonzo}
    */
   function bonzo(els) {
-    return new Bonzo(els)
+    return new Bonzo(normalize(els))
   }
 
   bonzo.setQueryEngine = function (q) {
