@@ -341,11 +341,11 @@
   function Bonzo(elements) {
     this.length = 0
     if (elements) {
-      elements = typeof elements !== 'string' &&
-        !elements.nodeType &&
-        typeof elements.length !== 'undefined' ?
-          elements :
-          [elements]
+      elements = typeof elements === 'string' &&
+        !/^\s*</.test(elements) &&
+        query ?
+          query(elements) :
+          normalize(elements)
       this.length = elements.length
       for (var i = 0; i < elements.length; i++) this[i] = elements[i]
     }
