@@ -15,6 +15,7 @@
     , query = null // used for setting a selector engine host
     , specialAttributes = /^(checked|value|selected|disabled)$/i
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
+    , simpleScriptTagRe = /\s*<script +src=['"]([^'"]+)['"]>/
     , table = ['<table>', '</table>', 1]
     , td = ['<table><tbody><tr>', '</tr></tbody></table>', 3]
     , option = ['<select>', '</select>', 1]
@@ -1036,6 +1037,13 @@
     return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
   }
 
+  function createScriptFromHtml(html) {
+    var scriptEl = document.createElement('script')
+      , matches = html.match(simpleScriptTagRe)
+    scriptEl.src = matches[1]
+    return scriptEl
+  }
+
   /**
    * @param {Array.<Element>|Element|Node|string} els
    * @return {Bonzo}
@@ -1060,7 +1068,8 @@
     // hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
     return typeof node == 'string' && node !== '' ?
       function () {
-        var tag = /^\s*<([^\s>]+)/.exec(node)
+        if (simpleScriptTagRe.test(node)) return [createScriptFromHtml(node)]
+        var tag = node.match(/^\s*<([^\s>]+)/)
           , el = doc.createElement('div')
           , els = []
           , p = tag ? tagMap[tag[1].toLowerCase()] : null

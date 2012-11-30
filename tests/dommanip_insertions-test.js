@@ -2265,4 +2265,20 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
     , verify       : [ verifyExistingElementSourceEmpty, verifySingleToMultiPrepended, verifyReturnType('#insertiontastic > p') ]
   })
 
+
+  /*********************************
+   * $.create script tags
+   */
+
+  test('$.create with script tags will execute scripts', function (complete) {
+    $($.create('<script src="./sample-fixture.js?' + (+new Date) + '"></script>')).appendTo(document.body)
+    var intervalTimer = setInterval(function () {
+      if (typeof window.externalFunction == 'function') {
+        clearInterval(intervalTimer)
+        ok(true, 'loaded external script file')
+        complete()
+      }
+    }, 50)
+  })
+
 })
