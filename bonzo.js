@@ -12,7 +12,6 @@
     , doc = win.document
     , html = doc.documentElement
     , parentNode = 'parentNode'
-    , query = null // used for setting a selector engine host
     , specialAttributes = /^(checked|value|selected|disabled)$/i
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i // tags that we have trouble inserting *into*
     , simpleScriptTagRe = /\s*<script +src=['"]([^'"]+)['"]>/
@@ -65,6 +64,7 @@
     , whitespaceRegex = /\s+/
     , toString = String.prototype.toString
     , unitless = { lineHeight: 1, zoom: 1, zIndex: 1, opacity: 1, boxFlex: 1, WebkitBoxFlex: 1, MozBoxFlex: 1 }
+    , query = doc.querySelectorAll && function (selector) { return doc.querySelectorAll(selector) }
     , trim = String.prototype.trim ?
         function (s) {
           return s.trim()
