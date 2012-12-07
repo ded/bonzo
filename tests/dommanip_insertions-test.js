@@ -2266,6 +2266,18 @@ sink('DOM Manipulation - insertions', function(test, ok, before, after, assert) 
   })
 
 
+  /**
+   * test $.create with html that contains trailing text nodes
+   */
+  test('nodes with text nodes being appended with $.create', function (complete) {
+    var tree = $.create('<span>hey</span> there')
+    ok(tree.length == 2, 'created two nodes')
+    ok(tree[0] && tree[0].nodeType == 1, 'first node is an element')
+    ok(tree[1] && tree[1].nodeType == 3, 'second node is a text node')
+    complete()
+  })
+
+
   /*********************************
    * $.create script tags
    */
