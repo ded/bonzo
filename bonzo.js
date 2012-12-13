@@ -616,7 +616,7 @@
           each(c, function (c) {
             if (c) {
               typeof opt_condition !== 'undefined' ?
-                opt_condition ? addClass(el, c) : removeClass(el, c) :
+                opt_condition ? !hasClass(el, c) && addClass(el, c) : removeClass(el, c) :
                 hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
             }
           })
@@ -1085,7 +1085,7 @@
         do {
           // tbody special case for IE<8, creates tbody on any empty table
           // we don't want it if we're just after a <thead>, <caption>, etc.
-          if ((!tag || el.nodeType == 1) && (!tb || el.tagName.toLowerCase() != 'tbody')) {
+          if ((!tag || el.nodeType == 1) && (!tb || (el.tagName && el.tagName != 'TBODY'))) {
             els.push(el)
           }
         } while (el = el.nextSibling)

@@ -611,7 +611,7 @@
           each(c, function (c) {
             if (c) {
               typeof opt_condition !== 'undefined' ?
-                opt_condition ? addClass(el, c) : removeClass(el, c) :
+                opt_condition ? !hasClass(el, c) && addClass(el, c) : removeClass(el, c) :
                 hasClass(el, c) ? removeClass(el, c) : addClass(el, c)
             }
           })
