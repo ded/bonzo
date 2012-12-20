@@ -86,7 +86,6 @@
     return node
   }
 
-
   /**
    * @param {string} c a class name to test
    * @return {boolean}
@@ -553,6 +552,17 @@
         return this.remove()
       }
 
+      /**
+       * @param {Object=} opt_host an optional host scope (primarily used when integrated with Ender)
+       * @return {Bonzo}
+       */
+    , clone: function (opt_host) {
+        var ret = [] // don't change original array
+          , l, i
+        for (i = 0, l = this.length; i < l; i++) ret[i] = cloneNode(opt_host || this, this[i])
+        return bonzo(ret)
+      }
+
       // class management
 
       /**
@@ -705,7 +715,7 @@
        * @return {Element|Node}
        */
     , related: function (method) {
-        return this.map(
+        return bonzo(this.map(
           function (el) {
             el = el[method]
             while (el && el.nodeType !== 1) {
@@ -716,7 +726,7 @@
           function (el) {
             return el
           }
-        )
+        ))
       }
 
 
