@@ -295,15 +295,16 @@
 
   // classList support for class management
   // altho to be fair, the api sucks because it won't accept multiple classes at once
+  // @regiskuckaertz: well, i need it anyway so ...
   if (features.classList) {
     hasClass = function (el, c) {
-      return el.classList.contains(c)
+      return c.split(' ').every(function(v) { return el.classList.contains(v); });
     }
     addClass = function (el, c) {
-      el.classList.add(c)
+      c.split(' ').forEach(function(v) { el.classList.add(v); });
     }
     removeClass = function (el, c) {
-      el.classList.remove(c)
+      c.split(' ').forEach(function(v) { el.classList.remove(v); });
     }
   }
   else {
