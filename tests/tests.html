@@ -152,7 +152,7 @@
     sink('Post-init', function (test, ok) {
       test('set up test environment', 1, function () {
         window.dom = bonzo
-        window.$ = function $(s) {
+        window.$ = $ = function $(s) {
           return dom(Q(s))
         }
         //dom.setQueryEngine(Q)
