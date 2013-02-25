@@ -833,7 +833,7 @@
         var el = this[0]
           , de = el.ownerDocument.documentElement
           , bcr = el.getBoundingClientRect()
-          , scroll = getWindowScroll()
+          , scroll = getWindowScroll(el)
           , width = el.offsetWidth
           , height = el.offsetHeight
           , top = bcr.top + scroll.y - Math.max(0, de && de.clientTop, doc.body.clientTop)
@@ -1041,8 +1041,14 @@
     return element === win || (/^(?:body|html)$/i).test(element.tagName)
   }
 
-  function getWindowScroll() {
-    return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
+  function getWindowScroll(el) {
+    if(el === undefined)
+      return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
+    else {
+      var elBody = el.ownerDocument.body,
+          elHtml = elBody.parentNode;
+      return { x: elBody.scrollLeft || elHtml.scrollLeft, y: elBody.scrollTop || elHtml.scrollTop }
+    }
   }
 
   function createScriptFromHtml(html) {
