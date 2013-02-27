@@ -1,3 +1,8 @@
+/*!
+  * Bonzo: DOM Utility (c) Dustin Diaz 2012
+  * https://github.com/ded/bonzo
+  * License MIT
+  */
 (function (name, context, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(definition)
@@ -1042,13 +1047,15 @@
   }
 
   function getWindowScroll(el) {
-    if(el === undefined)
-      return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
-    else {
-      var elBody = el.ownerDocument.body,
-          elHtml = elBody.parentNode;
-      return { x: elBody.scrollLeft || elHtml.scrollLeft, y: elBody.scrollTop || elHtml.scrollTop }
+    var elBody, elHtml
+    if(el === undefined) {
+      elBody = doc.body,
+      elHtml = html;
+    } else {
+      elBody = el.ownerDocument.body,
+      elHtml = elBody.parentNode;
     }
+    return { x: elBody.scrollLeft || elHtml.scrollLeft, y: elBody.scrollTop || elHtml.scrollTop }
   }
 
   function createScriptFromHtml(html) {
@@ -1061,7 +1068,8 @@
   /**
    * @param {Array.<Element>|Element|Node|string} els
    * @return {Bonzo}
-   */
+  */
+
   function bonzo(els) {
     return new Bonzo(els)
   }
