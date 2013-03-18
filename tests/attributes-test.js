@@ -137,6 +137,8 @@ sink('Element attributes', function (test, ok) {
     ok(input.attr('value', 'boosh').attr('value') == 'boosh', 'sets value attribute of input')
     input.val('eyoeyo')
     ok(input.val() == 'eyoeyo', 'val(val) can set value on input')
+    input.val(1234)
+    ok(input.val() == '1234', 'val(val) can set number value on input')
   })
 
   test('setting attributes using object', 2, function () {
