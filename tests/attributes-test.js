@@ -121,7 +121,7 @@ sink('Element attributes', function (test, ok) {
     })
   })
 
-  test('setting & getting attributes', 10, function () {
+  test('setting & getting attributes', function (done) {
     ok($('a#twitter').attr('href') == 'http://twitter.com/', 'retrieves "href" attribute from anchor')
     ok($('a#hrefrel').attr('href') == '/relative', 'retrieves relative "href" attribute from anchor')
     ok($('a#hrefname').attr('href') == '#name', 'retrieves plain #name "href" attribute from anchor')
@@ -139,6 +139,8 @@ sink('Element attributes', function (test, ok) {
     ok(input.val() == 'eyoeyo', 'val(val) can set value on input')
     input.val(1234)
     ok(input.val() == '1234', 'val(val) can set number value on input')
+
+    done()
   })
 
   test('setting attributes using object', 2, function () {
