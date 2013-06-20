@@ -792,11 +792,15 @@
           iter[o] = opt_v
         }
 
-        if (ie && iter.opacity) {
-          // oh this 'ol gamut
-          iter.filter = 'alpha(opacity=' + (iter.opacity * 100) + ')'
-          // give it layout
-          iter.zoom = o.zoom || 1;
+        if (!features.opasity && 'opacity' in iter) {
+          if (null === iter.opacity || '' === iter.opacity) {
+            iter.filter = '';
+          } else {
+            // oh this 'ol gamut
+            iter.filter = 'alpha(opacity=' + (iter.opacity * 100) + ')';
+            // give it layout
+            iter.zoom = o.zoom || 1;
+          }
           delete iter.opacity;
         }
 
