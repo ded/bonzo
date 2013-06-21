@@ -793,14 +793,10 @@
         }
 
         if (!features.opasity && 'opacity' in iter) {
-          if (null === iter.opacity || '' === iter.opacity) {
-            iter.filter = '';
-          } else {
-            // oh this 'ol gamut
-            iter.filter = 'alpha(opacity=' + (iter.opacity * 100) + ')';
-            // give it layout
-            iter.zoom = o.zoom || 1;
-          }
+          // oh this 'ol gamut
+          iter.filter = null == iter.opacity || '' === iter.opacity ? '' : 'alpha(opacity=' + (iter.opacity * 100) + ')'
+          // give it layout
+          iter.zoom = o.zoom || 1
           delete iter.opacity;
         }
 
