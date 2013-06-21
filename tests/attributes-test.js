@@ -161,6 +161,18 @@ sink('Element attributes', function (test, ok) {
     ok($('#styles div').css('float') == 'right', '"right" after update.')
   })
 
+  test('setting & getting opacity styles', 5, function () {
+    ok($('#styles').css('opacity') == 1, 'opacity is 1 by default')
+    $('#styles').css('opacity', '0.5')
+    ok($('#styles').css('opacity') == 0.5, '0.5 after update')
+    $('#styles div').css('opacity', '')
+    ok($('#styles div').css('opacity') == 1, 'back default after setting empty string')
+    $('#styles').css({opacity: 0})
+    ok($('#styles').css('opacity') == 0, '0 after setting with object')
+    $('#styles div').css('opacity', null)
+    ok($('#styles div').css('opacity') == 1, 'back default after setting null')
+  })
+
   if (!(bowser.msie && bowser.version <= 8) && !(bowser.firefox && bowser.version < 3.5)) {
 
     test('setting & getting transform styles', 3, function () {
