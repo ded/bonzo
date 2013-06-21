@@ -797,7 +797,7 @@
           iter.filter = null == iter.opacity || '' === iter.opacity ? '' : 'alpha(opacity=' + (iter.opacity * 100) + ')'
           // give it layout
           iter.zoom = o.zoom || 1
-          delete iter.opacity;
+          delete iter.opacity
         }
 
         function fn(el, p, v) {
@@ -934,7 +934,7 @@
        * @return {Bonzo|string}
        */
     , val: function (s) {
-        return (typeof s == 'string') ?
+        return (typeof s == 'string' || typeof s == 'number') ?
           this.attr('value', s) :
           this.length ? this[0].value : null
       }
