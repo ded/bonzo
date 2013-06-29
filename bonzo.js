@@ -934,7 +934,7 @@
        * @return {Bonzo|string}
        */
     , val: function (s) {
-        return (typeof s == 'string') ?
+        return (typeof s == 'string' || typeof s == 'number') ?
           this.attr('value', s) :
           this.length ? this[0].value : null
       }
@@ -1126,8 +1126,8 @@
 
   bonzo.viewport = function () {
     return {
-        width: ie ? html.clientWidth : self.innerWidth
-      , height: ie ? html.clientHeight : self.innerHeight
+        width: ie ? html.clientWidth : win.innerWidth
+      , height: ie ? html.clientHeight : win.innerHeight
     }
   }
 
