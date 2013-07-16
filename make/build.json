@@ -2,7 +2,7 @@
   "JAVASCRIPT": {
     "DIST_DIR": "./",
     "bonzo": [
-      "./src/copyright.js",
+      "./src/ebay.js",
       "./src/bonzo.js"
     ]
   },
