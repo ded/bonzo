@@ -1,6 +1,6 @@
 (function ($) {
 
-  var b = require('bonzo')
+  var b = require('ebay-bonzo')
   b.setQueryEngine($)
   $.ender(b)
   $.ender(b(), true)

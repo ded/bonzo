@@ -1,7 +1,7 @@
 {
     "name": "ebay-bonzo"
   , "description": "Modified version of Bonzo which is a library agnostic, extensible DOM utility"
-  , "version": "1.3.5-2"
+  , "version": "1.3.5-3"
   , "homepage": "https://github.com/humingchun/bonzo"
   , "author": "Michael Hu <humingchun@gmail.com> (http://michaellearnstocode.com)"
   , "contributors": [
