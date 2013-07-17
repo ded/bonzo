@@ -1,3 +1,7 @@
+eBay Bonzo
+==========
+Modified version of [Bonzo](https://github.com/ded/bonzo "A library agnostic extensible DOM utility") which is a library agnostic extensible DOM utility, in order to be embedded in eBay listing page.
+
 Bonzo
 -----
 

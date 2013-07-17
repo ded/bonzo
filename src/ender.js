@@ -1,6 +1,6 @@
 (function ($) {
 
-  var b = require('bonzo')
+  var b = require('ebay-bonzo')
   b.setQueryEngine($)
   $.ender(b)
   $.ender(b(), true)
@@ -103,6 +103,7 @@
       for (i = 0, l = this.length; i < l; i++) {
         p = this[i]
         while (p = p.previousSibling) p.nodeType == 1 && r.push(p)
+        r.reverse()
         p = this[i]
         while (p = p.nextSibling) p.nodeType == 1 && r.push(p)
       }

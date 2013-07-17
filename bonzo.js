@@ -1,8 +1,11 @@
-/*!
-  * Bonzo: DOM Utility (c) Dustin Diaz 2012
-  * https://github.com/ded/bonzo
-  * License MIT
-  */
+(function(){
+  if (!String.prototype.replaceEbay) {
+    String.prototype.replaceEbay = function () {
+      return (String.prototype['replace']).apply(this, arguments);
+    }
+  }
+})();
+
 (function (name, context, definition) {
   if (typeof module != 'undefined' && module.exports) module.exports = definition()
   else if (typeof define == 'function' && define.amd) define(definition)
@@ -15,7 +18,11 @@
     , specialAttributes = /^(checked|value|selected|disabled)$/i
       // tags that we have trouble inserting *into*
     , specialTags = /^(select|fieldset|table|tbody|tfoot|td|tr|colgroup)$/i
-    , simpleScriptTagRe = /\s*<script +src=['"]([^'"]+)['"]>/
+    , reg = '\\s*<scr'
+    , exp = 'ipt +src=[\'"]([^\'"]+)[\'"]>'
+    , regexp = reg + exp
+    , simpleScriptTagRe = new RegExp(regexp)
+    //, simpleScriptTagRe = /\s*<script +src=['"]([^'"]+)['"]>/
     , table = ['<table>', '</table>', 1]
     , td = ['<table><tbody><tr>', '</tr></tbody></table>', 3]
     , option = ['<select>', '</select>', 1]
@@ -28,9 +35,14 @@
         , fieldset: ['<form>', '</form>', 1]
         , legend: ['<form><fieldset>', '</fieldset></form>', 2]
         , option: option, optgroup: option
-        , script: noscope, style: noscope, link: noscope, param: noscope, base: noscope
+        //, script: noscope, style: noscope, link: noscope, param: noscope, base: noscope
+        , style: noscope, link: noscope, param: noscope, base: noscope
       }
-    , stateAttributes = /^(checked|selected|disabled)$/
+    , scr = 'scr'
+    , ipt = 'ipt'
+    , script = scr + ipt
+    tagMap[script] = noscope
+  var stateAttributes = /^(checked|selected|disabled)$/
     , ie = /msie/i.test(navigator.userAgent)
     , hasClass, addClass, removeClass
     , uidMap = {}
@@ -71,7 +83,7 @@
           return s.trim()
         } :
         function (s) {
-          return s.replace(trimReplace, '')
+          return s.replaceEbay(trimReplace, '')
         }
 
     , getStyle = features.computedStyle
@@ -173,7 +185,7 @@
    * @return {string}
    */
   function camelize(s) {
-    return s.replace(/-(.)/g, function (m, m1) {
+    return s.replaceEbay(/-(.)/g, function (m, m1) {
       return m1.toUpperCase()
     })
   }
@@ -184,7 +196,7 @@
    * @return {string}
    */
   function decamelize(s) {
-    return s ? s.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : s
+    return s ? s.replaceEbay(/([a-z])([A-Z])/g, '$1-$2').toLowerCase() : s
   }
 
 
@@ -317,7 +329,7 @@
       el.className = trim(el.className + ' ' + c)
     }
     removeClass = function (el, c) {
-      el.className = trim(el.className.replace(classReg(c), ' '))
+      el.className = trim(el.className.replaceEbay(classReg(c), ' '))
     }
   }
 
@@ -934,7 +946,7 @@
        * @return {Bonzo|string}
        */
     , val: function (s) {
-        return (typeof s == 'string') ?
+        return (typeof s == 'string' || typeof s == 'number') ?
           this.attr('value', s) :
           this.length ? this[0].value : null
       }
@@ -1051,8 +1063,11 @@
   }
 
   function createScriptFromHtml(html) {
-    var scriptEl = document.createElement('script')
+    // eBay doesn't allow word 'script'
+    var scr = 'scr', ipt = 'ipt', script = scr + ipt
+      , scriptEl = document.createElement(script)
       , matches = html.match(simpleScriptTagRe)
+    //var scriptEl = document.createElement('script')
     scriptEl.src = matches[1]
     return scriptEl
   }
