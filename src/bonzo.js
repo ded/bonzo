@@ -789,10 +789,12 @@
 
         if (!features.opasity && 'opacity' in iter) {
           // oh this 'ol gamut
-          iter.filter = null == iter.opacity || '' === iter.opacity ? '' : 'alpha(opacity=' + (iter.opacity * 100) + ')'
+          iter.filter = iter.opacity != null && iter.opacity !== ''
+            ? 'alpha(opacity=' + (iter.opacity * 100) + ')'
+            : ''
           // give it layout
           iter.zoom = o.zoom || 1
-          delete iter.opacity
+          ;delete iter.opacity
         }
 
         function fn(el, p, v) {
