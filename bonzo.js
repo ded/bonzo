@@ -1128,8 +1128,8 @@
 
   bonzo.viewport = function () {
     return {
-        width: ie ? html.clientWidth : self.innerWidth
-      , height: ie ? html.clientHeight : self.innerHeight
+        width: ie ? html.clientWidth : win.innerWidth
+      , height: ie ? html.clientHeight : win.innerHeight
     }
   }
 
