@@ -326,11 +326,11 @@
    * })
    *
    * @param {Element} el
-   * @param {function (Element)|string}
+   * @param {function (Element)|string} v
    * @return {string}
    */
   function setter(el, v) {
-    return typeof v == 'function' ? v(el) : v
+    return typeof v == 'function' ? v.call(el, el) : v
   }
 
   function scroll(x, y, type) {
