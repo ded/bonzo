@@ -562,8 +562,7 @@
        * @return {Bonzo}
        */
     , replaceWith: function (node) {
-        bonzo(normalize(node)).insertAfter(this)
-        return this.remove()
+         return bonzo(this[0].parentNode.replaceChild(bonzo(normalize(node))[0], this[0]))
       }
 
       /**
