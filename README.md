@@ -517,10 +517,12 @@ bonzo(document.querySelectorAll('p')).before('<b>hello</b>')
 ------------------------------------------------
 <a name="api-insertBefore"></a>
 ### bonzo().insertBefore(target)
-`bonzo.insertBefore()` will insert the items in the initial collection before the supplied targets
+`bonzo.insertBefore()` will insert the items in the initial collection before the supplied targets.
 
 #### Examples
+``` js
 bonzo('<p>hello</p>').insertBefore(document.querySelectorAll('div'))
+```
 
 ------------------------------------------------
 <a name="api-after"></a>
