@@ -449,62 +449,88 @@ el.length // 0
 ------------------------------------------------
 <a name="api-next"></a>
 ### bonzo().next()
-`next()` ...
+`bonzo.next()` returns a `Bonzo` object with a list of the next element siblings in the initial collection.
 
 ------------------------------------------------
 <a name="api-previous"></a>
 ### bonzo().previous()
-`previous()` ...
+`bonzo.previous()` returns a `Bonzo` object with a list of the previous element siblings in the initial collection.
 
 ------------------------------------------------
 <a name="api-parent"></a>
 ### bonzo().parent()
-`parent()` ...
+`bonzo.parent()` returns a `Bonzo` object with a list of the `parentNode`'s of each item in the initial collection.
 
 ------------------------------------------------
 <a name="api-focus"></a>
 ### bonzo().focus()
-`focus()` ...
+`bonzo.focus()` will send the browser's focus event to an input element. This will only work on the first (zeroith index) item in the `Bonzo` collection.
 
 ------------------------------------------------
 <a name="api-blur"></a>
 ### bonzo().blur()
-`blur()` ...
+`bonzo.blur()` will send the browser's blur event to an input element. This will only work on the first (zeroith index) item in the `Bonzo` collection.
 
 ------------------------------------------------
 <a name="api-append"></a>
 ### bonzo().append(html | element | collection)
-`append()` ...
+`bonzo.append()` will insert the supplied html | element | collection at the initial supplied collection.
+
+#### Examples
+``` js
+bonzo([element1, element2]).append('<p>hello</p><p>world</p>')
+bonzo(document.createElement('div')).append(document.createElement('p'))
+bonzo(element).append(document.getElementsByTagName('p'))
+```
 
 ------------------------------------------------
 <a name="api-appendTo"></a>
 ### bonzo().appendTo(target)
-`appendTo()` ...
+`bonzo.appendTo()` will insert the initial collection at the supplied `target`. It's the backwards version of `bonzo.append`
+
+#### Examples
+``` js
+bonzo('<p>hello</p>').appendTo(document.body)
+bonzo(document.createElement('div')).appendTo(document.querySelectorAll('p'))
+```
 
 ------------------------------------------------
 <a name="api-prepend"></a>
 ### bonzo().prepend(html | element | collection)
-`prepend()` ...
+`bonzo.prepend()` is similar to <a href="#api-append">bonzo.append()</a>, but inserts at the top of a collection (it prepends ;).
 
 ------------------------------------------------
 <a name="api-prependTo"></a>
 ### bonzo().prependTo(target)
-`prependTo()` ...
+`prependTo()` is similar to <a href="#api-append">bonzo.appendTo()</a>, but, you know, prepends.
 
 ------------------------------------------------
 <a name="api-before"></a>
 ### bonzo().before(html | element | collection)
-`before()` ...
+`bonzo.before()` inserts the supplied content before each item in the initial collection.
+
+#### Examples
+``` js
+bonzo(document.querySelectorAll('p')).before('<b>hello</b>')
+```
 
 ------------------------------------------------
 <a name="api-insertBefore"></a>
 ### bonzo().insertBefore(target)
-`insertBefore()` ...
+`bonzo.insertBefore()` will insert the items in the initial collection before the supplied targets
+
+#### Examples
+bonzo('<p>hello</p>').insertBefore(document.querySelectorAll('div'))
 
 ------------------------------------------------
 <a name="api-after"></a>
 ### bonzo().after(html | element | collection)
-`after()` ...
+`bonzo.after()` will insert the supplied content after each item in the initial collection.
+
+#### Examples
+``` js
+bonzo(document.querySelectorAll('p')).after('<b>, huh</b>')
+```
 
 ------------------------------------------------
 <a name="api-insertAfter"></a>
@@ -514,7 +540,12 @@ el.length // 0
 ------------------------------------------------
 <a name="api-replaceWith"></a>
 ### bonzo().replaceWith(html | element | collection)
-`replaceWith()` ...
+`bonzo.replaceWith()` will replace each item in the initial collection with the supplied content.
+
+#### Examples
+``` js
+bonzo(document.querySelectorAll('p')).replaceWith('<p>you have been replaced</p>')
+```
 
 ------------------------------------------------
 <a name="api-css"></a>
@@ -530,12 +561,19 @@ bonzo(elem).css({
 ------------------------------------------------
 <a name="api-offset"></a>
 ### bonzo().offset([ x, y ] | [ hash ])
-`offset()` ...
+`bonzo.offset()` is an overloaded setter and getter. When setting the offset of a collection, it will set an element to an explicit x/y coordinate position on the page. When getting the offset, the function returns an object containing the four properties `top`, `left`, `width`, and `height`.
+
+#### Examples
+``` js
+bonzo(el).offset() // returns { top: n, left: n, width: n, height: n }
+bonzo(el).offset(50, 100) // sets left to 50, and top to 100
+bonzo(el).offset({ left: 50, top: 100 }) // sets left to 50, and top to 100
+```
 
 ------------------------------------------------
 <a name="api-dim"></a>
 ### bonzo().dim()
-`dim()` ...
+`bonzo.dim()` returns the entire `width` and `height` dimensions of an element, including the `scrollHeight`.
 
 ------------------------------------------------
 <a name="api-attr"></a>
@@ -545,57 +583,93 @@ Sets or returns attributes of the element. If the first argument is a hash, then
 ------------------------------------------------
 <a name="api-removeAttr"></a>
 ### bonzo().removeAttr(key)
-`removeAttr()` ...
+`bonzo.removeAttr()` removes the supplied attribute from each item in the initial collection.
 
 ------------------------------------------------
 <a name="api-val"></a>
 ### bonzo().val([ value ])
-`val()` ...
+`bonzo.val()` is an overloaded setter and getter. it returns the content from the first element `value` attribute. When setting it sets the `value` attribute of each item in the initial collection.
 
 ------------------------------------------------
 <a name="api-data"></a>
 ### bonzo().data([ key[, value ] ] | [ hash ])
-`data()` ...
+`bonzo.data()` is an overloaded setter and getter. `data` can be set to any value and referenced further when getting the data.
+
+#### Examples
+``` js
+bonzo(el).data('username', 'ded')
+bonzo(el).data('username') // returns 'ded'
+
+bonzo(another).data('userinfo', {
+  id: 911,
+  name: 'agent'
+  age: 2
+})
+```
 
 ------------------------------------------------
 <a name="api-remove"></a>
 ### bonzo().remove()
-`remove()` ...
+`bonzo.remove()` removes the initial supplied collection from the DOM
+
+#### Examples
+``` js
+bonzo(document.querySelectorAll('p')).remove()
+```
 
 ------------------------------------------------
 <a name="api-empty"></a>
 ### bonzo().empty()
-`empty()` ...
+`bonzo.empty()` will empty out the content of the initial supplied collection, but not remove the nodes themselves.
 
 ------------------------------------------------
 <a name="api-detach"></a>
 ### bonzo().detach()
-`detach()` ...
+`bonzo.detach()` returns a `Bonzo` object containing the supplied collection, but detached from the DOM. This is useful if you wish to do heavy operations an offline Node, and then inserting it back into the DOM again.
+
+#### Examples
+``` js
+bonzo(document.querySelectorAll('p')).detach().addClass('eyo').html('<p>stuff</p>').appendTo(document.body)
+```
 
 ------------------------------------------------
 <a name="api-scrollLeft"></a>
 ### bonzo().scrollLeft([ x ])
-`scrollLeft()` ...
+`bonzo.scrollLeft()` is an overloaded setter and getter. it returns the `scrollLeft` of an element when no argument is supplied, otherwise, sets it.
 
 ------------------------------------------------
 <a name="api-scrollTop"></a>
 ### bonzo().scrollTop([ y ]
-`scrollTop()` ...
+`bonzo.scrollTop()` is an overloaded setter and getter. it returns the `scrollTop` of an element when no argument is supplied, otherwise, sets it.
 
 ------------------------------------------------
 <a name="api-aug"></a>
 ### bonzo.aug(hash)
-`aug()` ...
+`bonzo.aug()` will agument the `Bonzo` prototype so that you can customize and include additions to your liking.
+
+#### Examples
+``` js
+bonzo.aug({
+  color: function (c) {
+    // `this` is the scope of the `Bonzo` instance
+    return this.css('color', c)
+  }
+})
+
+// you can now do the following
+$('p').color('aqua')
+```
 
 ------------------------------------------------
 <a name="api-doc"></a>
 ### bonzo.doc()
-`doc()` ...
+`bonzo.doc()` returns an object containing `width` and `height` information regarding the document size. This includes `scrollWidth` and `scrollHeight`.
+
 
 ------------------------------------------------
 <a name="api-viewport"></a>
 ### bonzo.viewport()
-`viewport()` ...
+`bonzo.viewport()` returns an object containing `width` and `height` information regarding the document viewport. This is usually the same as using `bonzo.doc()`, but can be smaller given it's only what you *see* in the viewport, and not the entire document (with scrolling).
 
 ------------------------------------------------
 <a name="api-firstChild"></a>
@@ -620,16 +694,22 @@ Sets or returns attributes of the element. If the first argument is a hash, then
 ------------------------------------------------
 <a name="api-setQueryEngine"></a>
 ### bonzo.setQueryEngine(engine)
-`setQueryEngine()` ...
+`bonzo.setQueryEngine()` is a useful utility that allows you to pair `Bonzo` with a selector engine.
 
-***TODO*** more here
 
 For the insertion methods you can set a query selector host:
 
+#### Examples
 ``` js
-bonzo.setQueryEngine(qwery)
+// using Ender supported modules
+bonzo.setQueryEngine(require('qwery'))
 bonzo(bonzo.create('<div>')).insertAfter('.boosh a')
+
+// or Sizzle
+bonzo.setQueryEngine(Sizzle)
 ```
+
+
 
 ------------------------------------------------
 <a name="api-closest"></a>
@@ -703,7 +783,7 @@ Browser support
 Ender integration
 -----------------
 
-Bonzo is a registered npm package and fits in nicely with the [Ender](http://ender.no.de) framework. If you don't have Ender, you should install now, and never look back, *ever*. As a side note the *query engine host* is set for you when you include it with Ender.
+Bonzo is a registered npm package and fits in nicely with the [Ender](http://enderjs.com) framework. If you don't have Ender, you should install now, and never look back, *ever*. As a side note the *query engine host* is set for you when you include it with Ender.
 
 ```sh
 $ npm install ender -g
@@ -716,7 +796,6 @@ $ ender build bonzo[ package-b[ package-c ...]]
 ```
 
 or, add it to your existing ender package
-https://github.com/rvagg/bonzo/edit/docs-api/README.md#
 ```sh
 $ ender add bonzo
 ```
