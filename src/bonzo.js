@@ -562,7 +562,14 @@
        * @return {Bonzo}
        */
     , replaceWith: function (node) {
-         return bonzo(this[0].parentNode.replaceChild(bonzo(normalize(node))[0], this[0]))
+        var that = this
+        
+        return this.each(function (el, i) {
+          each(normalize(node, that, i), function (node) {
+            if (el.parentNode) el.parentNode.replaceChild(node, el) // Replace the element if it exists in the DOM
+            that[i] = node // Replace it in the Bonzo instance in case it's detached
+          }, null, 1)
+        })
       }
 
       /**
