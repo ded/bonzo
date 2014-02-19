@@ -1,9 +1,8 @@
-Bonzo
------
+## Bonzo
 
 A library agnostic extensible DOM utility. Nothing else.
 
-Bonzo is designed to live in any host library, such as [Ender](http://ender.jit.su), or simply as a stand-alone tool for the majority of your DOM-related tasks.
+Bonzo is designed to live in any host library, such as [Ender](http://enderjs.com), or simply as a stand-alone tool for the majority of your DOM-related tasks.
 
 **It looks like this:**
 
@@ -19,7 +18,7 @@ bonzo(elements)
   .show()
 ```
 
---------------------------------------------------------
+---------
 
   * <a href="#useselector"><b>Use with a selector engine</b></a>
   * <a href="#extensions"><b>Bonzo extension API</b></a>
@@ -36,28 +35,26 @@ bonzo(elements)
 --------------------------------------------------------
 
 <a name="useselector"></a>
-Use with a selector engine
------------------------------
+### Use with a selector engine
 
 A great way to use Bonzo is with a selector engine, like [Qwery](https://github.com/ded/qwery). You could wrap Bonzo up and augment your wrapper to inherit the same methods:
 
 ``` js
 function $(selector) {
-  return bonzo(qwery(selector));
+  return bonzo(qwery(selector))
 }
 ```
 
 This now allows you to write the following code:
 
 ``` js
-$('#content a[rel~="bookmark"]').after('√').css('text-decoration', 'none');
+$('#content a[rel~="bookmark"]').after('√').css('text-decoration', 'none')
 ```
 
 See <a href="#api-setQueryEngine"><code>bonzo.setQueryEngine()</code></a> for more details.
 
 <a name="extensions"></a>
-Bonzo extension API
--------------------
+### Bonzo extension API
 
 One of the greatest parts about Bonzo is its simplicity to hook into the internal chain to create custom methods. For example you can create a method called `color()` like this:
 
@@ -73,8 +70,7 @@ $('p').color('aqua')
 ```
 
 <a name="api"></a>
-Complete Bonzo API
-------------------
+### Complete Bonzo API
 
   * <a href="#api-ctor"><code>bonzo()</code></a>
 
@@ -775,10 +771,10 @@ Please try to include tests or adjustments to existing tests with all non-trivia
 Browser support
 ---------------
 
-  * IE6+
+  * IE9+
   * Chrome
-  * Safari 4+
-  * Firefox 3.5+
+  * Safari 5+
+  * Firefox 10+
   * Opera
 
 <a name="ender"></a>
@@ -798,6 +794,7 @@ $ ender build bonzo[ package-b[ package-c ...]]
 ```
 
 or, add it to your existing ender package
+
 ```sh
 $ ender add bonzo
 ```
@@ -816,4 +813,4 @@ Contributors
 Licence & copyright
 -------------------
 
-Bonzo is Copyright &copy; 2012 Dustin Diaz [@ded](https://twitter.com/ded) and licensed under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
+Bonzo is Copyright &copy; 2014 Dustin Diaz [@ded](https://twitter.com/ded) and licensed under the MIT licence. All rights not explicitly granted in the MIT license are reserved. See the included LICENSE file for more details.
