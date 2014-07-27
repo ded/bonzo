@@ -196,7 +196,7 @@ bonzo(element).html(); // <p>foo</p>
 <a name="api-text"></a>
 ### bonzo().text([content])
 
-`bonzo.text()` is very similar to [`.html`](#api-html), but uses the elements` `textContent` instead of `innerHTML` when setting the `content`. Thus, the `content` will not get parsed as markup.
+`bonzo.text()` is very similar to [`.html`](#api-html), but uses the elements' `textContent` instead of `innerHTML` when setting the `content`. Thus, the `content` will not get parsed as markup.
 
 This method either **gets** or **sets** the text of a given element, depending if the optional *content* argument is passed in.
 
