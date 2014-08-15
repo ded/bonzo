@@ -265,10 +265,10 @@
       return classReg(c).test(el.className)
     }
     addClass = function (el, c) {
-      el.className = (el.className + ' ' + c).trim()
+      el.className = (el.className + ' ' + c).replace(/^\s/, '');
     }
     removeClass = function (el, c) {
-      el.className = (el.className.replace(classReg(c), ' ')).trim()
+      el.className = (el.className.replace(classReg(c), ' ')).replace(/^\s|\s$/g, '');
     }
   }
 
