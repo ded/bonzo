@@ -1006,7 +1006,7 @@
 
   function getElementWindow(el) {
     if (el.contentWindow) return el.contentWindow
-    if (elDoc = el.ownerDocument) return elDoc.defaultView || elDoc.parentWindow
+    if (el.ownerDocument) return el.ownerDocument.defaultView || el.ownerDocument.parentWindow
     return win
   }
 
