@@ -126,8 +126,8 @@ sink('Layout', function (test, ok) {
       $iframe.scrollLeft(25)
       ok($iframe.scrollLeft() == 25, 'should set iframe window scroll left')
 
-      $body.scrollTop(1)
-      ok($body.scrollTop() == 1, 'should set iframe document body scroll top')
+      $body.scrollTop(10)
+      ok($body.scrollTop() == 10, 'should set iframe document body scroll top')
       $body.scrollLeft(50)
       ok($body.scrollLeft() == 50, 'should set iframe document body scroll left')
     }
