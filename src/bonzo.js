@@ -293,10 +293,11 @@
     var el = this[0]
     if (!el) return this
     if (x == null && y == null) {
-      return (isBody(el) ? getWindowScroll() : { x: el.scrollLeft, y: el.scrollTop })[type]
+      return (isBody(el) ? getWindowScroll(el) : { x: el.scrollLeft, y: el.scrollTop })[type]
     }
     if (isBody(el)) {
-      win.scrollTo(x, y)
+      var elWin = getElementWindow(el)
+      elWin.scrollTo(x, y)
     } else {
       x != null && (el.scrollLeft = x)
       y != null && (el.scrollTop = y)
@@ -785,7 +786,7 @@
         var el = this[0]
           , de = el.ownerDocument.documentElement
           , bcr = el.getBoundingClientRect()
-          , scroll = getWindowScroll()
+          , scroll = getWindowScroll(el)
           , width = el.offsetWidth
           , height = el.offsetHeight
           , top = bcr.top + scroll.y - Math.max(0, de && de.clientTop, doc.body.clientTop)
@@ -989,11 +990,19 @@
   }
 
   function isBody(element) {
-    return element === win || (/^(?:body|html)$/i).test(element.tagName)
+    return element === win || (/^(?:body|html|iframe)$/i).test(element.tagName)
   }
 
-  function getWindowScroll() {
-    return { x: win.pageXOffset || html.scrollLeft, y: win.pageYOffset || html.scrollTop }
+  function getWindowScroll(el) {
+    var elWin = getElementWindow(el)
+      , elHtml = elWin.document.documentElement || html
+    return { x: elWin.pageXOffset || elHtml.scrollLeft, y: elWin.pageYOffset || elHtml.scrollTop }
+  }
+
+  function getElementWindow(el) {
+    if (el.contentWindow) return el.contentWindow
+    if (el.ownerDocument) return el.ownerDocument.defaultView || el.ownerDocument.parentWindow
+    return win
   }
 
   function createScriptFromHtml(html) {

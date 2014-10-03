@@ -105,6 +105,35 @@ sink('Layout', function (test, ok) {
     ok($('#overflowed').scrollLeft() == 150, 'condition2')
   })
 
+  test('iframe scrollTop && scrollLeft', 4, function() {
+    // indeed, there has to be a better way to test this
+    var $iframe = $(dom.create('<iframe/>')).attr({
+            src: 'about:blank'
+        }).css({
+            width: '200px'
+          , height: '200px'
+        })
+      , $body;
+    $iframe[0].onload = function() {
+      $body = $(this.contentWindow.document.body);
+      $body.append($(dom.create('<div>')).css({
+          width: '400px'
+        , height: '300px'
+      }))
+
+      $iframe.scrollTop(5)
+      ok($iframe.scrollTop() == 5, 'should set iframe window scroll top')
+      $iframe.scrollLeft(25)
+      ok($iframe.scrollLeft() == 25, 'should set iframe window scroll left')
+
+      $body.scrollTop(10)
+      ok($body.scrollTop() == 10, 'should set iframe document body scroll top')
+      $body.scrollLeft(50)
+      ok($body.scrollLeft() == 50, 'should set iframe document body scroll left')
+    }
+    $iframe.appendTo(document.body)
+  })
+
   test('width & height can be accessed on window and document', 2, function () {
     ok($(window).css('width') == $(document).css('width'), 'win and doc have same width')
     ok($(window).css('height') < $(document).css('height'), 'document height is much larger than win height')
