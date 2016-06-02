@@ -331,7 +331,7 @@
         return this[index] || null
       }
 
-      // itetators
+      // iterators
       /**
        * @param {function(Element|Node)} fn
        * @param {Object=} opt_scope
